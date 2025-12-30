@@ -1,35 +1,37 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState, useEffect } from 'react';
+import { collection, onSnapshot, query, orderBy } from "firebase/firestore";
+import { db } from './firebase';
+import Stat from './components/sheet/Stat';
+import './App.css';
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [stats, setStats] = useState([]);
+
+  useEffect(() => {
+    // A consulta correta para ter "HP" em cima é ordenar por nome em ordem descendente.
+    const q = query(collection(db, "stats"), orderBy("name", "desc"));
+
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      const statsData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      setStats(statsData);
+    });
+
+    // Limpa a inscrição ao desmontar o componente
+    return () => unsubscribe();
+  }, []);
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <div className="App">
+      {stats.map(stat => (
+        <Stat
+          key={stat.id}
+          id={stat.id}
+          name={stat.name}
+          value={stat.value}
+        />
+      ))}
+    </div>
+  );
 }
 
-export default App
+export default App;

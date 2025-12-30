@@ -1,0 +1,126 @@
+@import url('https://fonts.googleapis.com/css2?family=Alegreya+Sans+SC:ital,wght@0,100;0,300;0,400;0,500;0,700;0,800;0,900;1,100;1,300;1,400;1,500;1,700;1,800;1,900&family=Alegreya:ital,wght@0,400..900;1,400..900&family=Ovo&display=swap');
+
+*{
+  box-sizing: border-box;
+}
+
+.Stat{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  font-family: "Alegreya Sans SC", sans-serif;
+  font-weight: 800;
+  width: 100%;
+  margin-top: 2rem;
+  user-select: none;
+}
+
+.Decrement {
+  content: url(../assets/Reduce.svg);
+}
+
+.Increment{
+  content: url(../assets/Sum.svg)
+}
+
+.Decrement, .Increment {
+  margin: 1rem;
+  height: 100%;
+  transition: transform 0.02s ease-in;
+}
+
+.Decrement:hover, .Increment:hover {
+  transform: scale(1.2);
+  opacity: 0.8;
+}
+
+.Decrement:active, .Increment:active {
+  transform: scale(1);
+}
+
+.StatMain{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  min-width: 100px;
+  max-width: 300px;
+}
+
+.StatBox{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid black;
+  border-radius: 10px;
+  padding: 0.4rem 0.4rem 1.2rem 0.4rem;
+  width: 100%;
+  
+}
+
+.StatValue{
+  font-size: 3rem;
+}
+
+.StatNameBox{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  margin: -0.95rem;
+  font-weight: 700;
+}
+
+.LeftVector{
+  content: url(../assets/StatVector.svg);
+}
+
+.StatName{
+  font-size: 1.5rem;
+  margin: -1px;
+  padding: 0.1rem 0.6rem;
+  background-color: black;
+}
+
+.RightVector{
+  content: url(../assets/StatVector.svg);
+  -webkit-transform: scale(-1, -1);
+  -moz-transform: scale(-1, -1);
+  -o-transform: scale(-1, -1);
+  transform: scale(-1, -1);
+}
+
+/* Estilos para o modo de edição */
+.StatInput {
+  font-family: "Alegreya Sans SC", sans-serif;
+  font-weight: 800;
+  font-size: 3rem;
+  text-align: center;
+  border: none;
+  width: 100%;
+  background-color: transparent;
+}
+
+/* Para remover as setas de inputs do tipo "number" */
+.StatInput::-webkit-outer-spin-button,
+.StatInput::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.StatInput[type=number] {
+  -moz-appearance: textfield; /* Firefox */
+}
+
+.StatInput:focus {
+  outline: none;
+  background-color: #f0f0f0;
+  border-radius: 5px;
+}
+
+
+
