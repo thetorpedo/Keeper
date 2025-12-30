@@ -1,0 +1,17 @@
+@import url('https://fonts.googleapis.com/css2?family=Alegreya+Sans+SC:ital,wght@0,100;0,300;0,400;0,500;0,700;0,800;0,900;1,100;1,300;1,400;1,500;1,700;1,800;1,900&family=Alegreya:ital,wght@0,400..900;1,400..900&family=Ovo&display=swap');
+@import "tailwindcss";
+
+@theme {
+    --default-font-family: var(--font-serif);
+    --font-serif: "Ovo", "Times New Roman", Times, serif;
+    --font-ovo: "Ovo", "Times New Roman", Times, serif;
+    --font-alegraya-sans: "Alegreya Sans SC", Arial, Helvetica, sans-serif;
+    --font-alegraya: "Alegreya", Georgia, serif;
+    --shadow-btn: 5px 5px 0 rgba(0, 0, 0, 1); 
+    --shadow-btn2: 8px 8px 0 rgba(0, 0, 0, 1); 
+    --color-purple: #F5E1FF;
+  }
+
+#root{
+    height: 100vh;
+}
