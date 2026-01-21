@@ -23,7 +23,7 @@ function Home() {
                     <p className='font-alegraya text-3xl/8 md:text-5xl text-center font-medium md:mb-10'>
                     <span className='font-extrabold '>Create</span>, 
                     <span className='font-extrabold '> store</span>, and  
-                    <span className='font-extrabold '> share</span> ydour character sheet in just a few clicks.</p>
+                    <span className='font-extrabold '> share</span> your character sheet in just a few clicks.</p>
                     < Button
                         text='Create Character'
                         isImportant
