@@ -5,11 +5,13 @@ const Button = ({
   isImportant = false,
   isBold = false,
   onClick,
-  className = "" 
+  className = "",
+  href = '#'
 }) => {
   return (
     <button
       onClick={onClick}
+      href={href}
       className={`
         ${isImportant ? 'bg-purple' : ''}
         ${isBold ? 'font-bold' : ''}
@@ -19,7 +21,8 @@ const Button = ({
         lowercase 
         shadow-btn 
         transition-all 
-        active:scale-95
+        active:translate-1.5
+        active:shadow-none
         hover:shadow-btn2
         hover:brightness-105
         hover:-translate-px

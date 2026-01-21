@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
 import { collection, onSnapshot, query, orderBy } from "firebase/firestore";
-import { db } from '../firebase';
-import Stat from '../components/sheet/Stat';
-import './sheet.css';
+import { db } from '../../firebase';
+import Stat from '../../components/sheet/Stat.jsx';
+import '../css/sheet.css';
 
-function sheet() {
+function Sheet() {
   const [stats, setStats] = useState([]);
 
   useEffect(() => {
@@ -34,4 +34,4 @@ function sheet() {
   );
 }
 
-export default sheet;
+export default Sheet;
