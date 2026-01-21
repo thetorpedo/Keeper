@@ -1,41 +1,45 @@
 import React, {useState} from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
-import {  signInWithEmailAndPassword   } from 'firebase/auth';
-import { auth } from '../../firebase';
-
-const Login = () => {
+import {  createUserWithEmailAndPassword  } from 'firebase/auth';
+import { auth } from '../../firebase.js';
+ 
+const Signup = () => {
     const navigate = useNavigate();
-    const [email, setEmail] = useState('');
+ 
+    const [email, setEmail] = useState('')
     const [password, setPassword] = useState('');
-
-    const onLogin = (e) => {
-        e.preventDefault();
-        signInWithEmailAndPassword(auth, email, password)
+ 
+    const onSubmit = async (e) => {
+      e.preventDefault()
+     
+      await createUserWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
             // Signed in
             const user = userCredential.user;
-            navigate("/")
             console.log(user);
+            navigate("/login")
+            // ...
         })
         .catch((error) => {
             const errorCode = error.code;
             const errorMessage = error.message;
-            console.log(errorCode, errorMessage)
+            console.log(errorCode, errorMessage);
+            // ..
         });
     }
-
-    return(
-        <main className="flex items-center justify-center h-screen bg-gray-100">
+ 
+  return (
+    <main className="flex items-center justify-center h-screen bg-gray-100">
         <section className="w-full max-w-md p-8 space-y-8 bg-white rounded-lg shadow-md">
           <div className="text-center">
             <h1 className="text-4xl font-extrabold tracking-tight text-gray-900">
               FocusApp
             </h1>
             <p className="mt-2 text-sm text-gray-600">
-              Please sign in to continue
+              Create a new account
             </p>
           </div>
-          <form className="mt-8 space-y-6" onSubmit={onLogin}>
+          <form className="mt-8 space-y-6" onSubmit={onSubmit}>
             <div className="-space-y-px rounded-md shadow-sm">
               <div>
                 <label htmlFor="email-address" className="sr-only">
@@ -74,19 +78,19 @@ const Login = () => {
                 type="submit"
                 className="relative flex justify-center w-full px-4 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md group hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
               >
-                Sign in
+                Sign up
               </button>
             </div>
           </form>
           <p className="mt-2 text-sm text-center text-gray-600">
-            No account yet?{' '}
-            <NavLink to="/signup" className="font-medium text-indigo-600 hover:text-indigo-500">
-              Sign up
+            Already have an account?{' '}
+            <NavLink to="/login" className="font-medium text-indigo-600 hover:text-indigo-500">
+              Sign in
             </NavLink>
           </p>
         </section>
       </main>
-    )
+  )
 }
-
-export default Login
+ 
+export default Signup

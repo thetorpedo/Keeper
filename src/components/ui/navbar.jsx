@@ -24,7 +24,7 @@ const Navbar = () => {
             <Link to="/about" className="hover:text-gray-500 hover:underline-offset-3 hover:underline active:scale-95">About Keeper</Link>
             <a href="#" className="hover:text-gray-500 hover:underline-offset-3 hover:underline active:scale-95">Create Character</a>
             <a href="#" className="hover:text-gray-500 hover:underline-offset-3 hover:underline active:scale-95">View Characters</a>
-            <a href="#" className="hover:text-gray-500 hover:underline-offset-3 hover:underline active:scale-95">Log In</a>
+            <a href="/login" className="hover:text-gray-500 hover:underline-offset-3 hover:underline active:scale-95">Log In</a>
           </div>
 
           {/* Botão Hambúrguer (Escondido no desktop) */}
@@ -46,7 +46,7 @@ const Navbar = () => {
            <Link to="/about" className="block px-3 py-2 text-white active:bg-white/50">About Keeper</Link>
           <a href="#" className="block px-3 py-2 text-white active:bg-white/50">Create Character</a>
           <a href="#" className="block px-3 py-2 text-white active:bg-white/50">View Characters</a>
-          <a href="#" className="block px-3 py-2 text-white active:bg-white/50">Log In</a>
+          <a href="/login" className="block px-3 py-2 text-white active:bg-white/50">Log In</a>
         </div>
       </div>
     </nav>

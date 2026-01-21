@@ -7,7 +7,7 @@ function Home() {
   return (
         <div className='flex flex-col justify-between items-center bg-white h-full'>
             < Navbar/>
-            <div className="my-10 max-w-5/6 space-y-5 flex flex-col items-center md:flex-row md:flex-row-reverse">
+            <div className="my-10 max-w-5/6 space-y-5 flex flex-col items-center md:flex-row-reverse">
                 <div className='max-md:border-b-2'>
                     <img 
                         src='src/assets/sombra-sm.png'

@@ -2,7 +2,8 @@ import React from 'react';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from './public/Home.jsx';
 import About from './public/About.jsx';
-import Navbar from '../components/ui/navbar.jsx';
+import Login from './public/Login.jsx';
+import Signup from './public/Signup.jsx';
 import './css/style.css';
 
 function App() {
@@ -11,6 +12,8 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
       </Routes>
     </BrowserRouter>
   );
