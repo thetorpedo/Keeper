@@ -1,17 +1,24 @@
-import React from 'react';
 
-const Button = ({ 
-  text = 'Botão',  
+import React from "react";
+
+interface ButtonProps {
+  text?: string;
+  isImportant?: boolean;
+  isBold?: boolean;
+  onClick?: React.MouseEventHandler<HTMLButtonElement>;
+  className?: string;
+}
+
+const Button: React.FC<ButtonProps> = ({
+  text = 'Botão',
   isImportant = false,
   isBold = false,
   onClick,
   className = "",
-  href = '#'
 }) => {
   return (
     <button
       onClick={onClick}
-      href={href}
       className={`
         ${isImportant ? 'bg-purple' : ''}
         ${isBold ? 'font-bold' : ''}

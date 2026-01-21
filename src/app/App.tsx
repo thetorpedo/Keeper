@@ -1,10 +1,9 @@
-import React from 'react';
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Home from './public/Home.jsx';
-import About from './public/About.jsx';
-import Login from './public/Login.jsx';
-import Signup from './public/Signup.jsx';
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import './css/style.css';
+import About from './public/About.tsx';
+import Home from './public/Home.tsx';
+import Login from './public/Login.tsx';
+import Signup from './public/Signup.tsx';
 
 function App() {
   return (
