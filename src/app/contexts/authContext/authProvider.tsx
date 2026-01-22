@@ -52,7 +52,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     return (
         <AuthContext.Provider value={value}>
-            {loading ? <h1>Loading...</h1> : children}
+            {loading ? 
+            <>
+            <main className="flex items-center justify-center bg-purple/30 h-screen">
+            <section className="p-8 text-center font-alegraya-sans font-bold lowercase text-4xl max-w-md mx-5 space-y-8 border bg-white shadow-btn2 relative">
+                Loading...
+            </section>
+            </main>
+            </> : children}
         </AuthContext.Provider>
     )
 }
