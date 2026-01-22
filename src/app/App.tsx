@@ -1,6 +1,7 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import './css/style.css';
 import About from './public/About.tsx';
+import ForgotPassword from "./public/ForgotPassword.tsx";
 import Home from './public/Home.tsx';
 import Login from './public/Login.tsx';
 import Signup from './public/Signup.tsx';
@@ -13,6 +14,7 @@ function App() {
         <Route path="/about" element={<About />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
+        <Route path="/reset" element={<ForgotPassword />} />
       </Routes>
     </BrowserRouter>
   );

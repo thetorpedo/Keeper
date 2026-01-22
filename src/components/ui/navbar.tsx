@@ -2,7 +2,7 @@ import { onAuthStateChanged, signOut } from "firebase/auth";
 import { Menu, X } from 'lucide-react'; // Biblioteca de ícones (opcional)
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { auth } from '../../firebase';
+import { auth } from '../../app/firebase/firebase';
 
 
 const Navbar = () => {
@@ -42,20 +42,18 @@ const Navbar = () => {
             <Link to="/" className="text-3xl font-extrabold font-alegraya">Keeper</Link>
           </div>
 
-          {/* Desktop Menu (Escondido no mobile) */}
           <div className="hidden font-alegraya-sans lowercase text-xl md:flex space-x-8">
             <Link to="/" className="hover:text-gray-500 hover:underline-offset-3 hover:underline active:scale-95">Home</Link>
             <Link to="/about" className="hover:text-gray-500 hover:underline-offset-3 hover:underline active:scale-95">About Keeper</Link>
-            <a href="#" className="hover:text-gray-500 hover:underline-offset-3 hover:underline active:scale-95">Create Character</a>
-            <a href="#" className="hover:text-gray-500 hover:underline-offset-3 hover:underline active:scale-95">View Characters</a>
+            <a href="/" className="hover:text-gray-500 hover:underline-offset-3 hover:underline active:scale-95">Create Character</a>
+            <a href="/" className="hover:text-gray-500 hover:underline-offset-3 hover:underline active:scale-95">View Characters</a>
             {loggedIn ? (
-              <a href="#" onClick={logOut} className="hover:text-gray-500 hover:underline-offset-3 hover:underline active:scale-95">Log Out</a>
+              <a href="/" onClick={logOut} className="hover:text-gray-500 hover:underline-offset-3 hover:underline active:scale-95">Log Out</a>
             ) : (
               <a href="/login" className="hover:text-gray-500 hover:underline-offset-3 hover:underline active:scale-95">Log In</a>
             )}
           </div>
 
-          {/* Botão Hambúrguer (Escondido no desktop) */}
           <div className="md:hidden flex items-center">
             <button
               onClick={toggleMenu}
@@ -67,7 +65,6 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/* Mobile Menu (Renderização condicional ou transição) */}
       <div className={`${isOpen ? 'block' : 'hidden'} md:hidden bg-black`}>
         <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 font-alegraya-sans lowercase text-xl">
           <Link to="/" className="block px-3 py-2 text-white active:bg-white/50">Home</Link>
