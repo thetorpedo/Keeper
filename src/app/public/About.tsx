@@ -1,7 +1,6 @@
-import React from 'react';
-import Navbar from '../../components/ui/navbar';
 import Button from '../../components/ui/button';
 import Footer from '../../components/ui/footer';
+import Navbar from '../../components/ui/navbar';
 
 function About() {
   return (
@@ -24,7 +23,7 @@ function About() {
                     <p className='font-alegraya text-2xl/8 md:text-4xl text-justify font-extrabold md:mb-10'> About Keeper
                     </p>
                     <p className='text-justify'> I built Keeper to be a simple and user-friendly character sheet manager for Quest.</p>
-                    <p className='text-justify'>It was born as an undergraduate thesis project for my degree in Computer Engineering. The primary goal was to apply modern web technologies to build a real-world application, focusing heavily on the principles of User-Centered Design and Usability. It's a practical study in how to build a tool that truly serves the needs of its community.
+                    <p className='text-justify'>It was born as the undergraduate thesis project for my degree in Computer Engineering. The primary goal was to apply modern web technologies to build a real-world application, focusing heavily on the principles of User-Centered Design and Usability. It's a practical study in how to build a tool that truly serves the needs of its community.
                     </p>
                     <p className='text-justify'>Keeper is an unofficial, fan-made tool and is not affiliated with, sponsored, or endorsed by The Adventure Guild, LLC.
                     </p>
