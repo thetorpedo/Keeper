@@ -1,8 +1,19 @@
-import { createUserWithEmailAndPassword, GoogleAuthProvider, sendEmailVerification, sendPasswordResetEmail, signInWithEmailAndPassword, signInWithPopup, updatePassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, GoogleAuthProvider, sendEmailVerification, sendPasswordResetEmail, signInWithEmailAndPassword, signInWithPopup, updatePassword, updateProfile } from "firebase/auth";
 import { auth } from "./firebase";
 
 export const doCreateUserWithEmailAndPassword = async (email, password) => {
-    return createUserWithEmailAndPassword(auth, email, password);
+    const res = await createUserWithEmailAndPassword(auth, email, password);
+    const user = res.user;
+
+    const defaultName = email.split('@')[0];
+
+    await updateProfile(user, {
+        displayName: defaultName
+    });
+    console.log(user.displayName);
+    console.log(defaultName);
+
+    return res;
 };
 
 export const doSignInWithEmailAndPassword = async (email, password) => {
@@ -28,4 +39,10 @@ export const doSendEmailVerification = () => {
     return sendEmailVerification(auth.currentUser, {
         url: `${window.location.origin}/#`,
     });
+};
+
+export const doUpdateDisplayName = async (displayName) => {
+    if (auth.currentUser) {
+        return updateProfile(auth.currentUser, { displayName });
+    }
 };

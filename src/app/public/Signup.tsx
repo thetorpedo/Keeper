@@ -30,6 +30,7 @@ const Signup = () => {
       try {
         await doCreateUserWithEmailAndPassword(email, password);
         navigate('/'); 
+        window.location.reload();
       } catch (error) {
         if (error instanceof Error) {
           setErrorMessage(error.message);
