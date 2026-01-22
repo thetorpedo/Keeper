@@ -10,8 +10,6 @@ export const doCreateUserWithEmailAndPassword = async (email, password) => {
     await updateProfile(user, {
         displayName: defaultName
     });
-    console.log(user.displayName);
-    console.log(defaultName);
 
     return res;
 };
