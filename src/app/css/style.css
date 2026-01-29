@@ -2,16 +2,16 @@
 @import "tailwindcss";
 
 @theme {
-    --default-font-family: var(--font-serif);
-    --font-serif: "Ovo", "Times New Roman", Times, serif;
-    --font-ovo: "Ovo", "Times New Roman", Times, serif;
-    --font-alegraya-sans: "Alegreya Sans SC", Arial, Helvetica, sans-serif;
-    --font-alegraya: "Alegreya", Georgia, serif;
-    --shadow-btn: 5px 5px 0 rgba(0, 0, 0, 1); 
-    --shadow-btn2: 8px 8px 0 rgba(0, 0, 0, 1); 
-    --color-purple: #F5E1FF;
-  }
+  --default-font-family: var(--font-serif);
+  --font-serif: "Ovo", "Times New Roman", Times, serif;
+  --font-ovo: "Ovo", "Times New Roman", Times, serif;
+  --font-alegraya-sans: "Alegreya Sans SC", Arial, Helvetica, sans-serif;
+  --font-alegraya: "Alegreya", Georgia, serif;
+  --shadow-btn: 5px 5px 0 rgba(0, 0, 0, 1);
+  --shadow-btn2: 9px 9px 0 rgba(0, 0, 0, 1);
+  --color-purple: #F5E1FF;
+}
 
-#root{
-    height: 100vh;
+#root {
+  height: 100vh;
 }

@@ -22,7 +22,7 @@ const Button: React.FC<ButtonProps> = ({
         ${isBold ? 'font-bold' : ''}
         border text-2xl font-alegraya-sans lowercase shadow-btn transition-all 
         active:translate-1.5 active:shadow-none hover:shadow-btn2 hover:brightness-105 
-        hover:-translate-px px-4 py-1 cursor-pointer
+        hover:-translate-1 px-4 py-1 cursor-pointer
         ${className}
       `}
     >
