@@ -7,6 +7,7 @@ import ForgotPassword from "./public/ForgotPassword.tsx";
 import Home from './public/Home.tsx';
 import Login from './public/Login.tsx';
 import Signup from './public/Signup.tsx';
+import CharacterSheet from "./user/CharacterSheet.tsx";
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
         <Route path="/signup" element={<Signup />} />
         <Route path="/reset" element={<ForgotPassword />} />
         <Route path="/change-username" element={<ChangeUsername />} />
+        <Route path="/sheet" element={<CharacterSheet />} />
       </Routes></AuthProvider>
     </BrowserRouter>
   );
