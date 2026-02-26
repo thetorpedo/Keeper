@@ -47,8 +47,16 @@ function CharacterSheet() {
                             <CharacterProfile />
                         </section>
                         {/* Abilities & Inventory */}
-                        <section className="border border-gray-400 rounded-lg p-4">Abilities & Inventory
-                            <Card />
+                        <section className="border border-gray-400 rounded-lg flex flex-col p-4">Abilities & Inventory
+                            <div className="mt-30 flex-col">
+                                <Card />
+                                <Card />
+                                <Card />
+                                <Card />
+                                <Card />
+                                <Card />
+                            </div>
+
                         </section>
                     </div>
                 </div>
