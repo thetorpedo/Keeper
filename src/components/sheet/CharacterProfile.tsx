@@ -6,8 +6,8 @@ const handleUpdate = () => {
 export default function CharacterProfile() {
     return (
         <>
-        <div className="lowercase font-alegraya-sans text-lg text-center text-gray-400">Click on a characteristic to edit it</div>
-        <div className="text-xl">
+        <div className="lowercase font-alegraya-sans max-sm:text-sm text-lg text-center max-sm:mb-2 text-gray-400">Click on a characteristic to edit it</div>
+        <div className="max-sm:text-lg/7 text-xl">
             <p>Hello,</p>
             <p >My name is <EditableText value="Merlim" onSave={handleUpdate}/>, (<EditableText value="he/him" onSave={handleUpdate}/>).</p>    
             <p>I'm <EditableText value="30" onSave={handleUpdate}/> years old, and stand <EditableText value="80cm" onSave={handleUpdate}/> tall.</p>

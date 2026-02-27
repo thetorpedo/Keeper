@@ -47,7 +47,7 @@ export default function EditableText({ value, onSave, type = "text" }: EditableT
     }
   };
 
-const fontClasses = "font-alegraya-sans lowercase text-[22px] font-bold";
+const fontClasses = "font-alegraya-sans lowercase max-sm:text-[18px] text-[22px] font-bold";
 
   return (
     

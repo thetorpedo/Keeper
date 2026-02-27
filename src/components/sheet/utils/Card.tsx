@@ -1,5 +1,8 @@
 
 export default function Card(){
+
+    // Se mobile desativar botão de gastar ap e rolar dado.
+
     return(
         // <div className=" ">
             <div
@@ -14,7 +17,7 @@ export default function Card(){
                                 {/* <Tooltip message="Click to spend AP"> */}
                                     <button 
                                     onClick={() => console.log("!")}
-                                    className="flex items-center tooltip relative h-full hover:opacity-50 hover:scale-115 transition-all active:scale-100 cursor-pointer">
+                                    className="flex items-center tooltip relative h-full hover:opacity-50 hover:scale-115 transition-all active:scale-95 cursor-pointer">
                                     <span className="bg-black px-1.5 py-0.5 text-white font-alegraya-sans font-bold leading-none flex items-center justify-center">
                                         2
                                     </span>
