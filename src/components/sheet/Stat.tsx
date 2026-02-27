@@ -2,7 +2,7 @@ import { doc, increment, updateDoc } from "firebase/firestore";
 import { Minus, Plus } from "lucide-react";
 import { useEffect, useRef, useState } from 'react';
 import '../../app/css/style.css';
-import { db } from '../../app/firebase/firebase';
+import { db } from '../../app/firebase/firebase.ts';
 
 interface StatProps {
   id: string;

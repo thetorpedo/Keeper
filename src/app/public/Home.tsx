@@ -1,6 +1,6 @@
-import Button from '../../components/ui/button';
-import Footer from '../../components/ui/footer';
-import Navbar from '../../components/ui/navbar';
+import Button from '../../components/ui/button.tsx';
+import Footer from '../../components/ui/footer.tsx';
+import Navbar from '../../components/ui/navbar.tsx';
 
 function Home() {
   return (

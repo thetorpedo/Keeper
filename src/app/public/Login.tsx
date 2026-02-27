@@ -1,9 +1,9 @@
 import { ArrowLeft } from 'lucide-react';
 import { useState } from 'react';
 import { Navigate, NavLink, useNavigate } from 'react-router-dom';
-import Button from '../../components/ui/button';
-import { useAuth } from '../contexts/authContext/authProvider';
-import { doSignInWithEmailAndPassword, doSignInWithGoogle } from '../firebase/auth';
+import Button from '../../components/ui/button.tsx';
+import { useAuth } from '../contexts/authContext/authProvider.tsx';
+import { doSignInWithEmailAndPassword, doSignInWithGoogle } from '../firebase/auth.ts';
 
 
 const Login = () => {

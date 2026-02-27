@@ -1,4 +1,4 @@
-import EditableText from "./utils/EditableText";
+import EditableText from "./utils/EditableText.tsx";
 
 const handleUpdate = () => {
 }

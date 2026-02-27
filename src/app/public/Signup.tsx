@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { Navigate, NavLink, useNavigate } from 'react-router-dom';
 import Button from '../../components/ui/button.tsx';
 import { useAuth } from '../contexts/authContext/authProvider.tsx';
-import { doCreateUserWithEmailAndPassword } from '../firebase/auth.js';
+import { doCreateUserWithEmailAndPassword } from '../firebase/auth.ts';
 
 const Signup = () => {
 

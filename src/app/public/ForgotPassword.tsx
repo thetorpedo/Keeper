@@ -1,9 +1,9 @@
 import { ArrowLeft } from 'lucide-react';
 import { useState } from 'react';
 import { Navigate } from 'react-router-dom';
-import Button from '../../components/ui/button';
-import { useAuth } from '../contexts/authContext/authProvider';
-import { doPasswordReset } from '../firebase/auth';
+import Button from '../../components/ui/button.tsx';
+import { useAuth } from '../contexts/authContext/authProvider.tsx';
+import { doPasswordReset } from '../firebase/auth.ts';
 
 
 const ForgotPassword = () => {

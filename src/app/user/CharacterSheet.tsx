@@ -1,11 +1,11 @@
 import { CircleArrowLeft, Plus } from 'lucide-react';
 import { RiShareFill } from "react-icons/ri";
-import CharacterProfile from "../../components/sheet/CharacterProfile";
-import Stat from "../../components/sheet/Stat";
-import Card from "../../components/sheet/utils/Card";
-import Button from '../../components/ui/button';
-import Footer from '../../components/ui/footer';
-import Navbar from '../../components/ui/navbar';
+import CharacterProfile from "../../components/sheet/CharacterProfile.tsx";
+import Stat from "../../components/sheet/Stat.tsx";
+import Card from "../../components/sheet/utils/Card.tsx";
+import Button from '../../components/ui/button.tsx';
+import Footer from '../../components/ui/footer.tsx';
+import Navbar from '../../components/ui/navbar.tsx';
 
 function CharacterSheet() {
     return (

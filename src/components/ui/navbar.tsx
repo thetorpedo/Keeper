@@ -2,8 +2,8 @@ import { signOut } from "firebase/auth";
 import { ChevronDown, Menu, X } from 'lucide-react'; // Biblioteca de ícones (opcional)
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useAuth } from "../../app/contexts/authContext/authProvider";
-import { auth } from '../../app/firebase/firebase';
+import { useAuth } from "../../app/contexts/authContext/authProvider.tsx";
+import { auth } from '../../app/firebase/firebase.ts';
 
 
 const Navbar = () => {
