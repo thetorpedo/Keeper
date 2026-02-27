@@ -5,7 +5,7 @@ export default function CharacterCard() {
     return (
         <div className='flex flex-col mt-5 justify-center'>
                         <Button className='border rounded-lg relative p-5 w-full col-span-1 flex flex-col justify-center sm:pt-8 pt-5 items-center gap-1 sm:pb-4'>
-                            <div className='font-alegraya-sans flex justify-center items-center absolute -top-[14.5px]  text-white font-bold'>
+                            <div className='font-alegraya-sans flex justify-center items-center absolute sm:-top-[20.5px] -top-[14.5px]  text-white font-bold'>
                                 <img 
                                 src="../../src/assets/StatVector.svg" 
                                 className="h-7 w-auto block object-contain" 

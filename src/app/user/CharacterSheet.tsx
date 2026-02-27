@@ -38,7 +38,7 @@ function CharacterSheet() {
                         <div className="col-span-3 flex flex-col w-full gap-2">
                             {/* Stats */}
                             <section className="border border-gray-400 rounded-lg p-4 flex flex-col gap-2">
-                                <div className="w-full flex justify-center items-center h-60 border mb-3 rounded-lg overflow-hidden">
+                                <div className="w-full flex aspect-square justify-center items-center  border mb-3 rounded-lg overflow-hidden">
                                     <img src="src/assets/placeholderPfp.png" className="object-contain" />
                                 </div>
                                 <Stat id="1" name="HP" value={10} />
