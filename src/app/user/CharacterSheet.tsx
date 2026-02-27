@@ -106,7 +106,7 @@ function CharacterSheet() {
                 </div>
                 
             </div>
-            <span className='max-sm:hidden'>
+            <span className='max-sm:hidden w-full'>
                 < Footer />
             </span>
 
