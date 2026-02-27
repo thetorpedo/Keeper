@@ -2,8 +2,8 @@ import { signOut } from "firebase/auth";
 import { ChevronDown, Menu, X } from 'lucide-react'; // Biblioteca de ícones (opcional)
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useAuth } from "../../app/contexts/authContext/authProvider";
-import { auth } from '../../app/firebase/firebase';
+import { useAuth } from "../../app/contexts/authContext/authProvider.tsx";
+import { auth } from '../../app/firebase/firebase.ts';
 
 
 const Navbar = () => {
@@ -38,7 +38,7 @@ const Navbar = () => {
             <Link to="/" className="hover:text-gray-500 hover:underline-offset-3 hover:underline active:scale-95">Home</Link>
             <Link to="/about" className="hover:text-gray-500 hover:underline-offset-3 hover:underline active:scale-95">About Keeper</Link>
             <a href="/" className="hover:text-gray-500 hover:underline-offset-3 hover:underline active:scale-95">Create Character</a>
-            <a href="/" className="hover:text-gray-500 hover:underline-offset-3 hover:underline active:scale-95">View Characters</a>
+            <a href="/view" className="hover:text-gray-500 hover:underline-offset-3 hover:underline active:scale-95">View Characters</a>
             {!userLoggedIn ? (
               <Link to="/login" className="hover:text-gray-500 hover:underline-offset-3 hover:underline">Log In</Link>
             ) : (
