@@ -1,11 +1,12 @@
 
 export default function Card(){
     return(
-        <div className="">
-            {/* Card */}
-            <div className="relative h-38 -mt-23 overflow-hidden w-fit border-b bg-white rounded-t-lg  hover:h-50 hover:-mt-35 transition-all duration-300">
+        // <div className=" ">
+            <div
+            onClick={() => console.log("!")}
+            className="relative h-38 -mt-23 overflow-hidden w-fit border-b bg-white rounded-t-lg  hover:h-50 hover:-mt-35 transition-all duration-300">
                 {/* Outer Box */}
-                <div className="w-70 rounded-lg border border-gray-400 p-2.5 pt-2">
+                <div className="w-full rounded-lg border border-gray-400 p-2.5 pt-2">
                     <div className="flex justify-center -mb-4">
                         <div className="flex justify-center gap-2 px-2 relative bg-white">
                             {/* AP */}
@@ -58,7 +59,7 @@ export default function Card(){
                 {/* Title */}
                 
             </div>    
-        </div>
+        // </div>
         
     )
 }
