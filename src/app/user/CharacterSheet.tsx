@@ -6,6 +6,7 @@ import Card from "../../components/sheet/utils/Card.tsx";
 import Button from '../../components/ui/button.tsx';
 import Footer from '../../components/ui/footer.tsx';
 import Navbar from '../../components/ui/navbar.tsx';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../components/ui/tabs.tsx';
 
 function CharacterSheet() {
     return (
@@ -130,7 +131,14 @@ function CharacterSheet() {
                             <Stat id="1" name="HP" value={10} />
                             <Stat id="2" name="AP" value={10} />      
                         </div>
-                        
+                        <Tabs defaultValue="account" className="w-[400px]">
+  <TabsList>
+    <TabsTrigger value="account">Account</TabsTrigger>
+    <TabsTrigger value="password">Password</TabsTrigger>
+  </TabsList>
+  <TabsContent value="account">Make changes to your account here.</TabsContent>
+  <TabsContent value="password">Change your password here.</TabsContent>
+</Tabs>
                         
                     </div>
                         
