@@ -37,7 +37,7 @@ const Navbar = () => {
           <div className="hidden font-alegraya-sans lowercase text-xl md:flex space-x-8">
             <Link to="/" className="hover:text-gray-500 hover:underline-offset-3 hover:underline active:scale-95">Home</Link>
             <Link to="/about" className="hover:text-gray-500 hover:underline-offset-3 hover:underline active:scale-95">About Keeper</Link>
-            <a href="/" className="hover:text-gray-500 hover:underline-offset-3 hover:underline active:scale-95">Create Character</a>
+            <a href="/create" className="hover:text-gray-500 hover:underline-offset-3 hover:underline active:scale-95">Create Character</a>
             <a href="/view" className="hover:text-gray-500 hover:underline-offset-3 hover:underline active:scale-95">View Characters</a>
             {!userLoggedIn ? (
               <Link to="/login" className="hover:text-gray-500 hover:underline-offset-3 hover:underline">Log In</Link>

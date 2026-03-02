@@ -8,6 +8,7 @@ import Home from './public/Home.tsx';
 import Login from './public/Login.tsx';
 import Signup from './public/Signup.tsx';
 import CharacterSheet from "./user/CharacterSheet.tsx";
+import CreateCharacter from "./user/CreateCharacter.tsx";
 import ViewCharacters from "./user/ViewCharacters.tsx";
 
 
@@ -23,6 +24,7 @@ function App() {
         <Route path="/reset" element={<ForgotPassword />} />
         <Route path="/change-username" element={<ChangeUsername />} />
         <Route path="/sheet" element={<CharacterSheet />} />
+        <Route path="/create" element={<CreateCharacter />} />
         <Route path="/view" element={<ViewCharacters />} />
       </Routes></AuthProvider>
     </BrowserRouter>
