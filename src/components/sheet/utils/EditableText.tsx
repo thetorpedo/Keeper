@@ -51,7 +51,7 @@ const fontClasses = "font-alegraya-sans lowercase max-sm:text-[18px] text-[22px]
 
   return (
     
-    <div className="inline-flex items-center cursor-pointer group relative">
+    <span className="inline-flex items-center cursor-pointer group relative">
       {isEditing && (
         <span
             ref={measureRef}
@@ -81,6 +81,6 @@ const fontClasses = "font-alegraya-sans lowercase max-sm:text-[18px] text-[22px]
           {value}
         </span>
       )}
-    </div>
+    </span>
   );
 }

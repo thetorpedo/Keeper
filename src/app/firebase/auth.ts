@@ -1,5 +1,7 @@
-import { createUserWithEmailAndPassword, GoogleAuthProvider, sendEmailVerification, sendPasswordResetEmail, signInWithEmailAndPassword, signInWithPopup, updatePassword, updateProfile } from "firebase/auth";
-import { auth } from "./firebase.ts";
+import { createUserWithEmailAndPassword, getAdditionalUserInfo, GoogleAuthProvider, sendEmailVerification, sendPasswordResetEmail, signInWithEmailAndPassword, signInWithPopup, updatePassword, updateProfile } from "firebase/auth";
+import { doc, setDoc } from "firebase/firestore";
+import { auth, db } from "./firebase.ts";
+
 
 export const doCreateUserWithEmailAndPassword = async (email: string, password: string) => {
     const res = await createUserWithEmailAndPassword(auth, email, password);
@@ -9,6 +11,10 @@ export const doCreateUserWithEmailAndPassword = async (email: string, password: 
 
     await updateProfile(user, {
         displayName: defaultName ?? null
+    });
+    const docRef = doc(db, "users", res.user.uid);
+    await setDoc(docRef, {
+        username: res.user.displayName,
     });
 
     return res;
@@ -21,7 +27,16 @@ export const doSignInWithEmailAndPassword = async (email: string, password: stri
 export const doSignInWithGoogle = async () => {
     const provider = new GoogleAuthProvider();
     const result = await signInWithPopup(auth, provider);
-    // result.user
+
+    const { isNewUser } = getAdditionalUserInfo(result) || {};
+    if (isNewUser) {
+        const docRef = doc(db, "users", result.user.uid);
+        await setDoc(docRef, {
+            username: result.user.displayName,
+        });
+    }
+
+
     return result;
 };
 
