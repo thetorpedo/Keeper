@@ -14,6 +14,8 @@ import { db } from '../firebase/firebase.ts';
 function CreateCharacter() {
     const { currentUser } = useAuth();
     const [step, setStep] = useState(1);
+    const roles = ['Fighter', 'Invoker', 'Ranger', 'Naturalist', 'Doctor', 'Spy', 'Magician', 'Wizard', 'Custom Abilities'];
+    const [selectedRole, setSelectedRole] = useState<string>('Wizard');
     const [newCharacter, setNewCharacter] = useState({
     name: 'name', // Valores padrão se quiser
     pronouns: 'pronouns',
@@ -52,8 +54,8 @@ const toggleAbility = (abilityId: string) => {
         });
     };
 
-    const wizardAbilities = bookAbilities.filter(a => a.role === 'Wizard');
-    const wizardPaths = Array.from(new Set(wizardAbilities.map(a => a.path)));
+    const filteredAbilities = bookAbilities.filter(a => a.role === selectedRole);
+    const currentPaths = Array.from(new Set(filteredAbilities.map(a => a.path)));
 
     const nextStep = () => {
         if (step < 3) {
@@ -132,37 +134,22 @@ const toggleAbility = (abilityId: string) => {
     />}
                     {step === 2 && (
                     <div className='flex flex-col gap-4'>
-                        <div className='flex flex-row justify-center gap-2'>
-                            <div className='border opacity-60 px-2 py-0 font-alegraya-sans lowercase text-xl'>
-                                Fighter
-                            </div>
-                            <div className='border opacity-60 px-2 py-0 font-alegraya-sans lowercase text-xl'>
-                                Invoker
-                            </div>
-                            <div className='border opacity-60 px-2 py-0 font-alegraya-sans lowercase text-xl'>
-                                Ranger
-                            </div>
-                            <div className='border opacity-60 px-2 py-0 font-alegraya-sans lowercase text-xl'>
-                                Naturalist
-                            </div>
-                            <div className='border opacity-60 px-2 py-0 font-alegraya-sans lowercase text-xl'>
-                                Doctor
-                            </div>
-                            <div className='border opacity-60 px-2 py-0 font-alegraya-sans lowercase text-xl'>
-                                Spy
-                            </div>
-                            <div className='border opacity-60 px-2 py-0 font-alegraya-sans lowercase text-xl'>
-                                Magician
-                            </div>
-                            <div className='border-2 opacity-100 px-2 py-0 font-alegraya-sans lowercase text-xl'>
-                                Wizard
-                            </div>
-                            <div className='border opacity-60 px-2 py-0 font-alegraya-sans lowercase text-xl'>
-                                Custom Abilities
-                            </div>
+                        {/* BARRA DE FILTROS */}
+                        <div className='flex flex-row justify-center gap-2 flex-wrap'>
+                            {roles.map((role) => (
+                                <div 
+                                    key={role}
+                                    onClick={() => setSelectedRole(role)}
+                                    className={`px-2 py-0 font-alegraya-sans lowercase text-xl cursor-pointer transition-all ${
+                                        selectedRole === role ? 'border-2 opacity-100 border-black' : 'border opacity-60 hover:opacity-80'
+                                    }`}
+                                >
+                                    {role}
+                                </div>
+                            ))}
                         </div>
                         <div className='bg-gray-200 overflow-auto gap-4 flex flex-row p-4 border border-gray-300 rounded-lg'>
-                            {wizardPaths.map(path => (
+                            {currentPaths.map(path => (
                                 <div key={path} className='flex shrink-0 flex-col max-w-70'>
                                     {/* Nome do Path no topo da coluna */}
                                     <div className='font-alegraya-sans text-xl lowercase text-center bg-white border'>
@@ -170,7 +157,7 @@ const toggleAbility = (abilityId: string) => {
                                     </div>
                                     <div className='mt-27 pb-10'>
                                         {/* Filtra as magias desse Path e cria os Cards */}
-                                        {wizardAbilities.filter(a => a.path === path).map((ability, index, array) => (
+                                        {filteredAbilities.filter(a => a.path === path).map((ability, index, array) => (
                                             <Card 
                                                 key={ability.id}
                                                 ability={ability}
@@ -209,7 +196,7 @@ const toggleAbility = (abilityId: string) => {
                 </div>
                 <div className='flex w-full items-center justify-between'>
                     <Button onClick={createBlank} className='opacity-50 hover:opacity-100 shadow-none text-base'>Create Blank character</Button>
-                    <div className='flex flex-row gap-2'>
+                    <div className='flex flex-row gap-4'>
                         {step > 1 && <Button onClick={prevStep} className='px-10'>Back</Button>}
                         {step === 3 ? (
                             <Button onClick={createCharacter} className='px-10'>Finish</Button>
