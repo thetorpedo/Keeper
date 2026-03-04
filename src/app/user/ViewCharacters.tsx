@@ -1,4 +1,4 @@
-import Button from '@/components/ui/button.tsx';
+import Button from '@/components/ui/questbutton.tsx';
 import CharacterCard from '@/components/viewcharacters/character-card.tsx';
 import { collection, getDocs, orderBy, query, where } from 'firebase/firestore';
 import { Plus } from 'lucide-react';

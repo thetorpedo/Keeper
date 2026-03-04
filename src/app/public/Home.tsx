@@ -1,6 +1,6 @@
-import Button from '../../components/ui/button.tsx';
 import Footer from '../../components/ui/footer.tsx';
 import Navbar from '../../components/ui/navbar.tsx';
+import Button from '../../components/ui/questbutton.tsx';
 
 function Home() {
   return (

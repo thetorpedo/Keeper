@@ -1,6 +1,7 @@
 import CharacterProfile from '@/components/sheet/CharacterProfile.tsx';
 import Card from '@/components/sheet/utils/Card.tsx';
-import Button from '@/components/ui/button.tsx';
+import Button from '@/components/ui/questbutton.tsx';
+import { bookAbilities } from '@/data/abilities/wizard.ts';
 import { collection, doc, setDoc } from 'firebase/firestore';
 import { useState } from 'react';
 import Footer from '../../components/ui/footer.tsx';
@@ -28,7 +29,8 @@ function CreateCharacter() {
     origin: 'home',
     originTrait: 'community',
     belief: 'ideal',
-    flaw: 'flaw'
+    flaw: 'flaw',
+    abilities: [] as string[]
 });
 
     const updateCharacterField = (field: string, newValue: string) => {
@@ -37,6 +39,21 @@ function CreateCharacter() {
         [field]: newValue
     }));
 };
+
+const toggleAbility = (abilityId: string) => {
+        setNewCharacter((prev) => {
+            const currentAbilities = prev.abilities || [];
+            // Se já tem a magia, tira ela. Se não tem, adiciona.
+            if (currentAbilities.includes(abilityId)) {
+                return { ...prev, abilities: currentAbilities.filter(id => id !== abilityId) };
+            } else {
+                return { ...prev, abilities: [...currentAbilities, abilityId] };
+            }
+        });
+    };
+
+    const wizardAbilities = bookAbilities.filter(a => a.role === 'Wizard');
+    const wizardPaths = Array.from(new Set(wizardAbilities.map(a => a.path)));
 
     const nextStep = () => {
         if (step < 3) {
@@ -145,71 +162,27 @@ function CreateCharacter() {
                             </div>
                         </div>
                         <div className='bg-gray-200 overflow-auto gap-4 flex flex-row p-4 border border-gray-300 rounded-lg'>
-                            <div className='flex shrink-0 flex-col max-w-70'>
-                                <div className='font-alegraya-sans text-xl lowercase text-center bg-white border'>
-                                    Evocation
+                            {wizardPaths.map(path => (
+                                <div key={path} className='flex shrink-0 flex-col max-w-70'>
+                                    {/* Nome do Path no topo da coluna */}
+                                    <div className='font-alegraya-sans text-xl lowercase text-center bg-white border'>
+                                        {path}
+                                    </div>
+                                    <div className='mt-27 pb-10'>
+                                        {/* Filtra as magias desse Path e cria os Cards */}
+                                        {wizardAbilities.filter(a => a.path === path).map((ability, index, array) => (
+                                            <Card 
+                                                key={ability.id}
+                                                ability={ability}
+                                                isSelected={newCharacter.abilities.includes(ability.id)}
+                                                onClick={() => toggleAbility(ability.id)}
+                                                isLast={index === array.length - 1}
+                                            />
+                                        ))}
+                                    </div>
                                 </div>
-                                <div className='mt-27'>
-                                    <Card />
-                                    <Card />
-                                    <Card />
-                                    <Card />
-                                    <Card />
-                                    <Card />
-                                </div>
-                            </div>
-                            <div className='flex flex-col shrink-0 max-w-70'>
-                                <div className='font-alegraya-sans text-xl lowercase text-center bg-white border'>
-                                    Evocation
-                                </div>
-                                <div className='mt-27'>
-                                    <Card />
-                                    <Card />
-                                    <Card />
-                                    <Card />
-                                    <Card />
-                                    <Card />
-                                </div>
-                            </div>
-                            <div className='flex flex-col shrink-0 max-w-70'>
-                                <div className='font-alegraya-sans text-xl lowercase text-center bg-white border'>
-                                    Evocation
-                                </div>
-                                <div className='mt-27'>
-                                    <Card />
-                                    <Card />
-                                    <Card />
-                                    <Card />
-                                    <Card />
-                                    <Card />
-                                </div>
-                            </div>
-                            <div className='flex flex-col shrink-0 max-w-70'>
-                                <div className='font-alegraya-sans text-xl lowercase text-center bg-white border'>
-                                    Evocation
-                                </div>
-                                <div className='mt-27'>
-                                    <Card />
-                                    <Card />
-                                    <Card />
-                                    <Card />
-                                    <Card />
-                                    <Card />
-                                </div>
-                            </div>
-                            <div className='flex flex-col shrink-0 max-w-70'>
-                                <div className='font-alegraya-sans text-xl lowercase text-center bg-white border'>
-                                    Evocation
-                                </div>
-                                <div className='mt-27'>
-                                    <Card />
-                                    <Card />
-                                    <Card />
-                                    <Card />
-                                    <Card />
-                                    <Card />
-                                </div>
-                            </div>
+                            ))}
+                            
                         </div>
                     </div>)}
                     {step === 3 && (
@@ -231,73 +204,7 @@ function CreateCharacter() {
                                 Custom Items
                             </div>
                         </div>
-                        <div className='bg-gray-200 overflow-auto gap-4 flex flex-row p-4 border border-gray-300 rounded-lg'>
-                            <div className='flex shrink-0 flex-col max-w-70'>
-                                <div className='font-alegraya-sans text-xl lowercase text-center bg-white border'>
-                                    Evocation
-                                </div>
-                                <div className='mt-27'>
-                                    <Card />
-                                    <Card />
-                                    <Card />
-                                    <Card />
-                                    <Card />
-                                    <Card />
-                                </div>
-                            </div>
-                            <div className='flex flex-col shrink-0 max-w-70'>
-                                <div className='font-alegraya-sans text-xl lowercase text-center bg-white border'>
-                                    Evocation
-                                </div>
-                                <div className='mt-27'>
-                                    <Card />
-                                    <Card />
-                                    <Card />
-                                    <Card />
-                                    <Card />
-                                    <Card />
-                                </div>
-                            </div>
-                            <div className='flex flex-col shrink-0 max-w-70'>
-                                <div className='font-alegraya-sans text-xl lowercase text-center bg-white border'>
-                                    Evocation
-                                </div>
-                                <div className='mt-27'>
-                                    <Card />
-                                    <Card />
-                                    <Card />
-                                    <Card />
-                                    <Card />
-                                    <Card />
-                                </div>
-                            </div>
-                            <div className='flex flex-col shrink-0 max-w-70'>
-                                <div className='font-alegraya-sans text-xl lowercase text-center bg-white border'>
-                                    Evocation
-                                </div>
-                                <div className='mt-27'>
-                                    <Card />
-                                    <Card />
-                                    <Card />
-                                    <Card />
-                                    <Card />
-                                    <Card />
-                                </div>
-                            </div>
-                            <div className='flex flex-col shrink-0 max-w-70'>
-                                <div className='font-alegraya-sans text-xl lowercase text-center bg-white border'>
-                                    Evocation
-                                </div>
-                                <div className='mt-27'>
-                                    <Card />
-                                    <Card />
-                                    <Card />
-                                    <Card />
-                                    <Card />
-                                    <Card />
-                                </div>
-                            </div>
-                        </div>
+
                     </div>)}
                 </div>
                 <div className='flex w-full items-center justify-between'>

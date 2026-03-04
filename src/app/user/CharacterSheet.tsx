@@ -6,9 +6,9 @@ import { RiShareFill, RiSparkling2Fill } from "react-icons/ri";
 import CharacterProfile from "../../components/sheet/CharacterProfile.tsx";
 import Stat from "../../components/sheet/Stat.tsx";
 import Card from "../../components/sheet/utils/Card.tsx";
-import Button from '../../components/ui/button.tsx';
 import Footer from '../../components/ui/footer.tsx';
 import Navbar from '../../components/ui/navbar.tsx';
+import Button from '../../components/ui/questbutton.tsx';
 
 function CharacterSheet() {
     return (

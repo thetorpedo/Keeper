@@ -1,5 +1,5 @@
 import { RiShareFill } from "react-icons/ri";
-import Button from "../ui/button.tsx";
+import Button from "../ui/questbutton.tsx";
 
 interface CharacterCardProps {
   name: string;
