@@ -25,10 +25,19 @@
   --color-custom-ability: #897a7e;
   --color-item: #242021;
   --color-custom-item: #554c4f;
+  --color-damage: #d32f2f;
+  --color-useful: #25203b;
+  --color-common: #231f20;
+  --color-uncommon: #231f20;
+  --color-rare: #231f20;
+  --color-legendary: #231f20;
 }
-@source inline("border-{fighter,invoker,ranger,naturalist,doctor,spy,magician,wizard,custom-ability,item,custom-item}");
-@source inline("from-{fighter,invoker,ranger,naturalist,doctor,spy,magician,wizard,custom-ability,item,custom-item}{,/50}");
-@source inline('bg-purple');
+
+@source inline("border-{fighter,invoker,ranger,naturalist,doctor,spy,magician,wizard,custom-ability,item,custom-item,useful,common,uncommon,rare,legendary,damage}");
+@source inline("from-{fighter,invoker,ranger,naturalist,doctor,spy,magician,wizard,custom-ability,item,custom-item,useful,common,uncommon,rare,legendary}{,/50}");
+@source inline("bg-{fighter,invoker,ranger,naturalist,doctor,spy,magician,wizard,custom-ability,item,custom-item,useful,common,uncommon,rare,legendary,damage}{,/10}");
+@source inline("text-{damage}");
+
 
 #root {
   height: 100vh;

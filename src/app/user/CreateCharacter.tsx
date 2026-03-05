@@ -2,14 +2,14 @@ import CharacterProfile from '@/components/sheet/CharacterProfile.tsx';
 import Card from '@/components/sheet/utils/Card.tsx';
 import Button from '@/components/ui/questbutton.tsx';
 import { bookAbilities } from '@/data/abilities/wizard.ts';
+import type { Ability } from '@/data/interface.ts';
+import { bookItems } from '@/data/items/items.ts';
 import { collection, doc, setDoc } from 'firebase/firestore';
 import { useState } from 'react';
 import Footer from '../../components/ui/footer.tsx';
 import Navbar from '../../components/ui/navbar.tsx';
 import { useAuth } from '../contexts/authContext/authProvider.tsx';
 import { db } from '../firebase/firebase.ts';
-import { bookItems } from '@/data/items/items.ts';
-import type { Ability } from '@/data/interface.ts';
 
 function CreateCharacter() {
     const { currentUser } = useAuth();
@@ -148,7 +148,7 @@ const filteredItems = selectedItemCategory === 'All items'
   return (
         <div className='flex flex-col justify-between items-center bg-white h-full'>
             < Navbar/>
-            <div className="my-10 max-w-5/6 space-y-5 flex flex-col items-center">
+            <div className="my-10 max-w-4/6 space-y-5 flex flex-col items-center">
                 <div className='flex flex-col border-b pb-3 w-full text-center'>
                     <h1 className='text-4xl font-extrabold font-alegraya'>Creating a character</h1>
                     <span className='text-xl font-bold font-alegraya-sans text-gray-400 lowercase'>
@@ -183,7 +183,7 @@ const filteredItems = selectedItemCategory === 'All items'
                         </div>
                         <div className='bg-gray-200 overflow-auto gap-4 flex flex-row p-4 border border-gray-300 rounded-lg'>
                             {currentPaths.map(path => (
-                                <div key={path} className='flex mx-auto shrink-0 flex-col max-w-70'>
+                                <div key={path} className='flex shrink-0 flex-col max-w-70'>
                                     {/* Nome do Path no topo da coluna */}
                                     <div className='font-alegraya-sans text-xl lowercase text-center bg-white border'>
                                         {path}
@@ -208,12 +208,12 @@ const filteredItems = selectedItemCategory === 'All items'
                         <div className='flex flex-col max-w-[90vw] mx-auto gap-4'>
                             
                             {/* BARRA DE FILTROS DE ITENS */}
-                            <div className='flex flex-row justify-center gap-2 flex-wrap'>
+                            <div className='flex flex-row justify-center gap-2 z-20 flex-wrap'>
                                 {itemCategories.map((category) => (
                                     <div 
                                         key={category}
                                         onClick={() => setSelectedItemCategory(category)}
-                                        className={`px-2 py-0 font-alegraya-sans lowercase text-xl cursor-pointer transition-all ${
+                                        className={`px-2 py-0 font-alegraya-sans lowercase text-xl cursor-pointer bg-white transition-all ${
                                             selectedItemCategory === category ? 'border-2 opacity-100 border-black' : 'border opacity-60 hover:opacity-80'
                                         }`}
                                     >
@@ -223,40 +223,42 @@ const filteredItems = selectedItemCategory === 'All items'
                             </div>
 
                             {/* ÁREA DE CARTAS DOS ITENS */}
-                            <div className='bg-gray-200 relative overflow-auto gap-4 flex flex-col p-4 border border-gray-300 rounded-lg min-h-[400px]'>
-                                <div className='font-alegraya-sans sticky top-0 z-50 lowercase bg-white px-2 py-1 font-lg border w-full'>{selectedItemCategory}</div>
-                                <div className='flex flex-row gap-4 '>
-                                {/* Mensagem caso a categoria não tenha itens */}
-                                {filteredItems.length === 0 && (
-                                    <div className="w-full flex items-center justify-center text-gray-500 font-alegraya-sans text-xl">
-                                        No items found for {selectedItemCategory}.
-                                    </div>
-                                )}
+                            <div className='relative w-full min-h-110'>
                                 
-                                {/* Renderiza as 4 colunas lado a lado */}
-                                {itemColumns.map((col, colIndex) => (
-                                    <div key={colIndex} className='flex mx-auto shrink-0 flex-col max-w-70 w-full'>
-                                        {/* O mt-27 empurra a primeira carta pra baixo igual no Step 2 */}
-                                        <div className='mt-32 pb-10'>
-                                            {col.map((item, index, array) => (
-                                                <Card 
-                                                    key={item.id}
-                                                    ability={item} // Usamos a mesma interface
-                                                    isSelected={newCharacter.items.includes(item.id)} // Verifica no array de items
-                                                    onClick={() => toggleItem(item.id)} // Chama a função de itens
-                                                    isLast={index === array.length - 1}
-                                                />
-                                            ))}
-                                        </div>
-                                    </div>
-                                ))}
-                                </div>
+                                <div className="absolute top-4 left-0  right-0 bottom-0 bg-gray-200 border border-gray-300 rounded-lg  h-[92%]"></div>
 
+                                <div className='relative z-10 flex flex-row gap-4 px-4 pb-4 mb-4 pt-9 -mt-4 overflow-y-clip overflow-x-auto w-full h-full'>
+                                    
+                                    {filteredItems.length === 0 && (
+                                        <div className="w-full flex items-center justify-center text-gray-500 font-alegraya-sans text-xl h-75">
+                                            No items found for {selectedItemCategory}.
+                                        </div>
+                                    )}
+                                    
+                                    {itemColumns.map((col, colIndex) => (
+                                        <div key={colIndex} className='flex mx-auto shrink-0 flex-col max-w-70 w-full'>
+                                            
+
+                                            <div className='mt-27'>
+                                                {col.map((item, index, array) => (
+                                                    <Card 
+                                                        key={item.id}
+                                                        ability={item}
+                                                        isSelected={newCharacter.items.includes(item.id)} 
+                                                        onClick={() => toggleItem(item.id)}
+                                                        isLast={index === array.length - 1}
+                                                    />
+                                                ))}
+                                            </div>
+                                            
+                                        </div>
+                                    ))}
+                                </div>
                             </div>
                         </div>)}
                 </div>
                 <div className='flex w-full max-sm:flex-col-reverse max-sm:gap-8 items-center justify-between'>
-                    <Button onClick={createBlank} className='opacity-50 hover:opacity-100 shadow-none text-base'>Create Blank character</Button>
+                    {step === 1 ? (<Button onClick={createBlank} className='opacity-50 hover:opacity-100 shadow-none text-base'>Create Blank character</Button>) : (<div></div>)}
                     <div className='flex flex-row gap-4'>
                         {step > 1 && <Button onClick={prevStep} className='px-10'>Back</Button>}
                         {step === 3 ? (

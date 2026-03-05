@@ -15,6 +15,7 @@ export interface Ability {
     role: string;
     path: string;
     name: string;
+    slots?: number;
     damage?: number;
     description?: string;
     rollTheDie?: boolean;

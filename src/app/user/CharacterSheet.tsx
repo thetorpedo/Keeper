@@ -1,16 +1,75 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs.tsx';
+import { bookAbilities } from '@/data/abilities/wizard.ts';
+import { bookItems } from '@/data/items/items.ts';
+import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { CircleArrowLeft, Plus } from 'lucide-react';
+import { useEffect, useState } from 'react';
 import { BsFillBackpack2Fill, BsFillFileTextFill } from 'react-icons/bs';
 import { FaUser } from 'react-icons/fa6';
 import { RiShareFill, RiSparkling2Fill } from "react-icons/ri";
+import { useParams } from 'react-router-dom';
 import CharacterProfile from "../../components/sheet/CharacterProfile.tsx";
 import Stat from "../../components/sheet/Stat.tsx";
 import Card from "../../components/sheet/utils/Card.tsx";
 import Footer from '../../components/ui/footer.tsx';
 import Navbar from '../../components/ui/navbar.tsx';
 import Button from '../../components/ui/questbutton.tsx';
+import { db } from '../firebase/firebase.ts';
 
 function CharacterSheet() {
+const { id } = useParams(); 
+    
+    const [character, setCharacter] = useState<any>(null);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchCharacter = async () => {
+            if (!id) return;
+            try {
+                const docRef = doc(db, "characters", id);
+                const docSnap = await getDoc(docRef);
+
+                if (docSnap.exists()) {
+                    setCharacter(docSnap.data());
+                } else {
+                    console.log("Ficha não encontrada!");
+                }
+            } catch (error) {
+                console.error("Erro ao buscar personagem:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchCharacter();
+    }, [id]);
+
+    if (loading) {
+        return <div className="h-screen flex items-center justify-center font-alegraya text-2xl">Carregando ficha...</div>;
+    }
+
+    if (!character) {
+        return <div className="h-screen flex items-center justify-center font-alegraya text-2xl text-red-500">Personagem não encontrado.</div>;
+    }
+
+    const myAbilities = bookAbilities.filter(ability => character.abilities?.includes(ability.id));
+    const myItems = bookItems.filter(item => character.items?.includes(item.id));
+    const usedSlots = myItems.reduce((total, item) => total + (item.slots || 1), 0);
+
+    const removeAbility = async (abilityId: string) => {
+    if (!character || !id) return;
+    const updatedAbilities = character.abilities.filter((a: string) => a !== abilityId);
+    setCharacter({ ...character, abilities: updatedAbilities });
+    await updateDoc(doc(db, "characters", id), { abilities: updatedAbilities });
+};
+
+    const removeItem = async (itemId: string) => {
+        if (!character || !id) return;
+        const updatedItems = character.items.filter((i: string) => i !== itemId);
+        setCharacter({ ...character, items: updatedItems });
+        await updateDoc(doc(db, "characters", id), { items: updatedItems });
+    };
+
     return (
         <div className='flex max-sm:justify-start flex-col justify-between items-center bg-white h-full'>
             < Navbar />
@@ -53,50 +112,69 @@ function CharacterSheet() {
                         <div className="col-span-7 flex flex-col w-full gap-2">
                             {/* Characteristics */}
                             <section className="border border-gray-400 rounded-lg p-4">
-                                <CharacterProfile />
+                                <CharacterProfile characterData={character} updateField={() => {}} />
                             </section>
                             {/* Abilities & Inventory */}
-                            <section className="border border-gray-400 rounded-lg w-full gap-8 flex items-between flex-row p-4">
-                                <div className="flex flex-col gap-4 justify-center grow">
-                                    <div className="flex flex-row justify-between items-center">
+                            <section className="border border-gray-400 rounded-lg w-full gap-9 flex items-between flex-col p-4">
+                                <div className='flex flex-row gap-5 justify-between'>
+                                    <div className="flex flex-row justify-between w-full items-center">
                                         <div className="pl-1 font-alegraya-sans lowercase font-semibold text-2xl">Abilities</div>
                                         <div className='mr-1'>
-                                            <Button className="flex text-lg items-center"><Plus className="size-4 mr-2"/>{' '}Add Ability</Button>    
+                                            <Button className="flex text-lg py-0.5! items-center"><Plus className="size-4 mr-2"/>{' '}Add Ability</Button>    
                                         </div>   
                                     </div>
-                                    
-                                    <div className='p-5 bg-gray-100 rounded-lg w-fit border border-gray-300'>
+                                    <div className="flex flex-row justify-between w-full items-center">
+                                        <div className="pl-1 relative font-alegraya-sans lowercase font-semibold text-2xl">Inventory
+                                            <div className='absolute top-6 font-alegraya-sans opacity-40 lowercase text-lg'>{`(${usedSlots}/12)`}</div>  
+                                        </div>
+                                          
+                                        
+                                        
+                                        <div className='mr-1'>
+                                            <Button className="flex text-lg py-0.5! items-center"><Plus className="size-4 mr-2"/>{' '}Add Item</Button>    
+                                        </div>   
+                                    </div>
+                                </div>
+                                <div className='flex flex-row gap-4 justify-between'>
+                                    <div className="flex flex-col gap-4 justify-center w-1/2 ">
+                                    <div className='p-5 bg-gray-100 rounded-lg w-full border min-h-125 border-gray-300'>
                                         <div className="mt-23 flex-col grow-0">
-                                            <Card />
-                                            <Card />
-                                            <Card />
-                                            <Card />
-                                            <Card />
-                                            <Card />
+                                           {myAbilities.length === 0 && <p className="text-gray-500 font-alegraya-sans text-center">No abilities yet.</p>}
+                                            {myAbilities.map((ability, index, array) => (
+                                                <Card 
+                                                    key={ability.id}
+                                                    ability={ability}
+                                                    isSelected={true} 
+                                                    onClick={() => removeAbility(ability.id)} 
+                                                    isLast={index === array.length - 1}
+                                                />
+                                            ))}
                                         </div>     
                                     </div>
                                     
                                 </div>
-                                <div className="flex flex-col gap-4 justify-center grow">
-                                    <div className="flex flex-row justify-between items-center">
-                                        <div className="pl-1 font-alegraya-sans lowercase font-semibold text-2xl">Abilities</div>
-                                        <div className='mr-1'>
-                                            <Button className="flex text-lg items-center"><Plus className="size-4 mr-2"/>{' '}Add Ability</Button>    
-                                        </div>   
-                                    </div>
-                                    
-                                    <div className='p-5 bg-gray-100 rounded-lg w-fit border border-gray-300 '>
+                                <div className="flex flex-col gap-4 justify-center w-1/2">
+                                    <div className='p-5 bg-gray-100 rounded-lg w-full border min-h-125 border-gray-300 '>
                                         <div className="mt-23 flex-col grow-0">
-                                            <Card />
-                                            <Card />
-                                            <Card />
-                                            <Card />
-                                            <Card />
-                                            <Card />
+                                            {/* Renderização Dinâmica dos Itens */}
+                                            {myItems.length === 0 && <p className="text-gray-500 font-alegraya-sans text-center">No items yet.</p>}
+                                            {myItems.map((item, index, array) => (
+                                                <Card 
+                                                    key={item.id}
+                                                    ability={item}
+                                                    isSelected={true} 
+                                                    onClick={() => removeItem(item.id)}
+                                                    isLast={index === array.length - 1}
+                                                />
+                                            ))}
                                         </div>     
                                     </div>
                                     
                                 </div>
+                                </div>
+                                
+                                    
+                                
 
                             </section>
                         </div>
@@ -152,8 +230,7 @@ function CharacterSheet() {
                                 </Button>
                             </TabsList>
                             <TabsContent value="characteristics" className='px-5'>
-                                <CharacterProfile />
-                            </TabsContent>
+                                <CharacterProfile characterData={character} updateField={() => {}} />                            </TabsContent>
                             <TabsContent value="abilities" className='px-5'>
                                 <div className="flex flex-col gap-4 justify-center grow">
                                     <div className="flex flex-row justify-between items-center">
@@ -165,12 +242,16 @@ function CharacterSheet() {
                                     
                                     <div className='max-sm:p-0 max-sm:bg-white max-sm:border-0 p-5 bg-gray-100 rounded-lg w-fit border border-gray-300'>
                                         <div className="mt-23 flex-col grow-0">
-                                            <Card />
-                                            <Card />
-                                            <Card />
-                                            <Card />
-                                            <Card />
-                                            <Card />
+                                            {myAbilities.length === 0 && <p className="text-gray-500 font-alegraya-sans text-center">No abilities yet.</p>}
+                                    {myAbilities.map((ability, index, array) => (
+                                            <Card 
+                                                key={ability.id}
+                                                ability={ability}
+                                                isSelected={false}
+                                                onClick={() => {}} 
+                                                isLast={index === array.length - 1}
+                                                />
+                                            ))}
                                         </div>     
                                     </div>
                                 </div>
@@ -180,7 +261,7 @@ function CharacterSheet() {
                                     <div className="flex flex-row justify-between items-center">
                                         <div className='flex flex-col '>
                                             <div className="pl-1 font-alegraya-sans lowercase font-semibold text-xl">Inventory</div>    
-                                            <div className="pl-1 -mt-2 font-alegraya-sans lowercase font-semibold opacity-50 text-xl">(6/12)</div>
+                                            <div className="pl-1 -mt-2 font-alegraya-sans lowercase font-semibold opacity-50 text-xl">{`(${usedSlots}/12)`}</div>
                                         </div>
                                         
                                         <div className='mr-1'>
@@ -190,12 +271,16 @@ function CharacterSheet() {
                                     
                                     <div className='max-sm:p-0 max-sm:bg-white max-sm:border-0 p-5 bg-gray-100 rounded-lg w-fit border border-gray-300'>
                                         <div className="mt-23 flex-col grow-0">
-                                            <Card />
-                                            <Card />
-                                            <Card />
-                                            <Card />
-                                            <Card />
-                                            <Card />
+                                            {myItems.length === 0 && <p className="text-gray-500 font-alegraya-sans text-center">No items yet.</p>}
+                                            {myItems.map((item, index, array) => (
+                                                <Card 
+                                                    key={item.id}
+                                                    ability={item}
+                                                    isSelected={false}
+                                                    onClick={() => {}} 
+                                                    isLast={index === array.length - 1}
+                                                />
+                                            ))}
                                         </div>     
                                     </div>
                                 </div>
