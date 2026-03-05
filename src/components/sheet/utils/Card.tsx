@@ -7,13 +7,13 @@ import {
 import Button from "@/components/ui/questbutton.tsx";
 import type { Ability } from "@/data/interface.ts";
 import { Plus, X } from "lucide-react";
-import { useLocation } from "react-router-dom";
 
 interface CardProps {
   ability: Ability;
   isSelected: boolean;
   onClick: () => void;
   isLast: boolean;
+  addShortcut: boolean;
 }
 
 export default function Card({
@@ -21,13 +21,12 @@ export default function Card({
   isSelected,
   onClick,
   isLast,
+  addShortcut,
 }: CardProps) {
   const baseCost = ability.effects?.[0]?.cost ?? undefined;
 
   const roleColor = ability.role.toLowerCase().replace(/\s+/g, "-");
 
-  const location = useLocation();
-  const path = location.pathname;
 
   return (
     <Dialog>
@@ -36,15 +35,15 @@ export default function Card({
           <div className="w-full h-full relative rounded-t-lg border border-b-0 border-gray-400 p-2.5 pt-2">
             {isLast ? (
               <div
-                className={`absolute pointer-events-none justify-center items-center bg-linear-to-t to-transparent bottom-0 left-0 -mb-20 w-full z-9 transition-all animate-in fade-in duration-500 ${isSelected && path === '/create' ? `from-${roleColor}/50 h-60` : `from-black/20 h-35`}`}
+                className={`absolute pointer-events-none justify-center items-center bg-linear-to-t to-transparent bottom-0 left-0 -mb-20 w-full z-9 transition-all animate-in fade-in duration-500 ${isSelected && addShortcut ? `from-${roleColor}/50 h-60` : `from-black/20 h-35`}`}
               ></div>
             ) : (
               <div
-                className={`absolute pointer-events-none justify-center items-center bg-linear-to-t to-transparent bottom-0 left-0 w-full z-9 transition-all animate-in fade-in duration-500 ${isSelected && path === '/create' ? `from-${roleColor} h-35` : `from-black/50 h-25`}`}
+                className={`absolute pointer-events-none justify-center items-center bg-linear-to-t to-transparent bottom-0 left-0 w-full z-9 transition-all animate-in fade-in duration-500 ${isSelected && addShortcut ? `from-${roleColor} h-35` : `from-black/50 h-25`}`}
               ></div>
             )}
 
-            {path === '/create' && (
+            {addShortcut && (
             <Button
               onClick={(e) => {
                 e.preventDefault();
@@ -95,7 +94,7 @@ export default function Card({
                   </div>
 
                   {/* Roll */}
-                  {ability.path === "items"
+                  {ability.path === "Item"
                     ? ability.damage && (
                         <div className="border-3 border-damage px-1.5 text-base/4 font-extrabold font-alegraya-sans text-damage">
                           {ability.damage}
@@ -120,7 +119,7 @@ export default function Card({
             <div
               className={`border-4 min-h-70 border-${roleColor} rounded-lg text-justify p-3 pt-4`}
             >
-              {ability.path === "items" && (
+              {ability.path === "Item" && (
                 <div className="flex flex-wrap justify-center gap-1.5 mb-2 px-1">
                   {/* Tag de Raridade (Role) */}
                   <span className="border border-black px-1.5 py-0.5 text-[10px] font-alegraya-sans font-bold uppercase tracking-wider leading-none">
@@ -201,7 +200,7 @@ export default function Card({
                 {ability.name}
               </span>
             </div>
-            {ability.path === "items"
+            {ability.path === "Item"
               ? ability.damage && (
                   <div className="border-3 border-damage px-1.5 text-base/4 font-extrabold font-alegraya-sans text-damage">
                     {ability.damage}
@@ -212,7 +211,7 @@ export default function Card({
           <div
             className={`border-4  w-full border-${roleColor} rounded-lg text-justify p-3 pt-0`}
           >
-            {ability.path === "items" && (
+            {ability.path === "Item" && (
               <div className="flex flex-wrap justify-center gap-2 mb-2 mt-4 px-1">
                 {/* Tag de Raridade (Role) */}
                 <span className="border border-black px-2 py-1 text-base font-alegraya-sans lowercase tracking-wider leading-none">

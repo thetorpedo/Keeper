@@ -1,11 +1,12 @@
+import AbilitySelector from '@/components/sheet/AbilitySelector.tsx';
 import CharacterProfile from '@/components/sheet/CharacterProfile.tsx';
-import Card from '@/components/sheet/utils/Card.tsx';
+import ItemSelector from '@/components/sheet/ItemSelector.tsx';
 import Button from '@/components/ui/questbutton.tsx';
-import { bookAbilities } from '@/data/abilities/wizard.ts';
 import type { Ability } from '@/data/interface.ts';
 import { bookItems } from '@/data/items/items.ts';
 import { collection, doc, setDoc } from 'firebase/firestore';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Footer from '../../components/ui/footer.tsx';
 import Navbar from '../../components/ui/navbar.tsx';
 import { useAuth } from '../contexts/authContext/authProvider.tsx';
@@ -13,11 +14,10 @@ import { db } from '../firebase/firebase.ts';
 
 function CreateCharacter() {
     const { currentUser } = useAuth();
+    const navigate = useNavigate();
     const [step, setStep] = useState(1);
 
-    const roles = ['Fighter', 'Invoker', 'Ranger', 'Naturalist', 'Doctor', 'Spy', 'Magician', 'Wizard', 'Custom Abilities'];
 
-    const itemCategories = ['All items', 'Useful', 'Rare', 'Legendary', 'Custom Items'];
     const [selectedItemCategory, setSelectedItemCategory] = useState<string>('All items');
 
     const [selectedRole, setSelectedRole] = useState<string>('Wizard');
@@ -74,8 +74,6 @@ const filteredItems = selectedItemCategory === 'All items'
         });
     };
 
-        const filteredAbilities = bookAbilities.filter(a => a.role === selectedRole);
-    const currentPaths = Array.from(new Set(filteredAbilities.map(a => a.path)));
 
  const ITEMS_PER_COL = 5; 
     const itemColumns: Ability[][] = []; 
@@ -107,26 +105,31 @@ const filteredItems = selectedItemCategory === 'All items'
     }
 
 
-    const createBlank = () => {
+    const createBlank = async () => {
         console.log("Creating a blank character...");
 
-        
         if (!currentUser) {
             console.error("No user is currently logged in.");
             return;
         }
 
-        const docRef = doc(collection(db, "characters"));
-        setDoc(docRef, {
-            ownerId: currentUser.uid,
-            createdAt: new Date(),
-        })
-        .catch((error) => {
-            console.error("Error creating blank character: ", error);
-        });
-    }  
+        try {
+            const newDocRef = doc(collection(db, "characters"));
+            
+            await setDoc(newDocRef, {
+                ownerId: currentUser.uid,
+                createdAt: new Date(),
+            });
 
-    const createCharacter = () => {
+            console.log("Blank character created with ID: ", newDocRef.id);
+            navigate(`/character/${newDocRef.id}`);
+
+        } catch (error) {
+            console.error("Error creating blank character: ", error);
+        }
+    } 
+
+    const createCharacter = async () => { 
         console.log("Creating character...");
 
         if (!currentUser) {
@@ -134,21 +137,27 @@ const filteredItems = selectedItemCategory === 'All items'
             return;
         }
 
-        const docRef = doc(collection(db, "characters"));
-        setDoc(docRef, {
-            ...newCharacter,
-            ownerId: currentUser.uid,
-            createdAt: new Date(),
-        })
-        .catch((error) => {
-            console.error("Error creating blank character: ", error);
-        });
-    }  
+        try {
+            const newDocRef = doc(collection(db, "characters"));
+            
+            await setDoc(newDocRef, {
+                ...newCharacter,
+                ownerId: currentUser.uid,
+                createdAt: new Date(),
+            });
+
+            console.log("Character created with ID: ", newDocRef.id);
+            navigate(`/character/${newDocRef.id}`);
+
+        } catch (error) {
+            console.error("Error creating character: ", error);
+        }
+    }
 
   return (
         <div className='flex flex-col justify-between items-center bg-white h-full'>
             < Navbar/>
-            <div className="my-10 max-w-4/6 space-y-5 flex flex-col items-center">
+            <div className="my-10 max-w-4/6 w-250 space-y-5 flex flex-col items-center">
                 <div className='flex flex-col border-b pb-3 w-full text-center'>
                     <h1 className='text-4xl font-extrabold font-alegraya'>Creating a character</h1>
                     <span className='text-xl font-bold font-alegraya-sans text-gray-400 lowercase'>
@@ -166,96 +175,17 @@ const filteredItems = selectedItemCategory === 'All items'
         updateField={updateCharacterField} 
     />}
                     {step === 2 && (
-                    <div className='flex flex-col max-w-[90vw] mx-auto gap-4'>
-                        {/* BARRA DE FILTROS */}
-                        <div className='flex flex-row justify-center gap-2 flex-wrap'>
-                            {roles.map((role) => (
-                                <div 
-                                    key={role}
-                                    onClick={() => setSelectedRole(role)}
-                                    className={`px-2 py-0 font-alegraya-sans lowercase text-xl cursor-pointer transition-all ${
-                                        selectedRole === role ? 'border-2 opacity-100 border-black' : 'border opacity-60 hover:opacity-80'
-                                    }`}
-                                >
-                                    {role}
-                                </div>
-                            ))}
-                        </div>
-                        <div className='bg-gray-200 overflow-auto gap-4 flex flex-row p-4 border border-gray-300 rounded-lg'>
-                            {currentPaths.map(path => (
-                                <div key={path} className='flex shrink-0 flex-col max-w-70'>
-                                    {/* Nome do Path no topo da coluna */}
-                                    <div className='font-alegraya-sans text-xl lowercase text-center bg-white border'>
-                                        {path}
-                                    </div>
-                                    <div className='mt-27 pb-10'>
-                                        {/* Filtra as magias desse Path e cria os Cards */}
-                                        {filteredAbilities.filter(a => a.path === path).map((ability, index, array) => (
-                                            <Card 
-                                                key={ability.id}
-                                                ability={ability}
-                                                isSelected={newCharacter.abilities.includes(ability.id)}
-                                                onClick={() => toggleAbility(ability.id)}
-                                                isLast={index === array.length - 1}
-                                            />
-                                        ))}
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    </div>)}
+                        <AbilitySelector 
+                            selectedAbilities={newCharacter.abilities} 
+                            onToggleAbility={toggleAbility} 
+                        />
+                    )}
                     {step === 3 && (
-                        <div className='flex flex-col max-w-[90vw] mx-auto gap-4'>
-                            
-                            {/* BARRA DE FILTROS DE ITENS */}
-                            <div className='flex flex-row justify-center gap-2 z-20 flex-wrap'>
-                                {itemCategories.map((category) => (
-                                    <div 
-                                        key={category}
-                                        onClick={() => setSelectedItemCategory(category)}
-                                        className={`px-2 py-0 font-alegraya-sans lowercase text-xl cursor-pointer bg-white transition-all ${
-                                            selectedItemCategory === category ? 'border-2 opacity-100 border-black' : 'border opacity-60 hover:opacity-80'
-                                        }`}
-                                    >
-                                        {category}
-                                    </div>
-                                ))}
-                            </div>
-
-                            {/* ÁREA DE CARTAS DOS ITENS */}
-                            <div className='relative w-full min-h-110'>
-                                
-                                <div className="absolute top-4 left-0  right-0 bottom-0 bg-gray-200 border border-gray-300 rounded-lg  h-[92%]"></div>
-
-                                <div className='relative z-10 flex flex-row gap-4 px-4 pb-4 mb-4 pt-9 -mt-4 overflow-y-clip overflow-x-auto w-full h-full'>
-                                    
-                                    {filteredItems.length === 0 && (
-                                        <div className="w-full flex items-center justify-center text-gray-500 font-alegraya-sans text-xl h-75">
-                                            No items found for {selectedItemCategory}.
-                                        </div>
-                                    )}
-                                    
-                                    {itemColumns.map((col, colIndex) => (
-                                        <div key={colIndex} className='flex mx-auto shrink-0 flex-col max-w-70 w-full'>
-                                            
-
-                                            <div className='mt-27'>
-                                                {col.map((item, index, array) => (
-                                                    <Card 
-                                                        key={item.id}
-                                                        ability={item}
-                                                        isSelected={newCharacter.items.includes(item.id)} 
-                                                        onClick={() => toggleItem(item.id)}
-                                                        isLast={index === array.length - 1}
-                                                    />
-                                                ))}
-                                            </div>
-                                            
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-                        </div>)}
+                        <ItemSelector 
+                            selectedItems={newCharacter.items} 
+                            onToggleItem={toggleItem} 
+                        />
+                    )}
                 </div>
                 <div className='flex w-full max-sm:flex-col-reverse max-sm:gap-8 items-center justify-between'>
                     {step === 1 ? (<Button onClick={createBlank} className='opacity-50 hover:opacity-100 shadow-none text-base'>Create Blank character</Button>) : (<div></div>)}

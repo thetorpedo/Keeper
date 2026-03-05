@@ -4,7 +4,6 @@ export interface Table {
 }
 
 export interface AbilityEffect {
-    name?: string;
     cost: number | string;
     description: string;
 

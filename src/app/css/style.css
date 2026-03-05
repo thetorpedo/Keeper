@@ -27,10 +27,10 @@
   --color-custom-item: #554c4f;
   --color-damage: #d32f2f;
   --color-useful: #25203b;
-  --color-common: #231f20;
-  --color-uncommon: #231f20;
-  --color-rare: #231f20;
-  --color-legendary: #231f20;
+  --color-common: #25203b;
+  --color-uncommon: #25203b;
+  --color-rare: #25203b;
+  --color-legendary: #25203b;
 }
 
 @source inline("border-{fighter,invoker,ranger,naturalist,doctor,spy,magician,wizard,custom-ability,item,custom-item,useful,common,uncommon,rare,legendary,damage}");
