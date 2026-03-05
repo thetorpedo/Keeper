@@ -46,7 +46,7 @@ function ViewCharacters() {
     }, [currentUser]);
 
     return (
-        <div className='flex flex-col justify-between items-center grow bg-white h-full'>
+        <div className='flex flex-col justify-between items-center grow bg-white'>
             < Navbar />
             <div className="my-10 px-5 max-w-280 w-full h-full  space-y-5 flex flex-col items-center">
                 <div className='flex w-full max-sm:flex-col max-sm:gap-2 flex-row justify-between items-center pb-4 sm:pb-10 sm:border-b'>

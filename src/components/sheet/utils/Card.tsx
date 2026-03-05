@@ -1,6 +1,6 @@
 import { Dialog, DialogClose, DialogContent, DialogTrigger } from "@/components/ui/dialog.tsx";
 import Button from "@/components/ui/questbutton.tsx";
-import type { Ability } from "@/data/abilities/wizard.ts";
+import type { Ability } from "@/data/interface.ts";
 import { Plus, X } from "lucide-react";
 
 interface CardProps {
@@ -12,23 +12,22 @@ interface CardProps {
 }
 
 export default function Card({ ability, isSelected, onClick, isLast}: CardProps) {
-    const baseCost = ability.effects[0]?.cost ?? 0;
+const baseCost = ability.effects?.[0]?.cost ?? 0;
 
+    const roleColor = ability.role.toLowerCase().replace(/\s+/g, '-');
 
     return (
-        // <div className=" ">
         <Dialog>
             <DialogTrigger asChild>
             <div
             className="relative h-38 z-9 cursor-pointer -mt-23 overflow-hidden w-full border-b group bg-white rounded-t-lg hover:h-50 hover:-mt-35 transition-all duration-300">
-                {/* Outer Box - Adicionado relative aqui para prender o botão */}
                 <div className="w-full h-full relative rounded-t-lg border border-b-0 border-gray-400 p-2.5 pt-2">
 
                     {isLast ? (
-                        <div className={`absolute pointer-events-none justify-center items-center bg-linear-to-t to-transparent bottom-0 left-0 -mb-20 w-full z-9 transition-all animate-in fade-in duration-500 ${isSelected ? 'from-amber-300/50 h-60' : 'from-black/50 h-25'}`}>
+                        <div className={`absolute pointer-events-none justify-center items-center bg-linear-to-t to-transparent bottom-0 left-0 -mb-20 w-full z-9 transition-all animate-in fade-in duration-500 ${isSelected ? `from-${roleColor}/50 h-60` : `from-${roleColor}/50 h-25`}`}>
                         </div>
                     ) : (
-                        <div className={`absolute pointer-events-none justify-center items-center bg-linear-to-t to-transparent bottom-0 left-0 w-full z-9 transition-all animate-in fade-in duration-500 ${isSelected ? 'from-amber-300 h-35' : 'from-black/50 h-25'}`}>
+                        <div className={`absolute pointer-events-none justify-center items-center bg-linear-to-t to-transparent bottom-0 left-0 w-full z-9 transition-all animate-in fade-in duration-500 ${isSelected ? `from-${roleColor} h-35` : `from-${roleColor}/50 h-25`}`}>
                         </div>
                     )}
                     
@@ -89,12 +88,12 @@ export default function Card({ ability, isSelected, onClick, isLast}: CardProps)
                         </div>
                     </div>
                     {/* Inner Box */}
-                    <div className="border-4 min-h-70 border-amber-300 rounded-lg text-justify p-3 pt-4">
+                    <div className={`border-4 min-h-70 border-${roleColor} rounded-lg text-justify p-3 pt-4`}>
                         {/* Description */}
                         <div>
-                            <p className="text-sm mb-1">{ability.description || ability.effects[0]?.description}</p>
+                            <p className="text-sm mb-1">{ability.description || ability.effects?.[0]?.description}</p>
                             <div className="space-y-2">
-                                {ability.effects.map((effect, index) => (
+                                {ability.effects?.map((effect, index) => (
                                     <div key={index} className="font-ovo text-sm">
                                         <div className="font-bold mr-2 inline-block gap-2 items-center">
                                             <span className="flex shrink-0 items-center group relative"> 
@@ -151,14 +150,14 @@ export default function Card({ ability, isSelected, onClick, isLast}: CardProps)
                                     </div>
                                 )}
                 </div>
-                <div className="border-4  w-full border-amber-300 rounded-lg text-justify p-3 pt-0">
+                <div className={`border-4  w-full border-${roleColor} rounded-lg text-justify p-3 pt-0`}>
                     
                     <div className="space-y-4 my-4">
                     {ability.description && <p className="font-ovo text-base">{ability.description}</p>}
                     
                     <div className="space-y-2">
                         
-                        {ability.effects.map((effect, index) => (
+                        {ability.effects?.map((effect, index) => (
                             <div key={index} className="font-ovo text-base/snug">
                                 <div className="font-bold mr-2 inline-block gap-2 items-center">
                                     <span className="flex shrink-0 items-center group relative"> 
@@ -207,7 +206,6 @@ export default function Card({ ability, isSelected, onClick, isLast}: CardProps)
                 </div>
             </DialogContent>
         </Dialog>    
-        // </div>
         
     )
 }

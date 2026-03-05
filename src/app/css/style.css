@@ -14,7 +14,21 @@
   --shadow-btn: 5px 5px 0 rgba(0, 0, 0, 1);
   --shadow-btn2: 9px 9px 0 rgba(0, 0, 0, 1);
   --color-purple: #F5E1FF;
+  --color-fighter: #f04822;
+  --color-invoker: #0164b1;
+  --color-ranger: #00a1bb;
+  --color-naturalist: #5a9e44;
+  --color-doctor: #dc2027;
+  --color-spy: #4c3896;
+  --color-magician: #ed028c;
+  --color-wizard: #e2c121;
+  --color-custom-ability: #897a7e;
+  --color-item: #242021;
+  --color-custom-item: #554c4f;
 }
+@source inline("border-{fighter,invoker,ranger,naturalist,doctor,spy,magician,wizard,custom-ability,item,custom-item}");
+@source inline("from-{fighter,invoker,ranger,naturalist,doctor,spy,magician,wizard,custom-ability,item,custom-item}{,/50}");
+@source inline('bg-purple');
 
 #root {
   height: 100vh;

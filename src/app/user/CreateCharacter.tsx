@@ -8,16 +8,21 @@ import Footer from '../../components/ui/footer.tsx';
 import Navbar from '../../components/ui/navbar.tsx';
 import { useAuth } from '../contexts/authContext/authProvider.tsx';
 import { db } from '../firebase/firebase.ts';
-
-
+import { bookItems } from '@/data/items/items.ts';
+import type { Ability } from '@/data/interface.ts';
 
 function CreateCharacter() {
     const { currentUser } = useAuth();
     const [step, setStep] = useState(1);
+
     const roles = ['Fighter', 'Invoker', 'Ranger', 'Naturalist', 'Doctor', 'Spy', 'Magician', 'Wizard', 'Custom Abilities'];
+
+    const itemCategories = ['All items', 'Useful', 'Rare', 'Legendary', 'Custom Items'];
+    const [selectedItemCategory, setSelectedItemCategory] = useState<string>('All items');
+
     const [selectedRole, setSelectedRole] = useState<string>('Wizard');
     const [newCharacter, setNewCharacter] = useState({
-    name: 'name', // Valores padrão se quiser
+    name: 'name',
     pronouns: 'pronouns',
     age: 'age',
     height: 'height',
@@ -32,7 +37,8 @@ function CreateCharacter() {
     originTrait: 'community',
     belief: 'ideal',
     flaw: 'flaw',
-    abilities: [] as string[]
+    abilities: [] as string[],
+    items: [] as string[]
 });
 
     const updateCharacterField = (field: string, newValue: string) => {
@@ -45,7 +51,6 @@ function CreateCharacter() {
 const toggleAbility = (abilityId: string) => {
         setNewCharacter((prev) => {
             const currentAbilities = prev.abilities || [];
-            // Se já tem a magia, tira ela. Se não tem, adiciona.
             if (currentAbilities.includes(abilityId)) {
                 return { ...prev, abilities: currentAbilities.filter(id => id !== abilityId) };
             } else {
@@ -54,8 +59,36 @@ const toggleAbility = (abilityId: string) => {
         });
     };
 
-    const filteredAbilities = bookAbilities.filter(a => a.role === selectedRole);
+const filteredItems = selectedItemCategory === 'All items' 
+        ? bookItems 
+        : bookItems.filter(i => i.role === selectedItemCategory);
+
+    const toggleItem = (itemId: string) => {
+        setNewCharacter((prev) => {
+            const currentItems = prev.items || [];
+            if (currentItems.includes(itemId)) {
+                return { ...prev, items: currentItems.filter(id => id !== itemId) };
+            } else {
+                return { ...prev, items: [...currentItems, itemId] };
+            }
+        });
+    };
+
+        const filteredAbilities = bookAbilities.filter(a => a.role === selectedRole);
     const currentPaths = Array.from(new Set(filteredAbilities.map(a => a.path)));
+
+ const ITEMS_PER_COL = 5; 
+    const itemColumns: Ability[][] = []; 
+    
+    filteredItems.forEach((item, index) => {
+        const columnIndex = Math.floor(index / ITEMS_PER_COL);
+        
+        if (!itemColumns[columnIndex]) {
+            itemColumns[columnIndex] = [];
+        }
+        
+        itemColumns[columnIndex].push(item); 
+    });
 
     const nextStep = () => {
         if (step < 3) {
@@ -117,7 +150,7 @@ const toggleAbility = (abilityId: string) => {
             < Navbar/>
             <div className="my-10 max-w-5/6 space-y-5 flex flex-col items-center">
                 <div className='flex flex-col border-b pb-3 w-full text-center'>
-                    <h1 className='text-4xl font-extrabold font-alegraya text-gray-800'>Creating a character</h1>
+                    <h1 className='text-4xl font-extrabold font-alegraya'>Creating a character</h1>
                     <span className='text-xl font-bold font-alegraya-sans text-gray-400 lowercase'>
                         <span className={`text-gray-${step === 1 ? '500' : '300'}`}>PROFILE</span>
                         {' - '}
@@ -133,7 +166,7 @@ const toggleAbility = (abilityId: string) => {
         updateField={updateCharacterField} 
     />}
                     {step === 2 && (
-                    <div className='flex flex-col gap-4'>
+                    <div className='flex flex-col max-w-[90vw] mx-auto gap-4'>
                         {/* BARRA DE FILTROS */}
                         <div className='flex flex-row justify-center gap-2 flex-wrap'>
                             {roles.map((role) => (
@@ -150,7 +183,7 @@ const toggleAbility = (abilityId: string) => {
                         </div>
                         <div className='bg-gray-200 overflow-auto gap-4 flex flex-row p-4 border border-gray-300 rounded-lg'>
                             {currentPaths.map(path => (
-                                <div key={path} className='flex shrink-0 flex-col max-w-70'>
+                                <div key={path} className='flex mx-auto shrink-0 flex-col max-w-70'>
                                     {/* Nome do Path no topo da coluna */}
                                     <div className='font-alegraya-sans text-xl lowercase text-center bg-white border'>
                                         {path}
@@ -169,32 +202,60 @@ const toggleAbility = (abilityId: string) => {
                                     </div>
                                 </div>
                             ))}
-                            
                         </div>
                     </div>)}
                     {step === 3 && (
-                    <div className='flex flex-col gap-4'>
-                        <div className='flex flex-row justify-center gap-2'>
-                            <div className='border opacity-60 px-2 py-0 font-alegraya-sans lowercase text-xl'>
-                                All items
+                        <div className='flex flex-col max-w-[90vw] mx-auto gap-4'>
+                            
+                            {/* BARRA DE FILTROS DE ITENS */}
+                            <div className='flex flex-row justify-center gap-2 flex-wrap'>
+                                {itemCategories.map((category) => (
+                                    <div 
+                                        key={category}
+                                        onClick={() => setSelectedItemCategory(category)}
+                                        className={`px-2 py-0 font-alegraya-sans lowercase text-xl cursor-pointer transition-all ${
+                                            selectedItemCategory === category ? 'border-2 opacity-100 border-black' : 'border opacity-60 hover:opacity-80'
+                                        }`}
+                                    >
+                                        {category}
+                                    </div>
+                                ))}
                             </div>
-                            <div className='border opacity-60 px-2 py-0 font-alegraya-sans lowercase text-xl'>
-                                Useful
-                            </div>
-                            <div className='border opacity-60 px-2 py-0 font-alegraya-sans lowercase text-xl'>
-                                Rare
-                            </div>
-                            <div className='border opacity-60 px-2 py-0 font-alegraya-sans lowercase text-xl'>
-                                Legendary
-                            </div>
-                            <div className='border opacity-60 px-2 py-0 font-alegraya-sans lowercase text-xl'>
-                                Custom Items
-                            </div>
-                        </div>
 
-                    </div>)}
+                            {/* ÁREA DE CARTAS DOS ITENS */}
+                            <div className='bg-gray-200 relative overflow-auto gap-4 flex flex-col p-4 border border-gray-300 rounded-lg min-h-[400px]'>
+                                <div className='font-alegraya-sans sticky top-0 z-50 lowercase bg-white px-2 py-1 font-lg border w-full'>{selectedItemCategory}</div>
+                                <div className='flex flex-row gap-4 '>
+                                {/* Mensagem caso a categoria não tenha itens */}
+                                {filteredItems.length === 0 && (
+                                    <div className="w-full flex items-center justify-center text-gray-500 font-alegraya-sans text-xl">
+                                        No items found for {selectedItemCategory}.
+                                    </div>
+                                )}
+                                
+                                {/* Renderiza as 4 colunas lado a lado */}
+                                {itemColumns.map((col, colIndex) => (
+                                    <div key={colIndex} className='flex mx-auto shrink-0 flex-col max-w-70 w-full'>
+                                        {/* O mt-27 empurra a primeira carta pra baixo igual no Step 2 */}
+                                        <div className='mt-32 pb-10'>
+                                            {col.map((item, index, array) => (
+                                                <Card 
+                                                    key={item.id}
+                                                    ability={item} // Usamos a mesma interface
+                                                    isSelected={newCharacter.items.includes(item.id)} // Verifica no array de items
+                                                    onClick={() => toggleItem(item.id)} // Chama a função de itens
+                                                    isLast={index === array.length - 1}
+                                                />
+                                            ))}
+                                        </div>
+                                    </div>
+                                ))}
+                                </div>
+
+                            </div>
+                        </div>)}
                 </div>
-                <div className='flex w-full items-center justify-between'>
+                <div className='flex w-full max-sm:flex-col-reverse max-sm:gap-8 items-center justify-between'>
                     <Button onClick={createBlank} className='opacity-50 hover:opacity-100 shadow-none text-base'>Create Blank character</Button>
                     <div className='flex flex-row gap-4'>
                         {step > 1 && <Button onClick={prevStep} className='px-10'>Back</Button>}
