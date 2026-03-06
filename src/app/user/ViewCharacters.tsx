@@ -71,6 +71,7 @@ function ViewCharacters() {
                                     role={char.role || 'BLANK'}
                                     createdAt={char.createdAt}
                                     id={char.id}
+                                    pfp={char.profileImage}
                                 />
                             ))
                         ) : (

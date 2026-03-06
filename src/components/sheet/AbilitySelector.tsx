@@ -2,6 +2,8 @@
 import Card from "@/components/sheet/utils/Card.tsx";
 import { bookAbilities } from "@/data/abilities/wizard.ts";
 import { useState } from "react";
+import Button from "../ui/questbutton.tsx";
+import { Dialog, DialogContent, DialogTrigger } from "../ui/dialog.tsx";
 
 interface AbilitySelectorProps {
   selectedAbilities: string[]; // Array de IDs
@@ -31,6 +33,7 @@ export default function AbilitySelector({
   const currentPaths = Array.from(
     new Set(filteredAbilities.map((a) => a.path)),
   );
+  
 
   return (
     <div className="flex flex-col max-w-[90vw] w-full mx-auto gap-4">
@@ -54,8 +57,20 @@ export default function AbilitySelector({
       {/* ÁREA DE CARTAS */}
       <div className="bg-gray-200 overflow-auto gap-4 flex flex-row p-4 border w-250 max-sm:w-full border-gray-300 rounded-lg min-h-100">
         {currentPaths.length === 0 && (
-          <div className="w-full flex items-center justify-center text-gray-500 font-alegraya-sans text-xl h-75">
+          <div className="w-full flex gap-4 flex-col items-center justify-center text-gray-500 font-alegraya-sans text-xl h-full">
             No abilities found for {selectedRole}.
+            {selectedRole === "Custom Abilities" && (
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button className="bg-white font-bold text-black ">
+                    Create Custom Abilitys
+                  </Button> 
+                </DialogTrigger>
+                <DialogContent>
+                  .s
+                </DialogContent>
+              </Dialog>
+            )}
           </div>
         )}
         {currentPaths.map((path) => (

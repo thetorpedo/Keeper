@@ -7,9 +7,10 @@ interface CharacterCardProps {
   role: string;
   createdAt: Date;
   id: string;
+  pfp: string;
 }
 
-export default function CharacterCard({ name, role, createdAt, id }: CharacterCardProps) {
+export default function CharacterCard({ name, role, createdAt, id, pfp }: CharacterCardProps) {
     const formatDate = (date: any) => {
         if (!date) return 'Unknown';
         
@@ -24,14 +25,14 @@ export default function CharacterCard({ name, role, createdAt, id }: CharacterCa
         <div className='flex flex-col mt-5 justify-center'>
             <Link to={`/character/${id}`}>
             <Button className='border rounded-lg relative p-5 w-full col-span-1 flex flex-col justify-center sm:pt-8 pt-5 items-center gap-1 sm:pb-4'>
-                <div className='font-alegraya-sans flex justify-center items-center absolute sm:-top-[20.5px] -top-[14.5px]  text-white font-bold'>
+                <div className='font-alegraya-sans flex justify-center max-w-5/6 items-center absolute sm:-top-[20.5px] -top-[14.5px]  text-white font-bold'>
                     <img 
                     src="../../src/assets/StatVector.svg" 
                     className="h-7 w-auto block object-contain" 
                     alt=""
                     />
                     <div className=' text-xl bg-black px-1 sm:px-4 h-7 sm:h-10 flex items-center -mx-px leading-none'>
-                    <span className="max-sm:text-[16px] text-[25px]">{name}</span>
+                    <span className="max-sm:text-[16px] line-clamp-1 text-[25px]">{name}</span>
                     </div>
                     <img 
                     src="../../src/assets/StatVector.svg" 
@@ -39,9 +40,9 @@ export default function CharacterCard({ name, role, createdAt, id }: CharacterCa
                     alt=""
                     />
                 </div>
-                    <span className='font-alegraya-sans font-semibold text-gray-500 lowercase text-sm sm:text-xl'>The {role}</span>
+                    <span className='font-alegraya-sans font-semibold text-gray-500 lowercase line-clamp-1 text-sm sm:text-xl'>The {role}</span>
                 <div className="aspect-square shrink-0 w-24 sm:w-48 flex justify-center items-center border rounded-lg overflow-hidden">
-                    <img src="src/assets/placeholderPfp.png" className="object-contain" />
+                    <img src={pfp} className="object-contain" />
                 </div>
                 <div className='flex flex-col justify-between'>
                         <span className='font-alegraya-sans pt-1 text-gray-400 lowercase text-sm sm:text-lg'>Created on <span className="max-sm:block max-sm:-mt-2">{formatDate(createdAt)}</span></span>

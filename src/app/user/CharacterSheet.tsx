@@ -229,7 +229,7 @@ function CharacterSheet() {
               </h2>
             </div>
             <div>
-              <Button className="font-medium py-3 mr-1">
+              <Button className="font-medium flex flex-row justify-center items-center py-3 mr-1">
                 <RiShareFill className="inline-block mr-3" />
                 <span>Share</span>
               </Button>
@@ -241,27 +241,36 @@ function CharacterSheet() {
               <section className="border border-gray-400 rounded-lg p-4 flex flex-col gap-2">
                 <div className="w-full flex aspect-square justify-center items-center border mb-3 rounded-lg overflow-hidden"
                 >
-                  {uploadingImage ? (
-                  <span className="font-alegraya text-gray-500 animate-pulse">Uploading...</span>
-                ) : (
-                  <><div className='relative group'>
-                    <img
-                      src={character.profileImage || placeholderPfp} 
-                      className="object-cover  w-full h-full transition-all group-hover:opacity-50"
-                      alt="Profile"
-                    />
-                    <div className='w-full h-full z-999 bg-linear-to-t group-hover:flex absolute from-black/20 to-transparent bottom-0 left-0'>
-                    <div 
-                    onClick={() => fileInputRef.current?.click()}
-                    className='flex group-hover:flex hidden bottom-12 border font-alegraya-sans bg-white borderfont-alegraya-sans w-fit shrink-0 lowercase font-bold left-1/2 -translate-x-1/2 p-2 items-center flex-row justify-center text-center'>
-                      <Upload className='size-4 mr-2'/> Upload Image
-                      </div></div>                    
-                  </div>
-                    
-                  </>
-                )}
+                    {uploadingImage ? (
+                      <span className="font-alegraya-sans lowercase text-base font-bold animate-pulse">Uploading...</span>
+                    ) : (
+                      <div className="relative group w-full h-full overflow-hidden">
+                        {/* Imagem de Perfil */}
+                        <img
+                          src={character.profileImage || placeholderPfp}
+                          className="object-cover w-full h-full transition-all group-hover:scale-105 group-hover:opacity-90"
+                          alt="Profile"
+                        />
+
+                        {/* Overlay */}
+                        <div 
+                          className="absolute inset-0 bg-gradient-to-t  from-black/40 to-transparent 
+                                    opacity-0 group-hover:opacity-100 transition-opacity duration-300
+                                    flex items-center justify-center"
+                        >
+                          <Button
+                            type="button"
+                            onClick={() => fileInputRef.current?.click()}
+                            className="flex items-center bg-white border px-4 py-2 cursor-pointer text-sm font-bold font-alegraya-sans 
+                                      uppercase tracking-wider transition-all"
+                          >
+                            <Upload className="size-4 mr-2" />
+                            Upload Image
+                          </Button>
+                        </div>
+                      </div>
+                    )}
                 
-                {/* O Input escondido que faz o trabalho sujo */}
                 <input 
                   type="file" 
                   ref={fileInputRef}
@@ -438,7 +447,7 @@ function CharacterSheet() {
         <div className="flex flex-row w-full px-5 justify-between items-center align-middle pb-5 ">
           <div className="flex flex-col gap-2 pb-5 border-b">
             <div className="flex flex-row w-full gap-4 justify-between items-center">
-              <div className="flex flex-col h-full items-between gap-2">
+              <div className="flex flex-col h-full w-2/3 items-between gap-2">
                 <a
                   href="/"
                   className="text-gray-400 flex flex-row gap-2 w-full"
@@ -449,23 +458,59 @@ function CharacterSheet() {
                   </span>
                 </a>
                 <div>
-                  <h1 className="font-alegraya font-bold text-3xl">{character.name}</h1>
-                  <h2 className="font-alegraya-sans -mt-2 text-gray-500 uppercase font-medium">
+                  <h1 className="font-alegraya font-bold line-clamp-2 text-3xl/8">{character.name}</h1>
+                  <h2 className="font-alegraya-sans text-gray-500 uppercase font-medium">
                     The {character.role}
                   </h2>
                 </div>
-                <Button className="font-medium mr-1 px-0! flex items-center justify-center">
+                
+              </div>
+
+              <div className='flex flex-col h-full w-1/3 items-between gap-2'>       
+                <div className=" w-full aspect-square shrink-0 h-full flex justify-center items-center border rounded-lg overflow-hidden">
+                  {uploadingImage ? (
+                        <span className="font-alegraya-sans lowercase text-base font-bold animate-pulse">Uploading...</span>
+                      ) : (
+                        <div className="relative group w-full h-full overflow-hidden">
+                          {/* Imagem de Perfil */}
+                          <img
+                            src={character.profileImage || placeholderPfp}
+                            className="object-cover w-full h-full transition-all group-hover:scale-105 group-hover:opacity-90"
+                            alt="Profile"
+                          />
+
+                          {/* Overlay */}
+                          <div 
+                            className="absolute inset-0 bg-gradient-to-t  from-black/40 to-transparent 
+                                      opacity-0 group-hover:opacity-100 transition-opacity duration-300
+                                      flex items-center justify-center"
+                          >
+                            <Button
+                              type="button"
+                              onClick={() => fileInputRef.current?.click()}
+                              className="flex items-center bg-white border px-4 py-2 cursor-pointer text-sm font-bold font-alegraya-sans 
+                                        uppercase tracking-wider transition-all"
+                            >
+                              <Upload className="size-4 mr-2" />
+                              Upload Image
+                            </Button>
+                          </div>
+                      </div>
+                    )}
+                
+                <input 
+                  type="file" 
+                  ref={fileInputRef}
+                  onChange={handleImageUpload}
+                  accept="image/*"
+                  className="hidden" 
+                />
+              </div>
+              <Button className="font-medium mr-1 px-3! w-full  flex items-center justify-center">
                   <RiShareFill className="inline-block mr-2 size-3" />
                   <span className="text-sm">Share</span>
                 </Button>
-              </div>
-
-              <div className=" w-1/2 h-full flex justify-center items-center border rounded-lg overflow-hidden">
-                <img
-                  src={placeholderPfp}
-                  className="object-contain"
-                />
-              </div>
+                </div>  
             </div>
 
             <div className="mt-5 flex flex-col gap-4">
