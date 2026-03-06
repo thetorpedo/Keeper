@@ -1,5 +1,5 @@
 export interface Table {
-    value: number;
+    value: number | string;
     description: string;
 }
 
