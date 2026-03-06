@@ -3,6 +3,7 @@ import CharacterCard from '@/components/viewcharacters/character-card.tsx';
 import { collection, getDocs, orderBy, query, where } from 'firebase/firestore';
 import { Plus } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import Footer from '../../components/ui/footer.tsx';
 import Navbar from '../../components/ui/navbar.tsx';
 import { useAuth } from '../contexts/authContext/authProvider.tsx';
@@ -46,14 +47,16 @@ function ViewCharacters() {
     }, [currentUser]);
 
     return (
-        <div className='flex flex-col justify-between items-center grow bg-white'>
+        <div className='flex flex-col justify-between h-full items-center grow bg-white'>
             < Navbar />
             <div className="my-10 px-5 max-w-280 w-full h-full  space-y-5 flex flex-col items-center">
                 <div className='flex w-full max-sm:flex-col max-sm:gap-2 flex-row justify-between items-center pb-4 sm:pb-10 sm:border-b'>
                     <div className='font-alegraya text-2xl sm:text-4xl text-center font-bold'>
                         Your Characters
                     </div>
+                    <Link to={'/create'}>
                     <Button className='flex-row max-sm:w-fit max-sm:text-base flex items-center'><Plus className="w-5 h-5 mr-2" />Create New</Button>
+                    </Link>
                 </div>
                 <div className='grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-8 w-full'>
                {loading ? (
@@ -67,6 +70,7 @@ function ViewCharacters() {
                                     name={char.name || 'BLANK'}
                                     role={char.role || 'BLANK'}
                                     createdAt={char.createdAt}
+                                    id={char.id}
                                 />
                             ))
                         ) : (

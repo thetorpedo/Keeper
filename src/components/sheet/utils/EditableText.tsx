@@ -3,10 +3,11 @@ import { useEffect, useRef, useState } from "react";
 interface EditableTextProps {
   value: string;
   onSave: (newValue: string) => void; 
-  type?: "text" | "number";           
+  type?: "text" | "number";
+  name?: boolean;           
 }
 
-export default function EditableText({ value, onSave, type = "text" }: EditableTextProps) {
+export default function EditableText({ value, onSave, type = "text", name = false }: EditableTextProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [inputValue, setInputValue] = useState<string>(value);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -20,7 +21,6 @@ export default function EditableText({ value, onSave, type = "text" }: EditableT
   useEffect(() => {
     if (isEditing) {
       inputRef.current?.focus();
-    //   inputRef.current?.select();
     }
   }, [isEditing]);
 
@@ -47,7 +47,7 @@ export default function EditableText({ value, onSave, type = "text" }: EditableT
     }
   };
 
-const fontClasses = "font-alegraya-sans lowercase max-sm:text-[18px] text-[22px] font-bold";
+const fontClasses = `font-alegraya-sans ${!name && 'lowercase'} max-sm:text-[18px] text-[22px] font-bold`;
 
   return (
     

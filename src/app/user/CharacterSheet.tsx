@@ -3,38 +3,75 @@ import placeholderPfp from '@/assets/placeholderPfp.png';
 import AbilitySelector from "@/components/sheet/AbilitySelector.tsx";
 import ItemSelector from "@/components/sheet/ItemSelector.tsx";
 import {
-    Dialog,
-    DialogContent,
-    DialogTrigger,
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
 } from "@/components/ui/dialog.tsx";
 import {
-    Tabs,
-    TabsContent,
-    TabsList,
-    TabsTrigger,
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
 } from "@/components/ui/tabs.tsx";
 import { bookAbilities } from "@/data/abilities/wizard.ts";
 import { bookItems } from "@/data/items/items.ts";
-import { doc, getDoc, updateDoc } from "firebase/firestore";
-import { CircleArrowLeft, Plus } from "lucide-react";
-import { useEffect, useState } from "react";
+import { deleteDoc, doc, getDoc, updateDoc } from "firebase/firestore";
+import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
+import { CircleArrowLeft, Plus, Upload } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import { BsFillBackpack2Fill, BsFillFileTextFill } from "react-icons/bs";
 import { FaUser } from "react-icons/fa6";
 import { RiShareFill, RiSparkling2Fill } from "react-icons/ri";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import CharacterProfile from "../../components/sheet/CharacterProfile.tsx";
 import Stat from "../../components/sheet/Stat.tsx";
 import Card from "../../components/sheet/utils/Card.tsx";
 import Footer from "../../components/ui/footer.tsx";
 import Navbar from "../../components/ui/navbar.tsx";
 import Button from "../../components/ui/questbutton.tsx";
-import { db } from "../firebase/firebase.ts";
+import { db, storage } from "../firebase/firebase.ts";
 
 function CharacterSheet() {
   const { id } = useParams();
 
   const [character, setCharacter] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true)
+  const navigate = useNavigate();
+  const [uploadingImage, setUploadingImage] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file || !id) return;
+
+    if (!file.type.startsWith('image/') || file.size > 5 * 1024 * 1024) {
+      alert("Please upload a valid image file under 5MB.");
+      return;
+    }
+
+    try {
+      setUploadingImage(true);
+      
+      const imageRef = ref(storage, `characters/${id}/profile.jpg`);
+      
+      await uploadBytes(imageRef, file);
+      
+      const downloadURL = await getDownloadURL(imageRef);
+      
+      await updateCharacterField("profileImage", downloadURL);
+      
+    } catch (error) {
+      console.error("Error uploading image:", error);
+      alert("Failed to upload image.");
+    } finally {
+      setUploadingImage(false);
+    }
+  };
 
   useEffect(() => {
     const fetchCharacter = async () => {
@@ -123,6 +160,51 @@ function CharacterSheet() {
     await updateDoc(doc(db, "characters", id), { items: updatedItems });
   };
 
+  const updateCharacterField = async (field: string, newValue: string) => {
+    if (!character || !id) return;
+    if (newValue.replace(/\s+/g, "") === "") {
+      newValue = field;
+      newValue = newValue.charAt(0).toUpperCase() + newValue.slice(1);
+    }
+    setCharacter((prev: any) => ({
+        ...prev,
+        [field]: newValue
+    }));
+    await updateDoc(doc(db, "characters", id), { [field]: newValue });
+  };
+
+  const updateCharacterStat = async (field: string, newValue: number) => {
+    if (!character || !id) return;
+
+    setCharacter((prev: any) => ({
+        ...prev,
+        [field]: newValue
+    }));
+    
+    await updateDoc(doc(db, "characters", id), { [field]: newValue });
+  };
+
+  const handleDeductAP = async (cost: number) => {
+    if (!character || !id) return;
+    
+    const currentAP = character.ap ?? 10;
+    const newAP = currentAP - cost; 
+    
+    await updateCharacterStat("ap", newAP);
+  };
+
+  const deleteCharacter = async () => {
+    try {
+      if (!id) return;
+      await deleteDoc(doc(db, "characters", id));
+      
+      navigate('/view');
+    } catch (error) {
+      console.error("Error deleting character:", error);
+      alert("There was an error deleting the character. Please try again.");
+    }
+  };
+
   return (
     <div className="flex max-sm:justify-start flex-col justify-between items-center bg-white h-full">
       <Navbar />
@@ -157,14 +239,49 @@ function CharacterSheet() {
             <div className="col-span-3 flex flex-col w-full gap-2">
               {/* Stats */}
               <section className="border border-gray-400 rounded-lg p-4 flex flex-col gap-2">
-                <div className="w-full flex aspect-square justify-center items-center  border mb-3 rounded-lg overflow-hidden">
-                  <img
-                    src={placeholderPfp}
-                    className="object-contain"
-                  />
-                </div>
-                <Stat id="1" name="HP" value={10} />
-                <Stat id="2" name="AP" value={10} />
+                <div className="w-full flex aspect-square justify-center items-center border mb-3 rounded-lg overflow-hidden"
+                >
+                  {uploadingImage ? (
+                  <span className="font-alegraya text-gray-500 animate-pulse">Uploading...</span>
+                ) : (
+                  <><div className='relative group'>
+                    <img
+                      src={character.profileImage || placeholderPfp} 
+                      className="object-cover  w-full h-full transition-all group-hover:opacity-50"
+                      alt="Profile"
+                    />
+                    <div className='w-full h-full z-999 bg-linear-to-t group-hover:flex absolute from-black/20 to-transparent bottom-0 left-0'>
+                    <div 
+                    onClick={() => fileInputRef.current?.click()}
+                    className='flex group-hover:flex hidden bottom-12 border font-alegraya-sans bg-white borderfont-alegraya-sans w-fit shrink-0 lowercase font-bold left-1/2 -translate-x-1/2 p-2 items-center flex-row justify-center text-center'>
+                      <Upload className='size-4 mr-2'/> Upload Image
+                      </div></div>                    
+                  </div>
+                    
+                  </>
+                )}
+                
+                {/* O Input escondido que faz o trabalho sujo */}
+                <input 
+                  type="file" 
+                  ref={fileInputRef}
+                  onChange={handleImageUpload}
+                  accept="image/*"
+                  className="hidden" 
+                />
+              </div>
+                <Stat 
+                  id="hp" 
+                  name="HP" 
+                  value={character.hp ?? 10} 
+                  onUpdate={updateCharacterStat} 
+                />
+                <Stat 
+                  id="ap" 
+                  name="AP" 
+                  value={character.ap ?? 10}
+                  onUpdate={updateCharacterStat} 
+                />
               </section>
               {/* Notes */}
               <section className="border grow border-gray-400 rounded-lg p-4">
@@ -179,7 +296,7 @@ function CharacterSheet() {
               <section className="border border-gray-400 rounded-lg p-4">
                 <CharacterProfile
                   characterData={character}
-                  updateField={() => {}}
+                  updateField={updateCharacterField}
                 />
               </section>
               {/* Abilities & Inventory */}
@@ -247,10 +364,11 @@ function CharacterSheet() {
                           <Card
                             key={ability.id}
                             ability={ability}
-                            addShortcut={false}
+                            editing={false}
                             isSelected={true}
                             onClick={() => removeAbility(ability.id)}
                             isLast={index === array.length - 1}
+                            onDeductAP={handleDeductAP}
                           />
                         ))}
                       </div>
@@ -269,10 +387,11 @@ function CharacterSheet() {
                           <Card
                             key={item.id}
                             ability={item}
-                            addShortcut={false}
+                            editing={false}
                             isSelected={true}
                             onClick={() => removeItem(item.id)}
                             isLast={index === array.length - 1}
+                            onDeductAP={handleDeductAP}
                           />
                         ))}
                       </div>
@@ -282,9 +401,32 @@ function CharacterSheet() {
               </section>
             </div>
           </div>
-          <button className="font-alegraya-sans lowercase text-left w-full ml-1 cursor-pointer hover:underline transition-all hover:text-red-400 font-medium text-xl text-red-500 ">
-            Delete this character
-          </button>
+          <Dialog>
+            <DialogTrigger asChild>
+              <button className="font-alegraya-sans lowercase text-left w-full ml-1 cursor-pointer hover:underline transition-all hover:text-red-400 font-medium text-xl text-red-500 ">
+              Delete this character
+              </button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-md">
+              <DialogHeader>
+                <DialogTitle>Are you sure you want to delete this character?</DialogTitle>
+                <DialogDescription className='text-base pb-5'>
+                  This action CANNOT be undone!
+                </DialogDescription>
+              </DialogHeader>
+              <DialogFooter className="sm:justify-between">
+                <DialogClose asChild>
+                  <Button className='bg-red-400 text-white'
+                  onClick={deleteCharacter}
+                  >Delete</Button>
+                </DialogClose>
+                <DialogClose asChild>
+                  <Button>Close</Button>
+                </DialogClose>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+          
         </div>
       </div>
       <span className="max-sm:hidden w-full">
@@ -327,8 +469,18 @@ function CharacterSheet() {
             </div>
 
             <div className="mt-5 flex flex-col gap-4">
-              <Stat id="1" name="HP" value={10} />
-              <Stat id="2" name="AP" value={10} />
+              <Stat 
+                id="hp" 
+                name="HP" 
+                value={character.hp ?? 10} 
+                onUpdate={updateCharacterStat} 
+              />
+              <Stat 
+                id="ap" 
+                name="AP" 
+                value={character.ap ?? 10}
+                onUpdate={updateCharacterStat} 
+              />
             </div>
           </div>
         </div>
@@ -365,7 +517,7 @@ function CharacterSheet() {
           <TabsContent value="characteristics" className="px-5">
             <CharacterProfile
               characterData={character}
-              updateField={() => {}}
+              updateField={updateCharacterField}
             />{" "}
           </TabsContent>
           <TabsContent value="abilities" className="px-5">
@@ -405,8 +557,8 @@ function CharacterSheet() {
                     <Card
                       key={ability.id}
                       ability={ability}
-                      addShortcut={false}
-                      isSelected={false}
+                      editing={false}
+                      isSelected={true}
                       onClick={() => {}}
                       isLast={index === array.length - 1}
                     />
@@ -456,8 +608,8 @@ function CharacterSheet() {
                     <Card
                       key={item.id}
                       ability={item}
-                      addShortcut={false}
-                      isSelected={false}
+                      editing={false}
+                      isSelected={true}
                       onClick={() => {}}
                       isLast={index === array.length - 1}
                     />

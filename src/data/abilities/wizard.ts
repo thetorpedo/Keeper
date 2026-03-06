@@ -470,5 +470,17 @@ export const bookAbilities: Ability[] = [
                 description: 'You tap raw magic, converting its energy into a single, non-magical, inanimate object that fits inside a cube no larger than 5 meters in any dimension. You create the object perfectly and it is real in every sense. You may create anything that fits in the space, including precious gems, flawless weapons, or exact replicas of other objects. This spell requires perfection and is extremely taxing on your ability as a Wizard. Keep track of how many times you have cast the spell on your inventory sheet. The spell’s cost increases by 1 AP each time you use it.'
             }
         ]
+    },
+    {
+        id: 'wiz_create',
+        role: 'Naturalist',
+        path: 'Legendary',
+        name: 'Create',
+        effects: [
+            {
+                cost: 5,
+                description: 'You tap raw magic, converting its energy into a single, non-magical, inanimate object that fits inside a cube no larger than 5 meters in any dimension. You create the object perfectly and it is real in every sense. You may create anything that fits in the space, including precious gems, flawless weapons, or exact replicas of other objects. This spell requires perfection and is extremely taxing on your ability as a Wizard. Keep track of how many times you have cast the spell on your inventory sheet. The spell’s cost increases by 1 AP each time you use it.'
+            }
+        ]
     }
 ];

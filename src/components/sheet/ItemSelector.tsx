@@ -78,7 +78,7 @@ export default function ItemSelector({
                   <Card
                     key={item.id}
                     ability={item}
-                    addShortcut
+                    editing
                     isSelected={selectedItems.includes(item.id)}
                     onClick={() => onToggleItem(item.id)}
                     isLast={index === array.length - 1}

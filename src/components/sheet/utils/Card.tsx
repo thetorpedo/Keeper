@@ -1,8 +1,8 @@
 import {
-    Dialog,
-    DialogClose,
-    DialogContent,
-    DialogTrigger,
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogTrigger,
 } from "@/components/ui/dialog.tsx";
 import Button from "@/components/ui/questbutton.tsx";
 import type { Ability } from "@/data/interface.ts";
@@ -13,7 +13,8 @@ interface CardProps {
   isSelected: boolean;
   onClick: () => void;
   isLast: boolean;
-  addShortcut: boolean;
+  editing: boolean;
+  onDeductAP?: (cost: number) => void;
 }
 
 export default function Card({
@@ -21,7 +22,8 @@ export default function Card({
   isSelected,
   onClick,
   isLast,
-  addShortcut,
+  editing,
+  onDeductAP,
 }: CardProps) {
   const baseCost = ability.effects?.[0]?.cost ?? undefined;
 
@@ -35,15 +37,15 @@ export default function Card({
           <div className="w-full h-full relative rounded-t-lg border border-b-0 border-gray-400 p-2.5 pt-2">
             {isLast ? (
               <div
-                className={`absolute pointer-events-none justify-center items-center bg-linear-to-t to-transparent bottom-0 left-0 -mb-20 w-full z-9 transition-all animate-in fade-in duration-500 ${isSelected && addShortcut ? `from-${roleColor}/50 h-60` : `from-black/20 h-35`}`}
+                className={`absolute pointer-events-none justify-center items-center bg-linear-to-t to-transparent bottom-0 left-0 -mb-20 w-full z-9 transition-all animate-in fade-in duration-500 ${isSelected && editing ? `from-${roleColor}/50 h-60` : `from-black/20 h-35`}`}
               ></div>
             ) : (
               <div
-                className={`absolute pointer-events-none justify-center items-center bg-linear-to-t to-transparent bottom-0 left-0 w-full z-9 transition-all animate-in fade-in duration-500 ${isSelected && addShortcut ? `from-${roleColor} h-35` : `from-black/50 h-25`}`}
+                className={`absolute pointer-events-none justify-center items-center bg-linear-to-t to-transparent bottom-0 left-0 w-full z-9 transition-all animate-in fade-in duration-500 ${isSelected && editing ? `from-${roleColor} h-35` : `from-black/50 h-25`}`}
               ></div>
             )}
 
-            {addShortcut && (
+            {editing && (
             <Button
               onClick={(e) => {
                 e.preventDefault();
@@ -69,8 +71,15 @@ export default function Card({
                   {baseCost ? (
                     <div className="flex shrink-0 items-center group relative">
                       <button
-                        onClick={() => console.log("!")}
-                        className="flex items-center tooltip relative h-full hover:opacity-50 hover:scale-115 transition-all active:scale-95 cursor-pointer"
+                        onClick={(e) => {
+                          if (editing) return;
+                          e.preventDefault(); 
+                          e.stopPropagation();
+                          if (onDeductAP && typeof baseCost === 'number') {
+                            onDeductAP(baseCost);
+                          }
+                        }}
+                        className={`flex items-center tooltip relative h-full cursor-pointer ${editing ? ('') : ('hover:opacity-50 hover:scale-115 transition-all active:scale-95')}`}
                       >
                         <span className="bg-black px-1.5 py-0.5 text-white font-alegraya-sans font-bold leading-none flex items-center justify-center">
                           {baseCost}
@@ -102,7 +111,9 @@ export default function Card({
                       )
                     : ability.rollTheDie && (
                         <div className="flex shrink-0 items-center h-full">
-                          <button className="font-alegraya-sans cursor-pointer hover:opacity-50 hover:scale-108 transition-all active:scale-100 lowercase  text-[14px] leading-none flex items-center justify-center bg-gray-50">
+                          <button 
+                          onClick={editing ? () => {} : () => console.log("!")}
+                          className={`font-alegraya-sans cursor-pointer ${editing ? ('') : ('hover:opacity-50 hover:scale-115 transition-all active:scale-95')} lowercase  text-[14px] leading-none flex items-center justify-center bg-gray-50`}>
                             <img
                               src="../../src/assets/d20.png"
                               className="size-5"
@@ -133,9 +144,11 @@ export default function Card({
 
                   {/* Tag de Rolar o Dado */}
                   {ability.rollTheDie && (
-                    <span className="border border-black px-1.5 py-0.5 text-[10px] font-alegraya-sans font-bold uppercase tracking-wider leading-none">
+                    <button 
+                    onClick={editing ? () => {} : () => console.log("!")}
+                    className={`border border-black px-1.5 py-0.5 text-[10px] ${editing ? ('') : ('hover:opacity-50 hover:scale-115 transition-all active:scale-95')} font-alegraya-sans font-bold uppercase tracking-wider leading-none`}>
                       ROLL THE DIE
-                    </span>
+                    </button>
                   )}
                 </div>
               )}
@@ -211,8 +224,9 @@ export default function Card({
           <div
             className={`border-4  w-full border-${roleColor} rounded-lg text-justify p-3 pt-0`}
           >
-            {ability.path === "Item" && (
+            
               <div className="flex flex-wrap justify-center gap-2 mb-2 mt-4 px-1">
+                {ability.path === "Item" && (<>
                 {/* Tag de Raridade (Role) */}
                 <span className="border border-black px-2 py-1 text-base font-alegraya-sans lowercase tracking-wider leading-none">
                   {ability.role}
@@ -221,16 +235,18 @@ export default function Card({
                 {/* Tag de Espaço  */}
                 <span className="border border-black px-2 py-1 text-base font-alegraya-sans lowercase tracking-wider leading-none">
                   {ability.slots === 1 ? "1 slot" : `${ability.slots} slots`}
-                </span>
-
+                </span></>
+                )}
                 {/* Tag de Rolar o Dado */}
                 {ability.rollTheDie && (
-                  <span className="border border-black px-2 py-1 text-base font-alegraya-sans lowercase tracking-wider leading-none">
-                    ROLL THE DIE
-                  </span>
+                  <button 
+                    onClick={editing ? () => {} : () => console.log("!")}
+                    className={`border border-black px-2 py-1 text-base ${editing ? ('') : ('cursor-pointer hover:opacity-50 hover:scale-110 transition-all active:scale-95')} font-alegraya-sans lowercase tracking-wider leading-none`}>
+                      ROLL THE DIE
+                    </button>
                 )}
               </div>
-            )}
+            
             <div className="space-y-4 my-4">
               {ability.description && (
                 <p className="font-ovo text-base">{ability.description}</p>
@@ -242,8 +258,15 @@ export default function Card({
                     <div className="font-bold mr-2 inline-block gap-2 items-center">
                       <span className="flex shrink-0 items-center group relative">
                         <button
-                          onClick={() => console.log("!")}
-                          className="flex items-center tooltip relative h-full hover:opacity-50 hover:scale-115 transition-all active:scale-95 cursor-pointer"
+                          onClick={(e) => {
+                          if (editing) return;
+                          e.preventDefault(); 
+                          e.stopPropagation();
+                          if (onDeductAP && typeof baseCost === 'number') {
+                            onDeductAP(baseCost);
+                          }
+                        }}
+                          className={`flex items-center tooltip relative h-full ${editing ? ('') : ('hover:opacity-50 cursor-pointer hover:scale-115 transition-all active:scale-95')}  `}
                         >
                           <span className="bg-black px-1.5 py-0.5 text-white font-alegraya-sans font-bold leading-none flex items-center justify-center">
                             {effect.cost}
@@ -285,7 +308,7 @@ export default function Card({
             <DialogClose asChild>
                 <Button 
                     onClick={onClick} 
-                    className={isSelected ? `bg-purple hover:opacity-80 text-black border w-full rounded-lg text-lg` : 'w-full rounded-lg grow text-lg'}
+                    className={isSelected ? `bg-purple hover:opacity-80 text-black border w-full rounded-lg text-lg/3` : 'w-full rounded-lg grow text-lg'}
                 >
                     {isSelected ? 'Remove from Character' : 'Add to Character'}
                 </Button>

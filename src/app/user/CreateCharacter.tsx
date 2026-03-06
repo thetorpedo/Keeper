@@ -75,11 +75,11 @@ const filteredItems = selectedItemCategory === 'All items'
     };
 
 
- const ITEMS_PER_COL = 5; 
+ const itemsPerCol = 5; 
     const itemColumns: Ability[][] = []; 
     
     filteredItems.forEach((item, index) => {
-        const columnIndex = Math.floor(index / ITEMS_PER_COL);
+        const columnIndex = Math.floor(index / itemsPerCol);
         
         if (!itemColumns[columnIndex]) {
             itemColumns[columnIndex] = [];
@@ -117,6 +117,23 @@ const filteredItems = selectedItemCategory === 'All items'
             const newDocRef = doc(collection(db, "characters"));
             
             await setDoc(newDocRef, {
+                name: 'Blank',
+                pronouns: 'pronouns',
+                age: 'age',
+                height: 'height',
+                role: 'Blank',
+                feature1: 'distinctive feature',
+                feature2: 'distinctive feature',
+                feature3: 'distinctive feature',
+                clothing1: 'style',
+                clothing2: 'style',
+                vibe: 'style',
+                origin: 'home',
+                originTrait: 'community',
+                belief: 'ideal',
+                flaw: 'flaw',
+                abilities: [] as string[],
+                items: [] as string[],
                 ownerId: currentUser.uid,
                 createdAt: new Date(),
             });

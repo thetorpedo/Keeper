@@ -70,7 +70,7 @@ export default function AbilitySelector({
                   <Card
                     key={ability.id}
                     ability={ability}
-                    addShortcut
+                    editing
                     isSelected={selectedAbilities.includes(ability.id)}
                     onClick={() => onToggleAbility(ability.id)}
                     isLast={index === array.length - 1}
