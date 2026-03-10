@@ -1,3 +1,4 @@
+import defaultPfp from '@/assets/defaultpfp.png';
 import Button from '@/components/ui/questbutton.tsx';
 import CharacterCard from '@/components/viewcharacters/character-card.tsx';
 import { collection, getDocs, orderBy, query, where } from 'firebase/firestore';
@@ -71,7 +72,7 @@ function ViewCharacters() {
                                     role={char.role || 'BLANK'}
                                     createdAt={char.createdAt}
                                     id={char.id}
-                                    pfp={char.profileImage}
+                                    pfp={char.profileImage || defaultPfp}
                                 />
                             ))
                         ) : (

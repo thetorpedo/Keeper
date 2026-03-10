@@ -1,5 +1,5 @@
 import d20Icon from '@/assets/d20.png';
-import placeholderPfp from '@/assets/placeholderPfp.png';
+import defaultPfp from '@/assets/defaultpfp.png';
 import AbilitySelector from "@/components/sheet/AbilitySelector.tsx";
 import ItemSelector from "@/components/sheet/ItemSelector.tsx";
 import {
@@ -20,7 +20,6 @@ import {
 } from "@/components/ui/tabs.tsx";
 import { bookAbilities } from "@/data/abilities/wizard.ts";
 import { bookItems } from "@/data/items/items.ts";
-// Adicionado onSnapshot na importação do firestore
 import { deleteDoc, doc, getDoc, onSnapshot, updateDoc } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import { CircleArrowLeft, Pencil, Upload } from "lucide-react";
@@ -43,7 +42,7 @@ import type { Ability } from "@/data/interface.ts";
 
 function CharacterSheet() {
   const { id } = useParams();
-  const { currentUser } = useAuth(); // NOVO: Pegando o usuário logado
+  const { currentUser } = useAuth(); 
 
   const [character, setCharacter] = useState<any>(null);
   const [loading, setLoading] = useState(true);
@@ -51,11 +50,9 @@ function CharacterSheet() {
   const [uploadingImage, setUploadingImage] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // NOVO: Estados para guardar os dados customizados do jogador
   const [userCustomAbilities, setUserCustomAbilities] = useState<Ability[]>([]);
   const [userCustomItems, setUserCustomItems] = useState<Ability[]>([]);
 
-  // 1. Busca os dados do Personagem
   useEffect(() => {
     const fetchCharacter = async () => {
       if (!id) return;
@@ -78,7 +75,6 @@ function CharacterSheet() {
     fetchCharacter();
   }, [id]);
 
-  // 2. NOVO: Busca os itens e habilidades customizadas do Usuário em tempo real
   useEffect(() => {
     if (!currentUser?.uid) return;
     
@@ -134,12 +130,10 @@ function CharacterSheet() {
     );
   }
 
-  // A MÁGICA ACONTECE AQUI:
-  // Juntamos os arrays do Livro com os arrays Customizados do Usuário
+
   const allAbilities = [...bookAbilities, ...userCustomAbilities];
   const allItems = [...bookItems, ...userCustomItems];
 
-  // Agora o filtro procura na lista gigante (Livro + Custom)
   const myAbilities = allAbilities.filter((ability) =>
     character.abilities?.includes(ability.id),
   );
@@ -239,13 +233,11 @@ function CharacterSheet() {
   const handleUpdateNotes = async (newNotes: Note[]) => {
     if (!character || !id) return;
     
-    // Atualiza a tela instantaneamente
     setCharacter((prev: any) => ({
         ...prev,
         notes: newNotes
     }));
     
-    // Salva no Firebase
     await updateDoc(doc(db, "characters", id), { notes: newNotes });
   };
 
@@ -291,14 +283,14 @@ function CharacterSheet() {
                       <div className="relative group w-full h-full overflow-hidden">
                         {/* Imagem de Perfil */}
                         <img
-                          src={character.profileImage || placeholderPfp}
+                          src={character.profileImage || defaultPfp}
                           className="object-cover w-full h-full transition-all group-hover:scale-105 group-hover:opacity-90"
                           alt="Profile"
                         />
 
                         {/* Overlay */}
                         <div 
-                          className="absolute inset-0 bg-gradient-to-t  from-black/40 to-transparent 
+                          className="absolute inset-0 bg-linear-to-t  from-black/40 to-transparent 
                                     opacity-0 group-hover:opacity-100 transition-opacity duration-300
                                     flex items-center justify-center"
                         >
@@ -341,12 +333,6 @@ function CharacterSheet() {
                   notes={character.notes || []} 
                   onUpdateNotes={handleUpdateNotes} 
                 />
-              {/* <section className="border grow border-gray-400 rounded-lg p-4">
-                <div className="mb-3 flex w-full justify-center font-alegraya-sans lowercase  text-xl text-center">
-                  Notes
-                </div>
-                
-              </section> */}
             </div>
             <div className="col-span-7 flex flex-col w-full gap-2">
               {/* Characteristics */}
@@ -488,22 +474,17 @@ function CharacterSheet() {
         <div className="flex flex-row w-full px-5 justify-between items-center align-middle pb-5 ">
           <div className="flex flex-col gap-2 pb-5 border-b">
             <div className="flex flex-row w-full gap-4 justify-between items-center">
-              <div className="flex flex-col h-full w-2/3 items-between gap-2">
-                <a
-                  href="/"
-                  className="text-gray-400 flex flex-row gap-2 w-full"
-                >
-                  <CircleArrowLeft />
-                  <span className="uppercase text-lg font-medium font-alegraya-sans">
-                    Back
-                  </span>
-                </a>
+              <div className="flex flex-col h-full w-2/3 justify-between items-between gap-1">
                 <div>
-                  <h1 className="font-alegraya font-bold line-clamp-2 text-3xl/8">{character.name}</h1>
-                  <h2 className="font-alegraya-sans text-gray-500 uppercase font-medium">
+                  <h1 className={`font-alegraya font-bold line-clamp-2 ${character.name.length < 11 ? 'text-5xl/8 pb-3 pt-1' : 'text-3xl/8'}`}>{character.name}</h1>
+                  <h2 className="font-alegraya-sans line-clamp-1 text-gray-500 uppercase font-medium">
                     The {character.role}
                   </h2>
                 </div>
+                <Button className="font-medium mr-1 px-3! w-fit flex items-center justify-center">
+                  <RiShareFill className="inline-block mr-2 size-3" />
+                  <span className="text-sm">Share</span>
+                </Button>
                 
               </div>
 
@@ -515,14 +496,14 @@ function CharacterSheet() {
                         <div className="relative group w-full h-full overflow-hidden">
                           {/* Imagem de Perfil */}
                           <img
-                            src={character.profileImage || placeholderPfp}
+                            src={character.profileImage || defaultPfp}
                             className="object-cover w-full h-full transition-all group-hover:scale-105 group-hover:opacity-90"
                             alt="Profile"
                           />
 
                           {/* Overlay */}
                           <div 
-                            className="absolute inset-0 bg-gradient-to-t  from-black/40 to-transparent 
+                            className="absolute inset-0 bg-linear-to-t  from-black/40 to-transparent 
                                       opacity-0 group-hover:opacity-100 transition-opacity duration-300
                                       flex items-center justify-center"
                           >
@@ -547,10 +528,7 @@ function CharacterSheet() {
                   className="hidden" 
                 />
               </div>
-              <Button className="font-medium mr-1 px-3! w-full  flex items-center justify-center">
-                  <RiShareFill className="inline-block mr-2 size-3" />
-                  <span className="text-sm">Share</span>
-                </Button>
+              
                 </div>  
             </div>
 
