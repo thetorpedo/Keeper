@@ -699,9 +699,6 @@ function CharacterSheet() {
             </div>
           </TabsContent>
           <TabsContent value="notes" className="px-5">
-            <div className="mb-3 flex w-full justify-center font-alegraya-sans lowercase  text-xl text-center">
-              Notes
-            </div>
             <NotesManager 
                   notes={character.notes || []} 
                   onUpdateNotes={handleUpdateNotes} 

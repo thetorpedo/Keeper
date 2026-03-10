@@ -1,5 +1,5 @@
 import Button from "@/components/ui/questbutton.tsx"; // Seu botão customizado
-import { CircleArrowLeft, Plus, Save, Trash2 } from "lucide-react";
+import { ChevronLeft, Plus, Save, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog.tsx";
 
@@ -66,19 +66,19 @@ export default function NotesManager({ notes, onUpdateNotes }: NotesManagerProps
   };
 
   return (
-    <div className="flex flex-col w-full h-90 border grow rounded-lg border-gray-400 bg-white  overflow-hidden">
+    <div className="flex flex-col w-full h-90 sm:border grow sm:rounded-lg border-gray-400 bg-white  overflow-hidden">
       
       {/* TELA 1: LISTA DE NOTAS */}
       {view === "list" && (
         <div className="flex flex-col h-full">
-          <div className="flex justify-between items-center p-4 pt-5 border-gray-300">
+          <div className="flex justify-between items-center sm:p-4 pt-5 border-gray-300">
             <span className="font-alegraya-sans font-bold lowercase text-2xl">Notes</span>
             <Button onClick={handleCreateNew} className="px-3 py-1 mr-1 flex items-center text-base">
               <Plus className="size-4 mr-1" /> New
             </Button>
           </div>
 
-          <div className="flex flex-col h-full overflow-y-auto p-4 gap-2 ">
+          <div className="flex flex-col h-full overflow-y-auto pt-4 sm:p-4 gap-2 ">
             {notes.length === 0 ? (
               <div className="text-center text-gray-400 font-alegraya-sans mt-10">
                 No notes yet. <br/> Write something down!
@@ -105,12 +105,12 @@ export default function NotesManager({ notes, onUpdateNotes }: NotesManagerProps
 
       {/* TELA 2: EDITOR DA NOTA */}
       {view === "editor" && currentNote && (
-        <div className="flex flex-col h-full p-2 bg-white">
+        <div className="flex flex-col h-full sm:p-2 bg-white">
           {/* Header do Editor */}
-          <div className="flex justify-between items-center p-2  border-gray-300 ">
-            <button onClick={() => setView("list")} className="p-2 hover:bg-gray-200 cursor-pointer rounded transition-colors text-gray-600">
-              <CircleArrowLeft className="size-6" />
-            </button>
+          <div className="flex justify-between items-center pb-2 sm:p-2  border-gray-300 ">
+            <Button onClick={() => setView("list")} className="p-1.5! shadow-none border hover:shadow-btn! cursor-pointer  transition-all text-gray-600">
+              <ChevronLeft  className="size-6" />
+            </Button>
             
             <div className="flex gap-2">
               {/* Só mostra botão de deletar se a nota já existir (tiver conteúdo salvo) */}
@@ -145,14 +145,14 @@ export default function NotesManager({ notes, onUpdateNotes }: NotesManagerProps
               </Dialog> 
                 </>
               )}
-              <Button onClick={handleSave} className="px-3 py-1 flex items-center text-sm shadow-none bg-purple hover:shadow-btn! text-black border-black">
+              <Button onClick={handleSave} className="px-3! py-1 p-2! flex items-center text-sm shadow-none bg-purple hover:shadow-btn! text-black border-black">
                 <Save className="size-4 mr-2" /> Save
               </Button>
             </div>
           </div>
-              <hr className="border-t border-gray-400 w-[95%] mx-auto"/>
+              <hr className="border-t border-gray-400 max-sm:pb-2 w-full sm:w-[95%] mx-auto"/>
           {/* Área de digitação */}
-          <div className="flex flex-col h-full p-3 gap-2 overflow-hidden">
+          <div className="flex flex-col h-full sm:p-3 gap-2 overflow-hidden">
             <input
               type="text"
               placeholder="Note Title..."
