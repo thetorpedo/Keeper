@@ -62,7 +62,7 @@ export default function Stat({ id, name, value, onUpdate }: StatProps) {
 
   return (
     <div className='flex flex-row justify-center items-center gap-3'>
-      <div className="pb-4"><div className='bg-black rounded-lg cursor-pointer transition-all hover:bg-black/60 hover:scale-105 active:scale-95 text-white p-1.5' onClick={handleDecrement}><Minus /></div></div>
+      <div className="pb-4"><div className='bg-black rounded-lg cursor-pointer select-none transition-all hover:bg-black/60 hover:scale-105 active:scale-95 text-white p-1.5' onClick={handleDecrement}><Minus /></div></div>
       <div className='w-full'>
         <div className="border rounded-xl" onClick={() => setIsEditing(true)}>
           {isEditing ? (
@@ -97,7 +97,7 @@ export default function Stat({ id, name, value, onUpdate }: StatProps) {
             />
           </div>
       </div>
-      <div className="pb-4 "><button className='bg-black rounded-lg cursor-pointer transition-all hover:bg-black/60 hover:scale-105 active:scale-95 text-white p-1.5' onClick={handleIncrement}><Plus /></button></div>
+      <div className="pb-4 "><button className='bg-black rounded-lg cursor-pointer select-none transition-all hover:bg-black/60 hover:scale-105 active:scale-95 text-white p-1.5' onClick={handleIncrement}><Plus /></button></div>
     </div>
   )
 }

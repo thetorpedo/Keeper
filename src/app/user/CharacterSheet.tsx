@@ -20,9 +20,10 @@ import {
 } from "@/components/ui/tabs.tsx";
 import { bookAbilities } from "@/data/abilities/wizard.ts";
 import { bookItems } from "@/data/items/items.ts";
-import { deleteDoc, doc, getDoc, updateDoc } from "firebase/firestore";
+// Adicionado onSnapshot na importação do firestore
+import { deleteDoc, doc, getDoc, onSnapshot, updateDoc } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
-import { CircleArrowLeft, Plus, Upload } from "lucide-react";
+import { CircleArrowLeft, Pencil, Upload } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { BsFillBackpack2Fill, BsFillFileTextFill } from "react-icons/bs";
 import { FaUser } from "react-icons/fa6";
@@ -35,44 +36,25 @@ import Footer from "../../components/ui/footer.tsx";
 import Navbar from "../../components/ui/navbar.tsx";
 import Button from "../../components/ui/questbutton.tsx";
 import { db, storage } from "../firebase/firebase.ts";
+// NOVO: Importando a tipagem de Ability e o AuthProvider
+import { useAuth } from "@/app/contexts/authContext/authProvider.tsx";
+import type { Ability } from "@/data/interface.ts";
 
 function CharacterSheet() {
   const { id } = useParams();
+  const { currentUser } = useAuth(); // NOVO: Pegando o usuário logado
 
   const [character, setCharacter] = useState<any>(null);
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   const [uploadingImage, setUploadingImage] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (!file || !id) return;
+  // NOVO: Estados para guardar os dados customizados do jogador
+  const [userCustomAbilities, setUserCustomAbilities] = useState<Ability[]>([]);
+  const [userCustomItems, setUserCustomItems] = useState<Ability[]>([]);
 
-    if (!file.type.startsWith('image/') || file.size > 5 * 1024 * 1024) {
-      alert("Please upload a valid image file under 5MB.");
-      return;
-    }
-
-    try {
-      setUploadingImage(true);
-      
-      const imageRef = ref(storage, `characters/${id}/profile.jpg`);
-      
-      await uploadBytes(imageRef, file);
-      
-      const downloadURL = await getDownloadURL(imageRef);
-      
-      await updateCharacterField("profileImage", downloadURL);
-      
-    } catch (error) {
-      console.error("Error uploading image:", error);
-      alert("Failed to upload image.");
-    } finally {
-      setUploadingImage(false);
-    }
-  };
-
+  // 1. Busca os dados do Personagem
   useEffect(() => {
     const fetchCharacter = async () => {
       if (!id) return;
@@ -95,6 +77,46 @@ function CharacterSheet() {
     fetchCharacter();
   }, [id]);
 
+  // 2. NOVO: Busca os itens e habilidades customizadas do Usuário em tempo real
+  useEffect(() => {
+    if (!currentUser?.uid) return;
+    
+    const docRef = doc(db, "users", currentUser.uid);
+    const unsubscribe = onSnapshot(docRef, (docSnap) => {
+      if (docSnap.exists()) {
+        const data = docSnap.data();
+        setUserCustomAbilities(data.custom_abilities || []);
+        setUserCustomItems(data.custom_items || []);
+      }
+    });
+
+    return () => unsubscribe();
+  }, [currentUser]);
+
+
+  const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file || !id) return;
+
+    if (!file.type.startsWith('image/') || file.size > 5 * 1024 * 1024) {
+      alert("Please upload a valid image file under 5MB.");
+      return;
+    }
+
+    try {
+      setUploadingImage(true);
+      const imageRef = ref(storage, `characters/${id}/profile.jpg`);
+      await uploadBytes(imageRef, file);
+      const downloadURL = await getDownloadURL(imageRef);
+      await updateCharacterField("profileImage", downloadURL);
+    } catch (error) {
+      console.error("Error uploading image:", error);
+      alert("Failed to upload image.");
+    } finally {
+      setUploadingImage(false);
+    }
+  };
+
   if (loading) {
     return (
       <div className="h-screen flex items-center justify-center font-alegraya text-2xl">
@@ -111,12 +133,20 @@ function CharacterSheet() {
     );
   }
 
-  const myAbilities = bookAbilities.filter((ability) =>
+  // A MÁGICA ACONTECE AQUI:
+  // Juntamos os arrays do Livro com os arrays Customizados do Usuário
+  const allAbilities = [...bookAbilities, ...userCustomAbilities];
+  const allItems = [...bookItems, ...userCustomItems];
+
+  // Agora o filtro procura na lista gigante (Livro + Custom)
+  const myAbilities = allAbilities.filter((ability) =>
     character.abilities?.includes(ability.id),
   );
-  const myItems = bookItems.filter((item) =>
+  
+  const myItems = allItems.filter((item) =>
     character.items?.includes(item.id),
   );
+
   const usedSlots = myItems.reduce(
     (total, item) => total + (item.slots || 1),
     0,
@@ -319,13 +349,10 @@ function CharacterSheet() {
                       <Dialog>
                         <DialogTrigger asChild>
                           <Button className="flex text-lg py-0.5! items-center cursor-pointer">
-                            <Plus className="size-4 mr-2" /> Add Ability
+                            <Pencil className="size-4 mr-2" /> Edit
                           </Button>
                         </DialogTrigger>
                         <DialogContent className="w-fit max-w-[90vw]! max-h-[90vh] overflow-y-auto p-10 bg-white">
-                          <div className="font-alegraya font-extrabold text-4xl mb-4 text-center">
-                            Add new ability
-                          </div>
                           <AbilitySelector
                             selectedAbilities={character.abilities || []}
                             onToggleAbility={toggleAbility}
@@ -344,13 +371,10 @@ function CharacterSheet() {
                       <Dialog>
                         <DialogTrigger asChild>
                           <Button className="flex text-lg py-0.5! items-center cursor-pointer">
-                            <Plus className="size-4 mr-2" /> Add Item
+                            <Pencil className="size-4 mr-2" /> Edit
                           </Button>
                         </DialogTrigger>
                         <DialogContent className="w-fit max-w-[90vw]! max-h-[90vh] overflow-y-auto p-10 bg-white">
-                          <div className="font-alegraya font-extrabold text-4xl mb-4 text-center">
-                            Add new item
-                          </div>
                           <ItemSelector
                             selectedItems={character.items || []}
                             onToggleItem={toggleItem}
@@ -386,7 +410,6 @@ function CharacterSheet() {
                   <div className="flex flex-col gap-4 justify-start h-full w-1/2">
                     <div className="p-5 bg-gray-100 rounded-lg w-full h-full border min-h-125 border-gray-300 ">
                       <div className="mt-23 flex-col grow-0">
-                        {/* Renderização Dinâmica dos Itens */}
                         {myItems.length === 0 && (
                           <p className="text-gray-500 font-alegraya-sans text-center">
                             No items yet.
@@ -575,13 +598,10 @@ function CharacterSheet() {
                   <Dialog>
                         <DialogTrigger asChild>
                           <Button className="flex text-lg py-0! items-center cursor-pointer">
-                            <Plus className="size-4 mr-2" /> Add New
+                            <Pencil className="size-4 mr-2" /> Edit
                           </Button>
                         </DialogTrigger>
                         <DialogContent className="w-fit max-w-[95vw]! max-h-[85vh] p-2 pt-8 max-sm:w-[95vw] -mt-8 overflow-y-auto sm:p-10 bg-white">
-                          <div className="font-alegraya font-extrabold text-4xl mb-2 text-center">
-                            Add new ability
-                          </div>
                           <AbilitySelector
                             selectedAbilities={character.abilities || []}
                             onToggleAbility={toggleAbility}
@@ -626,13 +646,10 @@ function CharacterSheet() {
                   <Dialog>
                         <DialogTrigger asChild>
                           <Button className="flex text-lg py-0! items-center cursor-pointer">
-                            <Plus className="size-4 mr-2" /> Add New
+                            <Pencil className="size-4 mr-2" /> Edit
                           </Button>
                         </DialogTrigger>
                         <DialogContent className="w-fit max-w-[95vw]! max-h-[85vh] p-2 pt-8 max-sm:w-[95vw] -mt-8 overflow-y-auto sm:p-10 bg-white">
-                          <div className="font-alegraya font-extrabold text-4xl mb-2 text-center">
-                            Add new item
-                          </div>
                           <ItemSelector
                             selectedItems={character.items || []}
                             onToggleItem={toggleItem}

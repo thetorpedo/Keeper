@@ -2,6 +2,10 @@ import {
   Dialog,
   DialogClose,
   DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog.tsx";
 import Button from "@/components/ui/questbutton.tsx";
@@ -15,6 +19,8 @@ interface CardProps {
   isLast: boolean;
   editing: boolean;
   onDeductAP?: (cost: number) => void;
+  onDelete?: (id: string) => void;
+  onEdit?: (id: string) => void;
 }
 
 export default function Card({
@@ -24,6 +30,8 @@ export default function Card({
   isLast,
   editing,
   onDeductAP,
+  onDelete,
+  onEdit,
 }: CardProps) {
   const baseCost = ability.effects?.[0]?.cost ?? undefined;
 
@@ -68,7 +76,7 @@ export default function Card({
               <div className="px-2 max-w-full">
                 <div className="flex items-center justify-center gap-2 px-2 relative max-w-full bg-white">
                   {/* AP */}
-                  {baseCost ? (
+                  {typeof baseCost === 'number' ? (
                     <div className="flex shrink-0 items-center group relative">
                       <button
                         onClick={(e) => {
@@ -206,21 +214,20 @@ export default function Card({
         className="sm:max-w-md max-h-[80vh] gap-0 z-100 overflow-y-auto font-alegraya-sans p-0 font-medium text-lg"
       >
         <div className="flex flex-col relative m-3 mt-7 justify-center items-center">
-          <div className="flex items-center justify-center gap-2 px-2 relative -mb-8 grow-0 w-fit -top-4 max-w-full bg-white">
-            {/* Name */}
-            <div className="flex shrink-0 min-w-0 truncate items-center h-full">
-              <span className="font-alegraya-sans lowercase truncate block w-full font-extrabold text-2xl text-center ">
+          
+          {/* PARENT DO TÍTULO: max-w-[90%] garante que a caixa branca nunca encoste nas bordas do modal */}
+          <div className="flex items-center justify-center gap-2 px-2 relative -mb-8 z-10 -top-4 max-w-75 bg-white">
+            
+            {/* NOME: Removemos os w-fit! min-w-0 e shrink permitem que o Flexbox esmague essa div se o nome for gigante */}
+            <div className="flex shrink min-w-0 items-center h-full">
+              <span 
+                className="font-alegraya-sans lowercase truncate block w-full font-extrabold text-2xl text-center"
+                title={ability.name}
+              >
                 {ability.name}
               </span>
             </div>
-            {ability.path === "Item"
-              ? ability.damage && (
-                  <div className="border-3 border-damage px-1.5 text-base/4 font-extrabold font-alegraya-sans text-damage">
-                    {ability.damage}
-                  </div>
-                )
-              : ""}
-          </div>
+            </div>
           <div
             className={`border-4  w-full border-${roleColor} rounded-lg text-justify p-3 pt-0`}
           >
@@ -298,14 +305,66 @@ export default function Card({
                 )}
               </div>
             </div>
+            
           </div>
+          {/* BOTÕES DE EDIT E DELETE */}
+          {(ability.role === "Custom Abilities" || ability.role === "Custom Items") && editing && (
+            <div className="flex flex-row justify-between items-center w-full px-1 mt-2">
+              {/* BOTÃO DELETE */}
+              <Dialog>
+                <DialogTrigger asChild>
+                  <button className="font-alegraya-sans lowercase text-left cursor-pointer hover:underline transition-all hover:text-red-400 font-medium text-xl text-red-500">
+                    Delete this ability
+                  </button>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-md z-999">
+                  <DialogHeader>
+                    <DialogTitle>Are you sure you want to delete this {ability.path.toLowerCase()}?</DialogTitle>
+                    <DialogDescription className='text-base pb-5'>
+                      This action CANNOT be undone!
+                    </DialogDescription>
+                  </DialogHeader>
+                  <DialogFooter className="sm:justify-between">
+                    <DialogClose asChild>
+                      <Button 
+                        className='bg-red-400 text-white'
+                        onClick={() => onDelete && onDelete(ability.id)}
+                      >
+                        Delete
+                      </Button>
+                    </DialogClose>
+                    <DialogClose asChild>
+                      <Button>Close</Button>
+                    </DialogClose>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>  
+
+              {/* BOTÃO EDIT */}
+              <DialogClose asChild>
+              <button 
+                onClick={() => {
+                  if (onEdit) {
+                    onEdit(ability.id);
+                  }
+                }}
+                className="font-alegraya-sans lowercase text-right cursor-pointer hover:underline transition-all hover:text-purple-900/50 font-medium text-xl text-purple-900/70"
+              >
+                Edit
+              </button>
+              </DialogClose>
+            </div>
+          )}
+
+          
+          
         </div>
         <div className="flex justify-end gap-3 p-4 border-t border-gray-200">
         <DialogClose asChild>
-            <Button type="button" className="shrink rounded-lg text-lg">Close</Button>
+            <Button type="button" className={`shrink rounded-lg text-lg ${!editing && 'w-full'}`}>Close</Button>
                 </DialogClose>
-            
-            <DialogClose asChild>
+            {editing && (
+<DialogClose asChild>
                 <Button 
                     onClick={onClick} 
                     className={isSelected ? `bg-purple hover:opacity-80 text-black border w-full rounded-lg text-lg/3` : 'w-full rounded-lg grow text-lg'}
@@ -313,6 +372,9 @@ export default function Card({
                     {isSelected ? 'Remove from Character' : 'Add to Character'}
                 </Button>
             </DialogClose>
+
+            )}
+            
         </div>
       </DialogContent>
     </Dialog>

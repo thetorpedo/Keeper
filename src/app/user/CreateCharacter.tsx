@@ -174,23 +174,23 @@ const filteredItems = selectedItemCategory === 'All items'
   return (
         <div className='flex flex-col justify-between items-center bg-white h-full'>
             < Navbar/>
-            <div className="my-10 max-w-4/6 w-250 space-y-5 flex flex-col items-center">
+            <div className="my-10 max-sm:max-w-[90%] max-w-4/6 w-250 space-y-5 flex flex-col items-center">
                 <div className='flex flex-col border-b pb-3 w-full text-center'>
                     <h1 className='text-4xl font-extrabold font-alegraya'>Creating a character</h1>
                     <span className='text-xl font-bold font-alegraya-sans text-gray-400 lowercase'>
-                        <span className={`text-gray-${step === 1 ? '500' : '300'}`}>PROFILE</span>
+                        <span onClick={() => setStep(1)} className={`text-gray-${step === 1 ? '500' : '300'} cursor-pointer`}>PROFILE</span>
                         {' - '}
-                        <span className={`text-gray-${step === 2 ? '500' : '300'}`}>ABILITIES</span>
+                        <span onClick={() => setStep(2)} className={`text-gray-${step === 2 ? '500' : '300'} cursor-pointer`}>ABILITIES</span>
                         {' - '}
-                        <span className={`text-gray-${step === 3 ? '500' : '300'}`}>INVENTORY</span>
+                        <span onClick={() => setStep(3)} className={`text-gray-${step === 3 ? '500' : '300'} cursor-pointer`}>INVENTORY</span>
                     </span>
                     
                 </div>
                 <div className='flex flex-col max-w-280'>
                     {step === 1 && <CharacterProfile 
-        characterData={newCharacter} 
-        updateField={updateCharacterField} 
-    />}
+                        characterData={newCharacter} 
+                        updateField={updateCharacterField} 
+                    />}
                     {step === 2 && (
                         <AbilitySelector 
                             selectedAbilities={newCharacter.abilities} 
