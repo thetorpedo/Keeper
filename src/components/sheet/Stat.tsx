@@ -43,7 +43,7 @@ export default function Stat({ id, name, value, onUpdate }: StatProps) {
   };
 
   const handleUpdate = () => {
-    const newValue = parseInt(inputValue.toString(), 5);
+    const newValue = parseInt(inputValue.toString(), 10);
     if (!isNaN(newValue) && newValue !== value) {
       onUpdate(id, newValue);
     }
