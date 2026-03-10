@@ -38,6 +38,7 @@ import Button from "../../components/ui/questbutton.tsx";
 import { db, storage } from "../firebase/firebase.ts";
 // NOVO: Importando a tipagem de Ability e o AuthProvider
 import { useAuth } from "@/app/contexts/authContext/authProvider.tsx";
+import NotesManager, { type Note } from '@/components/sheet/NotesManager.tsx';
 import type { Ability } from "@/data/interface.ts";
 
 function CharacterSheet() {
@@ -235,6 +236,19 @@ function CharacterSheet() {
     }
   };
 
+  const handleUpdateNotes = async (newNotes: Note[]) => {
+    if (!character || !id) return;
+    
+    // Atualiza a tela instantaneamente
+    setCharacter((prev: any) => ({
+        ...prev,
+        notes: newNotes
+    }));
+    
+    // Salva no Firebase
+    await updateDoc(doc(db, "characters", id), { notes: newNotes });
+  };
+
   return (
     <div className="flex max-sm:justify-start flex-col justify-between items-center bg-white h-full">
       <Navbar />
@@ -323,12 +337,16 @@ function CharacterSheet() {
                 />
               </section>
               {/* Notes */}
-              <section className="border grow border-gray-400 rounded-lg p-4">
+              <NotesManager 
+                  notes={character.notes || []} 
+                  onUpdateNotes={handleUpdateNotes} 
+                />
+              {/* <section className="border grow border-gray-400 rounded-lg p-4">
                 <div className="mb-3 flex w-full justify-center font-alegraya-sans lowercase  text-xl text-center">
                   Notes
                 </div>
-                <textarea className="w-full  h-90 border rounded-lg"></textarea>
-              </section>
+                
+              </section> */}
             </div>
             <div className="col-span-7 flex flex-col w-full gap-2">
               {/* Characteristics */}
@@ -684,7 +702,10 @@ function CharacterSheet() {
             <div className="mb-3 flex w-full justify-center font-alegraya-sans lowercase  text-xl text-center">
               Notes
             </div>
-            <textarea className="w-full  h-90 border rounded-lg"></textarea>
+            <NotesManager 
+                  notes={character.notes || []} 
+                  onUpdateNotes={handleUpdateNotes} 
+                />
           </TabsContent>
         </Tabs>
       </div>
