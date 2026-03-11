@@ -38,6 +38,7 @@ import { db, storage } from "../firebase/firebase.ts";
 // NOVO: Importando a tipagem de Ability e o AuthProvider
 import { useAuth } from "@/app/contexts/authContext/authProvider.tsx";
 import NotesManager, { type Note } from '@/components/sheet/NotesManager.tsx';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert.tsx';
 import type { Ability } from "@/data/interface.ts";
 
 function CharacterSheet() {
@@ -49,6 +50,8 @@ function CharacterSheet() {
   const navigate = useNavigate();
   const [uploadingImage, setUploadingImage] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [isRolling, setIsRolling] = useState(false);
+  const [rollResult, setRollResult] = useState(0);
 
   const [userCustomAbilities, setUserCustomAbilities] = useState<Ability[]>([]);
   const [userCustomItems, setUserCustomItems] = useState<Ability[]>([]);
@@ -241,14 +244,54 @@ function CharacterSheet() {
     await updateDoc(doc(db, "characters", id), { notes: newNotes });
   };
 
+  const rollD20 = () => {
+    setIsRolling(true);
+    setRollResult(Math.floor(Math.random() * 20) + 1);
+    setTimeout(() => {
+      setIsRolling(false);
+    }, 5000);
+  };
+
+
+
   return (
-    <div className="flex max-sm:justify-start flex-col justify-between items-center bg-white h-full">
+    <div className="flex max-sm:justify-start relative flex-col justify-between items-center bg-white h-full">
       <Navbar />
+
+      <Alert 
+        className={`
+          fixed bottom-5 z-9999 w-fit text-center shadow-btn text-3xl p-5
+          transition-all duration-500 ease-in-out
+          font-alegraya
+          ${isRolling 
+            ? 'translate-y-0 opacity-100 visible' 
+            : 'translate-y-20 opacity-0 invisible'}
+        `}
+      >
+        <AlertTitle>You rolled {[8,11,18].includes(rollResult) ? 'an  ' : 'a  '}<span className='font-extrabold font-alegraya-sans text-4xl mx-1 -mt-1'>{rollResult}</span>{'  '}- 
+          <span className='font-bold'>
+          {rollResult === 20 && ' Triumph!'}
+          {rollResult >= 11 && rollResult <= 19 && ' Success'}
+          {rollResult >= 6 && rollResult <= 10 && ' Tough Choice'}
+          {rollResult >= 2 && rollResult <= 5 && ' Failure'}
+          {rollResult === 1 && ' Catastrophe'}
+          </span>
+        </AlertTitle>
+        <AlertDescription className='text-center w-full text-base whitespace-pre-line'>
+          {rollResult === 20 && 'This is an exciting moment!\nYou automatically succeed at what you were trying to do, and you may even find added fortune.\nIf you’re dealing damage, double it.'}
+          {rollResult >= 11 && rollResult <= 19 && 'You accomplish what you were trying to do without any compromises.\nIf you’re dealing damage, you deal the standard amount.'}
+          {rollResult >= 6 && rollResult <= 10 && 'You succeed in your action, but there’s a cost.\nThe Guide will give you a choice between two setbacks.'}
+          {rollResult >= 2 && rollResult <= 5 && 'You fail your intended action and face a setback of the Guide’s choice.\nYou might lose equipment, take damage from an enemy counterattack, or face some other misfortune.'}
+          {rollResult === 1 && 'Oh no.\nYou automatically fail, and you may suffer a severe setback.'}
+        </AlertDescription>
+      </Alert>
 
       {/* Desktop */}
       <div className="hidden md:block">
-        <Button className="p-4! fixed bottom-10 right-10 z-999 bg-white">
-          <img src={d20Icon} className="w-12 h-12 rounded-full" />
+        <Button 
+          onClick={rollD20}
+          className={`p-4! fixed bottom-10 right-10 z-999 bg-white `}>
+          <img src={d20Icon} className={`${isRolling && 'animate-spin'} w-12 h-12 rounded-full`} />
         </Button>
         <div className="my-10 max-w-280 w-full flex flex-col gap-3 items-center">
           <a href="/" className="text-gray-400 flex flex-row gap-2 w-full">

@@ -22,7 +22,7 @@ function CreateCharacter() {
 
     const [selectedRole, setSelectedRole] = useState<string>('Wizard');
     const [newCharacter, setNewCharacter] = useState({
-    name: 'name',
+    name: 'Name',
     pronouns: 'pronouns',
     age: 'age',
     height: 'height',
