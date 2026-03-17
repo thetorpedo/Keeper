@@ -21,6 +21,7 @@ interface CardProps {
   onDeductAP?: (cost: number) => void;
   onDelete?: (id: string) => void;
   onEdit?: (id: string) => void;
+  onRoll?: () => void;
 }
 
 export default function Card({
@@ -32,6 +33,7 @@ export default function Card({
   onDeductAP,
   onDelete,
   onEdit,
+  onRoll,
 }: CardProps) {
   const baseCost = ability.effects?.[0]?.cost ?? undefined;
 
@@ -120,7 +122,14 @@ export default function Card({
                     : ability.rollTheDie && (
                         <div className="flex shrink-0 items-center h-full">
                           <button 
-                          onClick={editing ? () => {} : () => console.log("!")}
+                          onClick={(e) => {
+                            if (editing) return;
+                            e.preventDefault();
+                            e.stopPropagation();
+                            if (onRoll) {
+                              onRoll();
+                            }
+                          }}
                           className={`font-alegraya-sans cursor-pointer ${editing ? ('') : ('hover:opacity-50 hover:scale-115 transition-all active:scale-95')} lowercase  text-[14px] leading-none flex items-center justify-center bg-gray-50`}>
                             <img
                               src="../../src/assets/d20.png"
@@ -153,8 +162,15 @@ export default function Card({
                   {/* Tag de Rolar o Dado */}
                   {ability.rollTheDie && (
                     <button 
-                    onClick={editing ? () => {} : () => console.log("!")}
-                    className={`border border-black px-1.5 py-0.5 text-[10px] ${editing ? ('') : ('hover:opacity-50 hover:scale-115 transition-all active:scale-95')} font-alegraya-sans font-bold uppercase tracking-wider leading-none`}>
+                    onClick={(e) => {
+                      if (editing) return;
+                      e.preventDefault();
+                      e.stopPropagation();
+                      if (onRoll) {
+                        onRoll();
+                      }
+                    }}
+                    className={`border border-black px-1.5 py-0.5 text-[10px] ${editing ? ('') : ('hover:opacity-50 hover:scale-105 transition-all active:scale-95 cursor-pointer')} font-alegraya-sans font-bold uppercase tracking-wider leading-none`}>
                       ROLL THE DIE
                     </button>
                   )}
@@ -189,12 +205,12 @@ export default function Card({
                     </div>
                   ))}
                   {ability.rollTable && (
-                    <div className="p-2 pb-0 text-base font-ovo">
+                    <div className="p-1 pt-0 pb-0 text-sm font-ovo">
                       {ability.rollTable?.map((roll, index, array) => (
                         <div
                           className={`${index === array.length - 1 ? "" : "border-b"} border-gray-300`}
                         >
-                          <span className="font-semibold font-alegraya-sans text-lg">
+                          <span className="font-semibold font-alegraya-sans text-base">
                             {roll.value}:{" "}
                           </span>
                           {roll.description}
@@ -247,7 +263,14 @@ export default function Card({
                 {/* Tag de Rolar o Dado */}
                 {ability.rollTheDie && (
                   <button 
-                    onClick={editing ? () => {} : () => console.log("!")}
+                    onClick={(e) => {
+                      if (editing) return;
+                      e.preventDefault();
+                      e.stopPropagation();
+                      if (onRoll) {
+                        onRoll();
+                      }
+                    }}
                     className={`border border-black px-2 py-1 text-base ${editing ? ('') : ('cursor-pointer hover:opacity-50 hover:scale-110 transition-all active:scale-95')} font-alegraya-sans lowercase tracking-wider leading-none`}>
                       ROLL THE DIE
                     </button>

@@ -56,6 +56,9 @@ function CharacterSheet() {
   const [userCustomAbilities, setUserCustomAbilities] = useState<Ability[]>([]);
   const [userCustomItems, setUserCustomItems] = useState<Ability[]>([]);
 
+  const rollTimeoutRef = useRef<any>(null);
+  const [spinKey, setSpinKey] = useState(0);
+
   useEffect(() => {
     const fetchCharacter = async () => {
       if (!id) return;
@@ -244,10 +247,16 @@ function CharacterSheet() {
     await updateDoc(doc(db, "characters", id), { notes: newNotes });
   };
 
-  const rollD20 = () => {
+ const rollD20 = () => {
+    if (rollTimeoutRef.current) {
+      clearTimeout(rollTimeoutRef.current);
+    }
+
+    setSpinKey(prev => prev + 1);
     setIsRolling(true);
     setRollResult(Math.floor(Math.random() * 20) + 1);
-    setTimeout(() => {
+    
+    rollTimeoutRef.current = setTimeout(() => {
       setIsRolling(false);
     }, 5000);
   };
@@ -260,7 +269,7 @@ function CharacterSheet() {
 
       <Alert 
         className={`
-          fixed bottom-5 z-9999 w-fit text-center shadow-btn text-3xl p-5
+          fixed bottom-5 z-9999 w-fit text-center shadow-btn text-xl sm:text-3xl p-2 mx-2 max-sm:bottom-20 sm:p-5
           transition-all duration-500 ease-in-out
           font-alegraya
           ${isRolling 
@@ -268,7 +277,7 @@ function CharacterSheet() {
             : 'translate-y-20 opacity-0 invisible'}
         `}
       >
-        <AlertTitle>You rolled {[8,11,18].includes(rollResult) ? 'an  ' : 'a  '}<span className='font-extrabold font-alegraya-sans text-4xl mx-1 -mt-1'>{rollResult}</span>{'  '}- 
+        <AlertTitle>You rolled {[8,11,18].includes(rollResult) ? 'an  ' : 'a  '}<span className='font-extrabold font-alegraya-sans text-2xl sm:text-4xl mx-1 -mt-1'>{rollResult}</span>{'  '}- 
           <span className='font-bold'>
           {rollResult === 20 && ' Triumph!'}
           {rollResult >= 11 && rollResult <= 19 && ' Success'}
@@ -277,7 +286,7 @@ function CharacterSheet() {
           {rollResult === 1 && ' Catastrophe'}
           </span>
         </AlertTitle>
-        <AlertDescription className='text-center w-full text-base whitespace-pre-line'>
+        <AlertDescription className='text-center w-full text-sm sm:text-base whitespace-pre-line'>
           {rollResult === 20 && 'This is an exciting moment!\nYou automatically succeed at what you were trying to do, and you may even find added fortune.\nIf you’re dealing damage, double it.'}
           {rollResult >= 11 && rollResult <= 19 && 'You accomplish what you were trying to do without any compromises.\nIf you’re dealing damage, you deal the standard amount.'}
           {rollResult >= 6 && rollResult <= 10 && 'You succeed in your action, but there’s a cost.\nThe Guide will give you a choice between two setbacks.'}
@@ -291,7 +300,7 @@ function CharacterSheet() {
         <Button 
           onClick={rollD20}
           className={`p-4! fixed bottom-10 right-10 z-999 bg-white `}>
-          <img src={d20Icon} className={`${isRolling && 'animate-spin'} w-12 h-12 rounded-full`} />
+          <img key={`roll-${spinKey}`} src={d20Icon} className={`${spinKey > 0 ? 'animate-[spin_0.7s_ease-out]' : ''} w-12 h-12 rounded-full`} />
         </Button>
         <div className="my-10 max-w-280 w-full flex flex-col gap-3 items-center">
           <a href="/" className="text-gray-400 flex flex-row gap-2 w-full">
@@ -447,6 +456,7 @@ function CharacterSheet() {
                             editing={false}
                             isSelected={true}
                             onClick={() => removeAbility(ability.id)}
+                            onRoll={rollD20}
                             isLast={index === array.length - 1}
                             onDeductAP={handleDeductAP}
                           />
@@ -468,6 +478,7 @@ function CharacterSheet() {
                             ability={item}
                             editing={false}
                             isSelected={true}
+                            onRoll={rollD20}
                             onClick={() => removeItem(item.id)}
                             isLast={index === array.length - 1}
                             onDeductAP={handleDeductAP}
@@ -592,7 +603,7 @@ function CharacterSheet() {
           </div>
         </div>
         <Tabs defaultValue="characteristics">
-          <TabsList className="fixed w-full bottom-0 left-0 z-99">
+          <TabsList className="fixed w-full bottom-0 left-0 z-10">
             <TabsTrigger
               value="characteristics"
               className="group active:scale-95 transition-transform"
@@ -617,8 +628,10 @@ function CharacterSheet() {
             >
               <BsFillFileTextFill className="size-6 group-data-[state=active]:-mt-2 group-data-[state=active]:size-7" />
             </TabsTrigger>
-            <Button className="p-3! fixed bottom-3 right-3 z-999 bg-white">
-              <img src={d20Icon} className="size-8.5" />
+            <Button
+              onClick={rollD20}
+              className="p-3! fixed bottom-3 right-3 z-999 bg-white">
+              <img key={`roll-${spinKey}`} src={d20Icon} className={`${spinKey > 0 ? 'animate-[spin_0.7s_ease-out]' : ''} size-8.5`} />
             </Button>
           </TabsList>
           <TabsContent value="characteristics" className="px-5">
@@ -663,6 +676,7 @@ function CharacterSheet() {
                       ability={ability}
                       editing={false}
                       isSelected={true}
+                      onRoll={rollD20}
                       onClick={() => {}}
                       isLast={index === array.length - 1}
                     />
@@ -711,6 +725,7 @@ function CharacterSheet() {
                       ability={item}
                       editing={false}
                       isSelected={true}
+                      onRoll={rollD20}
                       onClick={() => {}}
                       isLast={index === array.length - 1}
                     />
