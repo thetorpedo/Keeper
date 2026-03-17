@@ -40,6 +40,46 @@ import { useAuth } from "@/app/contexts/authContext/authProvider.tsx";
 import NotesManager, { type Note } from '@/components/sheet/NotesManager.tsx';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert.tsx';
 import type { Ability } from "@/data/interface.ts";
+import CropperOriginal from 'react-easy-crop';
+const Cropper = CropperOriginal as any;
+
+ const getCroppedImg = (imageSrc: string, pixelCrop: any): Promise<Blob> => {
+    return new Promise((resolve, reject) => {
+      const image = new Image();
+      image.src = imageSrc;
+      image.setAttribute('crossOrigin', 'anonymous'); // Evita erros de CORS
+      image.onload = () => {
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d");
+
+        if (!ctx) return reject(new Error("No 2d context"));
+
+        canvas.width = pixelCrop.width;
+        canvas.height = pixelCrop.height;
+
+        // Desenha só a parte cortada no canvas
+        ctx.drawImage(
+          image,
+          pixelCrop.x,
+          pixelCrop.y,
+          pixelCrop.width,
+          pixelCrop.height,
+          0,
+          0,
+          pixelCrop.width,
+          pixelCrop.height
+        );
+
+        // COMPRESSÃO AQUI: Exporta como JPEG com 70% de qualidade
+        canvas.toBlob((blob) => {
+          if (!blob) return reject(new Error("Canvas is empty"));
+          resolve(blob);
+        }, "image/jpeg", 0.7); 
+      };
+      image.onerror = (error) => reject(error);
+    });
+};
+
 
 function CharacterSheet() {
   const { id } = useParams();
@@ -48,8 +88,7 @@ function CharacterSheet() {
   const [character, setCharacter] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
-  const [uploadingImage, setUploadingImage] = useState(false);
-  const fileInputRef = useRef<HTMLInputElement>(null);
+
   const [isRolling, setIsRolling] = useState(false);
   const [rollResult, setRollResult] = useState(0);
 
@@ -59,6 +98,14 @@ function CharacterSheet() {
   const rollTimeoutRef = useRef<any>(null);
   const [spinKey, setSpinKey] = useState(0);
 
+  const [uploadingImage, setUploadingImage] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [imageToCrop, setImageToCrop] = useState<string | null>(null);
+  const [crop, setCrop] = useState({ x: 0, y: 0 });
+  const [zoom, setZoom] = useState(1);
+  const [croppedAreaPixels, setCroppedAreaPixels] = useState<any>(null);
+
+  
   useEffect(() => {
     const fetchCharacter = async () => {
       if (!id) return;
@@ -97,28 +144,56 @@ function CharacterSheet() {
   }, [currentUser]);
 
 
-  const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
-    if (!file || !id) return;
+    if (!file) return;
 
-    if (!file.type.startsWith('image/') || file.size > 5 * 1024 * 1024) {
-      alert("Please upload a valid image file under 5MB.");
+    if (!file.type.startsWith('image/')) {
+      alert("Please upload a valid image file.");
       return;
     }
 
+    // Cria uma URL temporária da imagem para o Cropper conseguir ler
+    const imageUrl = URL.createObjectURL(file);
+    setImageToCrop(imageUrl);
+    
+    // Reseta o input caso ele queira upar a mesma foto de novo
+    if (fileInputRef.current) fileInputRef.current.value = '';
+  };
+
+  // 2. O Cropper atualiza os pixels que o usuário selecionou
+  const onCropComplete = (_croppedArea: any, croppedAreaPixels: any) => {
+    setCroppedAreaPixels(croppedAreaPixels);
+  };
+
+  // 3. O usuário clica em "Salvar", cortamos, comprimimos e enviamos pro Firebase
+  const handleCropAndUpload = async () => {
+    if (!imageToCrop || !croppedAreaPixels || !id) return;
+    
     try {
       setUploadingImage(true);
+      
+      // Recebe a foto comprimida e cortada do canvas
+      const croppedBlob = await getCroppedImg(imageToCrop, croppedAreaPixels);
+      
+      // Faz o upload pro Firebase Storage
       const imageRef = ref(storage, `characters/${id}/profile.jpg`);
-      await uploadBytes(imageRef, file);
+      await uploadBytes(imageRef, croppedBlob);
       const downloadURL = await getDownloadURL(imageRef);
+      
+      // Atualiza a ficha
       await updateCharacterField("profileImage", downloadURL);
+      
+      // Fecha o modal
+      setImageToCrop(null);
     } catch (error) {
-      console.error("Error uploading image:", error);
+      console.error("Error cropping/uploading image:", error);
       alert("Failed to upload image.");
     } finally {
       setUploadingImage(false);
     }
   };
+
 
   if (loading) {
     return (
@@ -267,6 +342,46 @@ function CharacterSheet() {
     <div className="flex max-sm:justify-start relative flex-col justify-between items-center bg-white h-full">
       <Navbar />
 
+      <Dialog open={!!imageToCrop} onOpenChange={(open) => !open && setImageToCrop(null)}>
+        <DialogContent className="sm:max-w-md bg-white">
+          <DialogHeader>
+            <DialogTitle className="font-alegraya text-3xl font-extrabold">Adjust Picture</DialogTitle>
+          </DialogHeader>
+          
+          <div className="relative w-full h-72 bg-black rounded-lg overflow-hidden">
+            <Cropper
+              image={imageToCrop || ""}
+              crop={crop}
+              zoom={zoom}
+              aspect={1}
+              onCropChange={setCrop}
+              onCropComplete={onCropComplete}
+              onZoomChange={setZoom}
+            />
+          </div>
+          
+          <div className="flex flex-col gap-1 mt-2">
+            <label className="text-base font-alegraya-sans font-bold lowercase">Zoom</label>
+            <input
+              type="range"
+              value={zoom}
+              min={1}
+              max={3}
+              step={0.1}
+              onChange={(e) => setZoom(Number(e.target.value))}
+              className="w-full accent-purple"
+            />
+          </div>
+          
+          <DialogFooter className="mt-4 sm:justify-between gap-4">
+            <Button onClick={() => setImageToCrop(null)} className="bg-transparent shadow-none text-black hover:shadow-btn!">Cancel</Button>
+            <Button onClick={handleCropAndUpload} className="bg-purple text-black" disabled={uploadingImage}>
+              {uploadingImage ? "Saving..." : "Save Image"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
       <Alert 
         className={`
           fixed bottom-5 z-9999 w-fit text-center shadow-btn text-xl sm:text-3xl p-2 mx-2 max-sm:bottom-20 sm:p-5
@@ -303,7 +418,7 @@ function CharacterSheet() {
           <img key={`roll-${spinKey}`} src={d20Icon} className={`${spinKey > 0 ? 'animate-[spin_0.7s_ease-out]' : ''} w-12 h-12 rounded-full`} />
         </Button>
         <div className="my-10 max-w-280 w-full flex flex-col gap-3 items-center">
-          <a href="/" className="text-gray-400 flex flex-row gap-2 w-full">
+          <a href="/view" className="text-gray-400 flex flex-row gap-2 w-full">
             <CircleArrowLeft />
             <span className="uppercase text-xl font-medium font-alegraya-sans">
               Back
@@ -362,7 +477,7 @@ function CharacterSheet() {
                 <input 
                   type="file" 
                   ref={fileInputRef}
-                  onChange={handleImageUpload}
+                  onChange={handleFileSelect}
                   accept="image/*"
                   className="hidden" 
                 />
@@ -526,7 +641,7 @@ function CharacterSheet() {
       {/* Mobile */}
       <div className="block md:hidden pb-20">
         <div className="flex flex-row w-full px-5 justify-between items-center align-middle pb-5 ">
-          <div className="flex flex-col gap-2 pb-5 border-b">
+          <div className="flex flex-col gap-2 w-full pb-5 border-b">
             <div className="flex flex-row w-full gap-4 justify-between items-center">
               <div className="flex flex-col h-full w-2/3 justify-between items-between gap-1">
                 <div>
@@ -542,7 +657,7 @@ function CharacterSheet() {
                 
               </div>
 
-              <div className='flex flex-col h-full w-1/3 items-between gap-2'>       
+              <div className='flex flex-col h-full w-2/5 items-between gap-2'>       
                 <div className=" w-full aspect-square shrink-0 h-full flex justify-center items-center border rounded-lg overflow-hidden">
                   {uploadingImage ? (
                         <span className="font-alegraya-sans lowercase text-base font-bold animate-pulse">Uploading...</span>
@@ -577,7 +692,7 @@ function CharacterSheet() {
                 <input 
                   type="file" 
                   ref={fileInputRef}
-                  onChange={handleImageUpload}
+                  onChange={handleFileSelect}
                   accept="image/*"
                   className="hidden" 
                 />
