@@ -111,8 +111,8 @@ const Navbar = () => {
           )}
           <Link to="/" className="block py-1 hover:text-white/70">Home</Link>
           <Link to="/about" className="block py-1 hover:text-white/70">About Keeper</Link>
-          <Link to="/" className="block py-1 hover:text-white/70">Create Character</Link>
-          <Link to="/" className="block py-1 hover:text-white/70">View Characters</Link>
+          <Link to="/create" className="block py-1 hover:text-white/70">Create Character</Link>
+          <Link to="/view" className="block py-1 hover:text-white/70">View Characters</Link>
           {userLoggedIn ? (
             <>
               <Link to="/change-username" className="block py-1 hover:text-white/70">Edit Nickname</Link>

@@ -1,8 +1,12 @@
+import { useNavigate } from 'react-router-dom';
 import Footer from '../../components/ui/footer.tsx';
 import Navbar from '../../components/ui/navbar.tsx';
 import Button from '../../components/ui/questbutton.tsx';
 
 function Home() {
+const navigate = useNavigate()
+
+
   return (
         <div className='flex flex-col justify-between items-center bg-white h-full'>
             < Navbar/>
@@ -10,7 +14,7 @@ function Home() {
                 <div className='max-md:border-b-2'>
                     <img 
                         src='src/assets/sombra-sm.png'
-                        className=' w-full h-full md:hidden'
+                        className=' w-full max-w-100 h-full md:hidden'
                         alt=''    
                     ></img>
                     <img 
@@ -28,10 +32,12 @@ function Home() {
                         text='Create Character'
                         isImportant
                         isBold
+                        onClick={() => navigate('/create')}
                         className='px-6 py-3 text-3xl'
                     />
                     < Button
                         text='View Characters'
+                        onClick={() => navigate('/view')}
                     />
                 </div>
             </div>

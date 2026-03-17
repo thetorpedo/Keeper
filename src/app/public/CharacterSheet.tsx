@@ -132,23 +132,21 @@ function CharacterSheet() {
   }, [id]);
 
   useEffect(() => {
-    if (!currentUser?.uid) {
-      return;
-    }
-   
+    const ownerId = character?.ownerId || character?.userId || character?.uid;
     
-    const docRef = doc(db, "users", currentUser.uid);
+    if (!ownerId) return;
+    
+    const docRef = doc(db, "users", ownerId);
     const unsubscribe = onSnapshot(docRef, (docSnap) => {
       if (docSnap.exists()) {
         const data = docSnap.data();
         setUserCustomAbilities(data.custom_abilities || []);
         setUserCustomItems(data.custom_items || []);
-
       }
     });
 
     return () => unsubscribe();
-  }, [currentUser]);
+  }, [character]);
 
 
   const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -196,16 +194,24 @@ function CharacterSheet() {
 
   if (loading) {
     return (
-      <div className="h-screen flex items-center justify-center font-alegraya text-2xl">
-        Carregando ficha...
+      <div className="flex flex-col h-screen bg-white">
+        <Navbar />
+        <div className="flex-1 flex items-center justify-center font-alegraya text-2xl">
+          Loading Character...
+        </div>
+        <Footer/>
       </div>
     );
   }
 
   if (!character) {
     return (
-      <div className="h-screen flex items-center justify-center font-alegraya text-2xl text-red-500">
-        Personagem não encontrado.
+      <div className="flex flex-col h-screen bg-white">
+        <Navbar />
+        <div className="flex-1 flex items-center justify-center font-alegraya text-2xl text-red-500">
+          Character not found!
+        </div>
+        <Footer/>
       </div>
     );
   }
@@ -344,7 +350,6 @@ function CharacterSheet() {
   return (
     <div className="flex max-sm:justify-start relative flex-col justify-between items-center bg-white h-full">
       <Navbar />
-
       <Dialog open={!!imageToCrop} onOpenChange={(open) => !open && setImageToCrop(null)}>
         <DialogContent className="sm:max-w-md bg-white">
           <DialogHeader>
@@ -490,7 +495,7 @@ function CharacterSheet() {
                     {uploadingImage ? (
                       <span className="font-alegraya-sans lowercase text-base font-bold animate-pulse">Uploading...</span>
                     ) : (
-                      <div className="relative group w-full h-full overflow-hidden">
+                      <div className={`relative ${isOwner && 'group'} w-full h-full overflow-hidden`}>
                         {/* Imagem de Perfil */}
                         <img
                           src={character.profileImage || defaultPfp}
@@ -507,8 +512,8 @@ function CharacterSheet() {
                           <Button
                             type="button"
                             onClick={() => fileInputRef.current?.click()}
-                            className="flex items-center bg-white border px-4 py-2 cursor-pointer text-sm font-bold font-alegraya-sans 
-                                      uppercase tracking-wider transition-all"
+                            className={`flex items-center bg-white border px-4 py-2 cursor-pointer text-sm font-bold font-alegraya-sans 
+                                      uppercase tracking-wider transition-all ${!isOwner && 'hidden'}`}
                           >
                             <Upload className="size-4 mr-2" />
                             Upload Image
@@ -719,7 +724,7 @@ function CharacterSheet() {
                   {uploadingImage ? (
                         <span className="font-alegraya-sans lowercase text-base font-bold animate-pulse">Uploading...</span>
                       ) : (
-                        <div className="relative group w-full h-full overflow-hidden">
+                        <div className={`relative ${!isOwner && 'group'} w-full h-full overflow-hidden`}>
                           {/* Imagem de Perfil */}
                           <img
                             src={character.profileImage || defaultPfp}
@@ -736,8 +741,8 @@ function CharacterSheet() {
                             <Button
                               type="button"
                               onClick={() => fileInputRef.current?.click()}
-                              className="flex items-center bg-white border px-4 py-2 cursor-pointer text-sm font-bold font-alegraya-sans 
-                                        uppercase tracking-wider transition-all"
+                              className={`flex items-center bg-white border px-4 py-2 cursor-pointer text-sm font-bold font-alegraya-sans 
+                                        uppercase tracking-wider transition-all ${!isOwner && 'hidden'}`}
                             >
                               <Upload className="size-4 mr-2" />
                               Upload Image
