@@ -13,9 +13,10 @@ export interface Note {
 interface NotesManagerProps {
   notes: Note[];
   onUpdateNotes: (newNotes: Note[]) => void;
+  isOwner?: boolean;
 }
 
-export default function NotesManager({ notes, onUpdateNotes }: NotesManagerProps) {
+export default function NotesManager({ notes, onUpdateNotes, isOwner }: NotesManagerProps) {
   const [view, setView] = useState<"list" | "editor">("list");
   const [currentNote, setCurrentNote] = useState<Note | null>(null);
 
@@ -37,7 +38,6 @@ export default function NotesManager({ notes, onUpdateNotes }: NotesManagerProps
   const handleSave = () => {
     if (!currentNote) return;
 
-    // Se não tiver título, coloca um padrão
     const noteToSave = {
       ...currentNote,
       title: currentNote.title.trim() === "" ? "Untitled Note" : currentNote.title,
@@ -50,7 +50,7 @@ export default function NotesManager({ notes, onUpdateNotes }: NotesManagerProps
     if (existingIndex >= 0) {
       newNotes[existingIndex] = noteToSave;
     } else {
-      newNotes = [noteToSave, ...newNotes]; // Adiciona no topo
+      newNotes = [noteToSave, ...newNotes]; 
     }
 
     onUpdateNotes(newNotes);
@@ -67,9 +67,14 @@ export default function NotesManager({ notes, onUpdateNotes }: NotesManagerProps
 
   return (
     <div className="flex flex-col w-full h-90 sm:border grow sm:rounded-lg border-gray-400 bg-white  overflow-hidden">
-      
-      {/* TELA 1: LISTA DE NOTAS */}
-      {view === "list" && (
+      {!isOwner ? (
+        <div className="mx-auto flex h-full text-2xl font-semibold text-black/30 justify-center items-center font-alegraya-sans lowercase">
+          <div>Notes are private.
+          </div>
+        </div>
+      ) : (
+        <>
+        {view === "list" && (
         <div className="flex flex-col h-full">
           <div className="flex justify-between items-center sm:p-4 pt-5 border-gray-300">
             <span className="font-alegraya-sans font-bold lowercase text-2xl">Notes</span>
@@ -103,17 +108,14 @@ export default function NotesManager({ notes, onUpdateNotes }: NotesManagerProps
         </div>
       )}
 
-      {/* TELA 2: EDITOR DA NOTA */}
       {view === "editor" && currentNote && (
         <div className="flex flex-col h-full sm:p-2 bg-white">
-          {/* Header do Editor */}
           <div className="flex justify-between items-center pb-2 sm:p-2  border-gray-300 ">
             <Button onClick={() => setView("list")} className="p-1.5! shadow-none border hover:shadow-btn! cursor-pointer  transition-all text-gray-600">
               <ChevronLeft  className="size-6" />
             </Button>
             
             <div className="flex gap-2">
-              {/* Só mostra botão de deletar se a nota já existir (tiver conteúdo salvo) */}
               {notes.some(n => n.id === currentNote.id) && (<>
                 <Dialog>
                 <DialogTrigger asChild>
@@ -151,7 +153,6 @@ export default function NotesManager({ notes, onUpdateNotes }: NotesManagerProps
             </div>
           </div>
               <hr className="border-t border-gray-400 max-sm:pb-2 w-full sm:w-[95%] mx-auto"/>
-          {/* Área de digitação */}
           <div className="flex flex-col h-full sm:p-3 gap-2 overflow-hidden">
             <input
               type="text"
@@ -169,6 +170,9 @@ export default function NotesManager({ notes, onUpdateNotes }: NotesManagerProps
           </div>
         </div>
       )}
+        </>
+      )}
+      
     </div>
   );
 }

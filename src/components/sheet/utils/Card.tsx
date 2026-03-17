@@ -22,6 +22,7 @@ interface CardProps {
   onDelete?: (id: string) => void;
   onEdit?: (id: string) => void;
   onRoll?: () => void;
+  isOwner?: boolean;
 }
 
 export default function Card({
@@ -34,6 +35,7 @@ export default function Card({
   onDelete,
   onEdit,
   onRoll,
+  isOwner,
 }: CardProps) {
   const baseCost = ability.effects?.[0]?.cost ?? undefined;
 
@@ -81,15 +83,15 @@ export default function Card({
                   {typeof baseCost === 'number' ? (
                     <div className="flex shrink-0 items-center group relative">
                       <button
-                        onClick={(e) => {
+                        onClick={isOwner ? ((e) => {
                           if (editing) return;
                           e.preventDefault(); 
                           e.stopPropagation();
                           if (onDeductAP && typeof baseCost === 'number') {
                             onDeductAP(baseCost);
                           }
-                        }}
-                        className={`flex items-center tooltip relative h-full cursor-pointer ${editing ? ('') : ('hover:opacity-50 hover:scale-115 transition-all active:scale-95')}`}
+                        }) : undefined}
+                        className={`flex items-center tooltip relative h-full cursor-pointer ${editing || !isOwner ? ('') : ('hover:opacity-50 hover:scale-115 transition-all active:scale-95')}`}
                       >
                         <span className="bg-black px-1.5 py-0.5 text-white font-alegraya-sans font-bold leading-none flex items-center justify-center">
                           {baseCost}
@@ -122,15 +124,15 @@ export default function Card({
                     : ability.rollTheDie && (
                         <div className="flex shrink-0 items-center h-full">
                           <button 
-                          onClick={(e) => {
+                          onClick={isOwner ? ((e) => {
                             if (editing) return;
                             e.preventDefault();
                             e.stopPropagation();
                             if (onRoll) {
                               onRoll();
                             }
-                          }}
-                          className={`font-alegraya-sans cursor-pointer ${editing ? ('') : ('hover:opacity-50 hover:scale-115 transition-all active:scale-95')} lowercase  text-[14px] leading-none flex items-center justify-center bg-gray-50`}>
+                          }) : undefined}
+                          className={`font-alegraya-sans cursor-pointer ${editing || !isOwner ? ('') : ('hover:opacity-50 hover:scale-115 transition-all active:scale-95')} lowercase  text-[14px] leading-none flex items-center justify-center bg-gray-50`}>
                             <img
                               src="../../src/assets/d20.png"
                               className="size-5"
@@ -162,15 +164,15 @@ export default function Card({
                   {/* Tag de Rolar o Dado */}
                   {ability.rollTheDie && (
                     <button 
-                    onClick={(e) => {
+                    onClick={isOwner ? ((e) => {
                       if (editing) return;
                       e.preventDefault();
                       e.stopPropagation();
                       if (onRoll) {
                         onRoll();
                       }
-                    }}
-                    className={`border border-black px-1.5 py-0.5 text-[10px] ${editing ? ('') : ('hover:opacity-50 hover:scale-105 transition-all active:scale-95 cursor-pointer')} font-alegraya-sans font-bold uppercase tracking-wider leading-none`}>
+                    }) : undefined}
+                    className={`border border-black px-1.5 py-0.5 text-[10px] ${editing || !isOwner ? ('') : ('hover:opacity-50 hover:scale-105 transition-all active:scale-95 cursor-pointer')} font-alegraya-sans font-bold uppercase tracking-wider leading-none`}>
                       ROLL THE DIE
                     </button>
                   )}
@@ -231,10 +233,8 @@ export default function Card({
       >
         <div className="flex flex-col relative m-3 mt-7 justify-center items-center">
           
-          {/* PARENT DO TÍTULO: max-w-[90%] garante que a caixa branca nunca encoste nas bordas do modal */}
           <div className="flex items-center justify-center gap-2 px-2 relative -mb-8 z-10 -top-4 max-w-75 bg-white">
             
-            {/* NOME: Removemos os w-fit! min-w-0 e shrink permitem que o Flexbox esmague essa div se o nome for gigante */}
             <div className="flex shrink min-w-0 items-center h-full">
               <span 
                 className="font-alegraya-sans lowercase truncate block w-full font-extrabold text-2xl text-center"
@@ -263,15 +263,15 @@ export default function Card({
                 {/* Tag de Rolar o Dado */}
                 {ability.rollTheDie && (
                   <button 
-                    onClick={(e) => {
+                    onClick={isOwner ? ((e) => {
                       if (editing) return;
                       e.preventDefault();
                       e.stopPropagation();
                       if (onRoll) {
                         onRoll();
                       }
-                    }}
-                    className={`border border-black px-2 py-1 text-base ${editing ? ('') : ('cursor-pointer hover:opacity-50 hover:scale-110 transition-all active:scale-95')} font-alegraya-sans lowercase tracking-wider leading-none`}>
+                    }) : undefined}
+                    className={`border border-black px-2 py-1 text-base ${editing || !isOwner ? ('') : ('cursor-pointer hover:opacity-50 hover:scale-110 transition-all active:scale-95')} font-alegraya-sans lowercase tracking-wider leading-none`}>
                       ROLL THE DIE
                     </button>
                 )}
@@ -288,15 +288,15 @@ export default function Card({
                     <div className="font-bold mr-2 inline-block gap-2 items-center">
                       <span className="flex shrink-0 items-center group relative">
                         <button
-                          onClick={(e) => {
+                          onClick={isOwner ? ((e) => {
                           if (editing) return;
                           e.preventDefault(); 
                           e.stopPropagation();
                           if (onDeductAP && typeof baseCost === 'number') {
                             onDeductAP(baseCost);
                           }
-                        }}
-                          className={`flex items-center tooltip relative h-full ${editing ? ('') : ('hover:opacity-50 cursor-pointer hover:scale-115 transition-all active:scale-95')}  `}
+                        }) : undefined}
+                          className={`flex items-center tooltip relative h-full ${editing || !isOwner ? ('') : ('hover:opacity-50 cursor-pointer hover:scale-115 transition-all active:scale-95')}  `}
                         >
                           <span className="bg-black px-1.5 py-0.5 text-white font-alegraya-sans font-bold leading-none flex items-center justify-center">
                             {effect.cost}

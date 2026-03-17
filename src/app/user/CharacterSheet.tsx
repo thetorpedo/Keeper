@@ -22,7 +22,7 @@ import { bookAbilities } from "@/data/abilities/wizard.ts";
 import { bookItems } from "@/data/items/items.ts";
 import { deleteDoc, doc, getDoc, onSnapshot, updateDoc } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
-import { CircleArrowLeft, Pencil, Upload } from "lucide-react";
+import { Check, CircleArrowLeft, Copy, Pencil, Upload } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { BsFillBackpack2Fill, BsFillFileTextFill } from "react-icons/bs";
 import { FaUser } from "react-icons/fa6";
@@ -105,7 +105,10 @@ function CharacterSheet() {
   const [zoom, setZoom] = useState(1);
   const [croppedAreaPixels, setCroppedAreaPixels] = useState<any>(null);
 
-  
+  const isOwner = Boolean(currentUser && character && (character.ownerId === currentUser.uid));
+
+  const [isCopied, setIsCopied] = useState(false);
+
   useEffect(() => {
     const fetchCharacter = async () => {
       if (!id) return;
@@ -129,7 +132,10 @@ function CharacterSheet() {
   }, [id]);
 
   useEffect(() => {
-    if (!currentUser?.uid) return;
+    if (!currentUser?.uid) {
+      return;
+    }
+   
     
     const docRef = doc(db, "users", currentUser.uid);
     const unsubscribe = onSnapshot(docRef, (docSnap) => {
@@ -137,6 +143,7 @@ function CharacterSheet() {
         const data = docSnap.data();
         setUserCustomAbilities(data.custom_abilities || []);
         setUserCustomItems(data.custom_items || []);
+
       }
     });
 
@@ -153,38 +160,30 @@ function CharacterSheet() {
       return;
     }
 
-    // Cria uma URL temporária da imagem para o Cropper conseguir ler
     const imageUrl = URL.createObjectURL(file);
     setImageToCrop(imageUrl);
     
-    // Reseta o input caso ele queira upar a mesma foto de novo
     if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
-  // 2. O Cropper atualiza os pixels que o usuário selecionou
   const onCropComplete = (_croppedArea: any, croppedAreaPixels: any) => {
     setCroppedAreaPixels(croppedAreaPixels);
   };
 
-  // 3. O usuário clica em "Salvar", cortamos, comprimimos e enviamos pro Firebase
   const handleCropAndUpload = async () => {
     if (!imageToCrop || !croppedAreaPixels || !id) return;
     
     try {
       setUploadingImage(true);
       
-      // Recebe a foto comprimida e cortada do canvas
       const croppedBlob = await getCroppedImg(imageToCrop, croppedAreaPixels);
       
-      // Faz o upload pro Firebase Storage
       const imageRef = ref(storage, `characters/${id}/profile.jpg`);
       await uploadBytes(imageRef, croppedBlob);
       const downloadURL = await getDownloadURL(imageRef);
       
-      // Atualiza a ficha
       await updateCharacterField("profileImage", downloadURL);
       
-      // Fecha o modal
       setImageToCrop(null);
     } catch (error) {
       console.error("Error cropping/uploading image:", error);
@@ -336,7 +335,11 @@ function CharacterSheet() {
     }, 5000);
   };
 
-
+  const handleCopyLink = () => {
+    navigator.clipboard.writeText(window.location.href);
+    setIsCopied(true);
+    setTimeout(() => setIsCopied(false), 2000);
+  };
 
   return (
     <div className="flex max-sm:justify-start relative flex-col justify-between items-center bg-white h-full">
@@ -432,10 +435,50 @@ function CharacterSheet() {
               </h2>
             </div>
             <div>
-              <Button className="font-medium flex flex-row justify-center items-center py-3 mr-1">
-                <RiShareFill className="inline-block mr-3" />
-                <span>Share</span>
-              </Button>
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button className="font-medium flex flex-row justify-center items-center py-3 mr-1">
+                    <RiShareFill className="inline-block mr-3" />
+                    <span>Share</span>
+                  </Button> 
+                </DialogTrigger>
+                
+                <DialogContent className="sm:max-w-md p-6 gap-0 bg-white border- border-black rounded-xl">
+                  <DialogHeader className="mb-2">
+                    <DialogTitle className="text-3xl font-alegraya font-extrabold text-black">
+                      Share this character!
+                    </DialogTitle>
+                    <DialogDescription className="text-lg font-alegraya-sans text-gray-600">
+                      Anyone with this link can view this character.
+                    </DialogDescription>
+                  </DialogHeader>
+
+                  <div className="flex items-center w-full mt-2 mb-4 border border-black overflow-hidden bg-gray-50 focus-within:ring-2 focus-within:ring-purple/50 transition-all">
+                    
+                    <input
+                      className="flex-1 bg-transparent px-3 py-2 font-ovo text-[17px] text-gray-700 outline-none cursor-text truncate"
+                      readOnly
+                      value={window.location.href.replace("http://", "").replace("https://", "")}
+                    />
+                    <button
+                      onClick={handleCopyLink}
+                      className={`px-4 py-3 font-bold font-alegraya-sans border-l border-black transition-colors flex items-center gap-2 cursor-pointer w-28 justify-center
+                        ${isCopied ? "bg-purple text-black hover:bg-purple/80" : "bg-purple text-black hover:bg-purple/80"}
+                      `}
+                    >
+                      {isCopied ? <Check className="size-5" /> : <Copy className="size-4" />}
+                      {isCopied ? "COPIED!" : "COPY"}
+                    </button>
+                  </div>
+
+                  <DialogFooter className="sm:justify-start">
+                    <p className="text-base/tight font-ovo text-gray-500 italic">
+                      Viewers cannot edit any character information or read their notes.
+                    </p>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
+              
             </div>
           </div>
           <div className="grid grid-cols-10 w-full gap-2">
@@ -484,12 +527,14 @@ function CharacterSheet() {
               </div>
                 <Stat 
                   id="hp" 
+                  isOwner={isOwner} 
                   name="HP" 
                   value={character.hp ?? 10} 
                   onUpdate={updateCharacterStat} 
                 />
                 <Stat 
                   id="ap" 
+                  isOwner={isOwner} 
                   name="AP" 
                   value={character.ap ?? 10}
                   onUpdate={updateCharacterStat} 
@@ -497,6 +542,7 @@ function CharacterSheet() {
               </section>
               {/* Notes */}
               <NotesManager 
+                  isOwner={isOwner} 
                   notes={character.notes || []} 
                   onUpdateNotes={handleUpdateNotes} 
                 />
@@ -505,6 +551,7 @@ function CharacterSheet() {
               {/* Characteristics */}
               <section className="border border-gray-400 rounded-lg p-4">
                 <CharacterProfile
+                  isOwner={isOwner} 
                   characterData={character}
                   updateField={updateCharacterField}
                 />
@@ -517,7 +564,8 @@ function CharacterSheet() {
                       Abilities
                     </div>
                     <div className="mr-1">
-                      <Dialog>
+                      {isOwner && (
+                       <Dialog>
                         <DialogTrigger asChild>
                           <Button className="flex text-lg py-0.5! items-center cursor-pointer">
                             <Pencil className="size-4 mr-2" /> Edit
@@ -529,7 +577,9 @@ function CharacterSheet() {
                             onToggleAbility={toggleAbility}
                           />
                         </DialogContent>
-                      </Dialog>
+                      </Dialog> 
+                      )}
+                      
                     </div>
                   </div>
                   <div className="flex flex-row justify-between w-full items-center">
@@ -539,6 +589,7 @@ function CharacterSheet() {
                     </div>
 
                     <div className="mr-1">
+                      {isOwner && (
                       <Dialog>
                         <DialogTrigger asChild>
                           <Button className="flex text-lg py-0.5! items-center cursor-pointer">
@@ -552,6 +603,7 @@ function CharacterSheet() {
                           />
                         </DialogContent>
                       </Dialog>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -570,6 +622,7 @@ function CharacterSheet() {
                             ability={ability}
                             editing={false}
                             isSelected={true}
+                            isOwner={isOwner}
                             onClick={() => removeAbility(ability.id)}
                             onRoll={rollD20}
                             isLast={index === array.length - 1}
@@ -593,6 +646,7 @@ function CharacterSheet() {
                             ability={item}
                             editing={false}
                             isSelected={true}
+                            isOwner={isOwner}
                             onRoll={rollD20}
                             onClick={() => removeItem(item.id)}
                             isLast={index === array.length - 1}
@@ -606,7 +660,8 @@ function CharacterSheet() {
               </section>
             </div>
           </div>
-          <Dialog>
+          {isOwner && (
+           <Dialog>
             <DialogTrigger asChild>
               <button className="font-alegraya-sans lowercase text-left w-full ml-1 cursor-pointer hover:underline transition-all hover:text-red-400 font-medium text-xl text-red-500 ">
               Delete this character
@@ -630,7 +685,9 @@ function CharacterSheet() {
                 </DialogClose>
               </DialogFooter>
             </DialogContent>
-          </Dialog>
+          </Dialog>   
+            )}
+          
           
         </div>
       </div>
@@ -705,12 +762,14 @@ function CharacterSheet() {
               <Stat 
                 id="hp" 
                 name="HP" 
+                isOwner={isOwner} 
                 value={character.hp ?? 10} 
                 onUpdate={updateCharacterStat} 
               />
               <Stat 
                 id="ap" 
                 name="AP" 
+                isOwner={isOwner} 
                 value={character.ap ?? 10}
                 onUpdate={updateCharacterStat} 
               />
@@ -751,6 +810,7 @@ function CharacterSheet() {
           </TabsList>
           <TabsContent value="characteristics" className="px-5">
             <CharacterProfile
+              isOwner={isOwner} 
               characterData={character}
               updateField={updateCharacterField}
             />{" "}
@@ -762,6 +822,7 @@ function CharacterSheet() {
                   Abilities
                 </div>
                 <div className="mr-1">
+                  {isOwner && (
                   <Dialog>
                         <DialogTrigger asChild>
                           <Button className="flex text-lg py-0! items-center cursor-pointer">
@@ -774,7 +835,9 @@ function CharacterSheet() {
                             onToggleAbility={toggleAbility}
                           />
                         </DialogContent>
-                      </Dialog>
+                      </Dialog>  
+                  )}
+                  
                 </div>
               </div>
 
@@ -790,6 +853,7 @@ function CharacterSheet() {
                       key={ability.id}
                       ability={ability}
                       editing={false}
+                      isOwner={isOwner} 
                       isSelected={true}
                       onRoll={rollD20}
                       onClick={() => {}}
@@ -811,7 +875,8 @@ function CharacterSheet() {
                 </div>
 
                 <div className="mr-1">
-                  <Dialog>
+                  {isOwner && (
+                   <Dialog>
                         <DialogTrigger asChild>
                           <Button className="flex text-lg py-0! items-center cursor-pointer">
                             <Pencil className="size-4 mr-2" /> Edit
@@ -823,7 +888,9 @@ function CharacterSheet() {
                             onToggleItem={toggleItem}
                           />
                         </DialogContent>
-                      </Dialog>
+                      </Dialog> 
+                  )}
+                  
                 </div>
               </div>
 
@@ -839,6 +906,7 @@ function CharacterSheet() {
                       key={item.id}
                       ability={item}
                       editing={false}
+                      isOwner={isOwner} 
                       isSelected={true}
                       onRoll={rollD20}
                       onClick={() => {}}
@@ -849,11 +917,39 @@ function CharacterSheet() {
               </div>
             </div>
           </TabsContent>
-          <TabsContent value="notes" className="px-5">
+          <TabsContent value="notes" className="px-5 flex gap-2 justify-between flex-col h-full">
             <NotesManager 
+                  isOwner={isOwner} 
                   notes={character.notes || []} 
                   onUpdateNotes={handleUpdateNotes} 
                 />
+            {isOwner && (
+           <Dialog>
+            <DialogTrigger asChild>
+              <button className="font-alegraya-sans lowercase text-left w-full ml-1 cursor-pointer hover:underline transition-all hover:text-red-400 font-medium text-xl text-red-500 ">
+              Delete this character
+              </button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-md">
+              <DialogHeader>
+                <DialogTitle>Are you sure you want to delete this character?</DialogTitle>
+                <DialogDescription className='text-base pb-5'>
+                  This action CANNOT be undone!
+                </DialogDescription>
+              </DialogHeader>
+              <DialogFooter className="sm:justify-between">
+                <DialogClose asChild>
+                  <Button className='bg-red-400 text-white'
+                  onClick={deleteCharacter}
+                  >Delete</Button>
+                </DialogClose>
+                <DialogClose asChild>
+                  <Button>Close</Button>
+                </DialogClose>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>   
+            )}
           </TabsContent>
         </Tabs>
       </div>
