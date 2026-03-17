@@ -3,10 +3,12 @@ import { useEffect, useRef, useState } from "react";
 interface EditableTextProps {
   value: string;
   onSave: (newValue: string) => void; 
-  type?: "text" | "number";           
+  type?: "text" | "number";
+  name?: boolean;   
+  isOwner?: boolean;       
 }
 
-export default function EditableText({ value, onSave, type = "text" }: EditableTextProps) {
+export default function EditableText({ value, onSave, type = "text", name = false, isOwner }: EditableTextProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [inputValue, setInputValue] = useState<string>(value);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -20,7 +22,6 @@ export default function EditableText({ value, onSave, type = "text" }: EditableT
   useEffect(() => {
     if (isEditing) {
       inputRef.current?.focus();
-    //   inputRef.current?.select();
     }
   }, [isEditing]);
 
@@ -47,11 +48,11 @@ export default function EditableText({ value, onSave, type = "text" }: EditableT
     }
   };
 
-const fontClasses = "font-alegraya-sans lowercase max-sm:text-[18px] text-[22px] font-bold";
+const fontClasses = `font-alegraya-sans ${!name && 'lowercase'} max-sm:text-[18px] text-[22px] font-bold`;
 
   return (
     
-    <div className="inline-flex items-center cursor-pointer group relative">
+    <span className={`inline-flex items-center ${isOwner && 'cursor-pointer'} group relative`}>
       {isEditing && (
         <span
             ref={measureRef}
@@ -75,12 +76,12 @@ const fontClasses = "font-alegraya-sans lowercase max-sm:text-[18px] text-[22px]
         />
       ) : (
         <span
-          onClick={() => setIsEditing(true)}
-          className={`${fontClasses} border-b border-transparent underline decoration-1 underline-offset-3 decoration-gray-400 hover:decoration-2 hover:decoration-black transition-colors px-1`}
+          onClick={isOwner ? (() => setIsEditing(true)) : undefined}
+          className={`${fontClasses} border-b border-transparent underline decoration-1 underline-offset-3 decoration-gray-400 ${isOwner && 'hover:decoration-2 hover:decoration-black'} transition-colors px-1`}
         >
           {value}
         </span>
       )}
-    </div>
+    </span>
   );
 }

@@ -14,7 +14,30 @@
   --shadow-btn: 5px 5px 0 rgba(0, 0, 0, 1);
   --shadow-btn2: 9px 9px 0 rgba(0, 0, 0, 1);
   --color-purple: #F5E1FF;
+  --color-fighter: #f04822;
+  --color-invoker: #0164b1;
+  --color-ranger: #00a1bb;
+  --color-naturalist: #5a9e44;
+  --color-doctor: #dc2027;
+  --color-spy: #4c3896;
+  --color-magician: #ed028c;
+  --color-wizard: #e2c121;
+  --color-custom-abilities: #3a2e66;
+  --color-item: #242021;
+  --color-custom-items: #8a2e66;
+  --color-damage: #d32f2f;
+  --color-useful: #25203b;
+  --color-common: #25203b;
+  --color-uncommon: #25203b;
+  --color-rare: #25203b;
+  --color-legendary: #25203b;
 }
+
+@source inline("border-{fighter,invoker,ranger,naturalist,doctor,spy,magician,wizard,custom-abilities,item,custom-items,useful,common,uncommon,rare,legendary,damage}");
+@source inline("from-{fighter,invoker,ranger,naturalist,doctor,spy,magician,wizard,custom-abilities,item,custom-items,useful,common,uncommon,rare,legendary}{,/50}");
+@source inline("bg-{fighter,invoker,ranger,naturalist,doctor,spy,magician,wizard,custom-abilities,item,custom-items,useful,common,uncommon,rare,legendary,damage}{,/10}");
+@source inline("text-{damage}");
+
 
 #root {
   height: 100vh;

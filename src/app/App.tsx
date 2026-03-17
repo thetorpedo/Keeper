@@ -26,6 +26,7 @@ function App() {
         <Route path="/sheet" element={<CharacterSheet />} />
         <Route path="/create" element={<CreateCharacter />} />
         <Route path="/view" element={<ViewCharacters />} />
+        <Route path="/character/:id" element={<CharacterSheet />} />
       </Routes></AuthProvider>
     </BrowserRouter>
   );

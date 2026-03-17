@@ -1,9 +1,11 @@
+import { doc, setDoc } from "firebase/firestore";
 import { ArrowLeft } from 'lucide-react';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import Button from '../../components/ui/button.tsx';
+import Button from '../../components/ui/questbutton.tsx';
 import { useAuth } from '../contexts/authContext/authProvider.tsx';
 import { doUpdateDisplayName } from '../firebase/auth.ts';
+import { db } from '../firebase/firebase.ts';
 
 const ChangeUsername = () => {
     const { currentUser } = useAuth();
@@ -26,7 +28,14 @@ const ChangeUsername = () => {
         setMessage({ type: '', text: '' });
 
         try {
+            if (!currentUser?.uid) {
+                throw new Error("User not authenticated");
+            }
             await doUpdateDisplayName(newNick);
+            const docRef = doc(db, "users", currentUser.uid);
+            await setDoc(docRef, {
+                username: newNick
+            });
             
             if (currentUser) {
                 await currentUser.reload();
