@@ -1,6 +1,6 @@
 import { ArrowLeft } from 'lucide-react';
 import { useState } from 'react';
-import { Navigate, NavLink, useNavigate } from 'react-router-dom';
+import { Link, Navigate, NavLink, useNavigate } from 'react-router-dom';
 import Button from '../../components/ui/questbutton.tsx';
 import { useAuth } from '../contexts/authContext/authProvider.tsx';
 import { doSignInWithEmailAndPassword, doSignInWithGoogle } from '../firebase/auth.ts';
@@ -51,14 +51,14 @@ const Login = () => {
       {userLoggedIn && (<Navigate to={'/'} replace={true} />)}
       <section className="w-full max-w-md p-8 mx-5 space-y-8 border bg-white shadow-btn2">
         <div className='absolute'>
-          <a href='/#' className="text-5xl hover:opacity-70">
+          <Link to='/' className="text-5xl hover:opacity-70">
             <ArrowLeft className='hover:scale-110' />
-          </a>
+          </Link>
         </div>
         <div className="text-center">
-          <a href='/#' className="text-5xl font-extrabold tracking-tight hover:opacity-70 font-alegraya ">
+          <Link to='/' className="text-5xl font-extrabold tracking-tight hover:opacity-70 font-alegraya ">
             Keeper
-          </a>
+          </Link>
           <p className="mt-2 text-lg">
             Please sign in to continue
           </p>

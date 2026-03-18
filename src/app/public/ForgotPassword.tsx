@@ -1,6 +1,6 @@
 import { ArrowLeft } from 'lucide-react';
 import { useState } from 'react';
-import { Navigate } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
 import Button from '../../components/ui/questbutton.tsx';
 import { useAuth } from '../contexts/authContext/authProvider.tsx';
 import { doPasswordReset } from '../firebase/auth.ts';
@@ -34,14 +34,14 @@ const ForgotPassword = () => {
       {userLoggedIn && (<Navigate to={'/'} replace={true} />)}
       <section className="w-full max-w-md p-8 mx-5 space-y-8 border bg-white shadow-btn2">
         <div className='absolute'>
-          <a href='/#' className="text-5xl hover:opacity-70">
+          <Link to='/' className="text-5xl hover:opacity-70">
             <ArrowLeft className='hover:scale-110' />
-          </a>
+          </Link>
         </div>
         <div className="text-center">
-          <a href='/#' className="text-5xl font-extrabold tracking-tight hover:opacity-70 font-alegraya ">
+          <Link to='/' className="text-5xl font-extrabold tracking-tight hover:opacity-70 font-alegraya ">
             Keeper
-          </a>
+          </Link>
           <p className="mt-2 text-lg">
             You will receive instructions on your e-mail for resetting your password.
           </p>

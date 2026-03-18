@@ -110,7 +110,6 @@ export default function AbilitySelector({
       if (!currentUser?.uid) throw new Error("User not authenticated");
       const docRef = doc(db, "users", currentUser.uid);
       
-      // Se estiver editando, precisa deletar a antiga antes de salvar a nova
       if (isEditingId) {
         const oldAbility = customAbilities.find(a => a.id === isEditingId);
         if (oldAbility) {
@@ -183,15 +182,15 @@ export default function AbilitySelector({
   const closeDialog = () => {
     setIsDialogOpen(false);
     setEditingAbilityId(null);
-    setEditingAbilityData(null); // Limpa os dados do formulário
-    setEffectBlocks([Date.now()]); // Reseta quantidade de efeitos para 1
-    setRollBlocks([Date.now() + 1]); // Reseta quantidade de rolagens para 1
+    setEditingAbilityData(null); 
+    setEffectBlocks([Date.now()]); 
+    setRollBlocks([Date.now() + 1]); 
     setRequiresRoll(false);
     if(formRef.current) formRef.current.reset();
   }
 
   return (
-    <div className="flex flex-col max-w-[90vw] w-full mx-auto gap-4">
+    <div className="flex flex-col relative max-w-[90vw] w-full mx-auto gap-4">
       {/* BARRA DE FILTROS */}
       <div className="flex flex-row justify-center gap-2 flex-wrap">
         {roles.map((role) => (
@@ -210,281 +209,285 @@ export default function AbilitySelector({
       </div>
 
       {/* ÁREA DE CARTAS */}
-      <div className={`bg-gray-200 overflow-auto ${selectedRole === 'Custom Abilities' ? '' : 'p-4'} gap-4 flex flex-row border w-250 max-sm:w-full border-gray-300 rounded-lg min-h-100`}>
-        
-        {/* ESTADO VAZIO */}
-        {currentPaths.length === 0 && selectedRole !== "Custom Abilities" && (
-          <div className="w-full flex gap-4 flex-col items-center justify-center text-gray-500 font-alegraya-sans text-xl h-full">
-            No abilities found for {selectedRole}.
-          </div>
-        )}
+  
+      <div className=" relative">
+        {selectedRole !== 'Custom Abilities' && (<img src='src/assets/indicator.png' className="h-100 absolute max-md:hidden -left-8 top-1/2 transform -translate-y-1/2"></img>)}
+        <div className={`bg-gray-200 overflow-auto ${selectedRole === 'Custom Abilities' ? '' : 'p-4'} gap-4 flex flex-row border w-250 max-sm:w-full border-gray-300 rounded-lg min-h-100`}>
+          
+          {/* ESTADO VAZIO */}
+          {currentPaths.length === 0 && selectedRole !== "Custom Abilities" && (
+            <div className="w-full flex gap-4 flex-col items-center justify-center text-gray-500 font-alegraya-sans text-xl h-full">
+              No abilities found for {selectedRole}.
+            </div>
+          )}
 
-        {/* --- ABA CUSTOM ABILITIES --- */}
-        {selectedRole === "Custom Abilities" && (
-          <div className="flex relative flex-col items-center gap-6 w-full h-full">
-            <div className="flex flex-col w-full just shrink-0 max-w-70 gap-4">
-              
-              <Dialog open={isDialogOpen} onOpenChange={(open) => {
-                setIsDialogOpen(open);
-                if (!open) closeDialog();
-              }}>
-                <DialogTrigger asChild>
-                  <Button 
-                    onClick={() => {
-                      setEditingAbilityId(null);
-                      setEditingAbilityData(null);
-                      setEffectBlocks([Date.now()]);
-                      setRollBlocks([Date.now() + 1]);
-                      setRequiresRoll(false);
-                    }}
-                    className="bg-white absolute mt-4 max-sm:text-base max-sm:w-[90%] max-sm:left-[5%] w-1/3 left-1/3 top-1 font-bold flex flex-row justify-center items-center text-black border border-black hover:bg-gray-100"
-                  >
-                    <Plus className="size-4 mr-2" /> Create Custom Ability
-                  </Button>
-                </DialogTrigger>
+          {/* --- ABA CUSTOM ABILITIES --- */}
+          {selectedRole === "Custom Abilities" && (
+            <div className="flex relative flex-col items-center gap-6 w-full h-full">
+              <div className="flex flex-col w-full just shrink-0 max-w-70 gap-4">
+                
+                <Dialog open={isDialogOpen} onOpenChange={(open) => {
+                  setIsDialogOpen(open);
+                  if (!open) closeDialog();
+                }}>
+                  <DialogTrigger asChild>
+                    <Button 
+                      onClick={() => {
+                        setEditingAbilityId(null);
+                        setEditingAbilityData(null);
+                        setEffectBlocks([Date.now()]);
+                        setRollBlocks([Date.now() + 1]);
+                        setRequiresRoll(false);
+                      }}
+                      className="bg-white absolute mt-4 max-sm:text-base max-sm:w-[90%] max-sm:left-[5%] w-1/3 left-1/3 top-1 font-bold flex flex-row justify-center items-center text-black border border-black hover:bg-gray-100"
+                    >
+                      <Plus className="size-4 mr-2" /> Create Custom Ability
+                    </Button>
+                  </DialogTrigger>
 
-                <DialogContent className="sm:max-w-xl max-h-[85vh] overflow-y-auto bg-white">
-                  
-                  <form key={editingAbilityId || "new"} onSubmit={handleCreateCustomAbility} className="flex flex-col gap-4">
-                    <DialogHeader>
-                      <DialogTitle className="font-alegraya font-extrabold text-3xl">
-                        {editingAbilityId ? "Editing ability" : "Creating a new ability"}
-                      </DialogTitle>
-                    </DialogHeader>
+                  <DialogContent className="sm:max-w-xl max-h-[85vh] overflow-y-auto bg-white">
+                    
+                    <form key={editingAbilityId || "new"} onSubmit={handleCreateCustomAbility} className="flex flex-col gap-4">
+                      <DialogHeader>
+                        <DialogTitle className="font-alegraya font-extrabold text-3xl">
+                          {editingAbilityId ? "Editing ability" : "Creating a new ability"}
+                        </DialogTitle>
+                      </DialogHeader>
 
-                    <div className="grid grid-cols-10 gap-2">
-                      {/* NOME */}
-                      <div className="flex flex-col col-span-7">
-                        <label className="font-alegraya-sans ml-1 font-bold lowercase text-base ">Ability Name</label>
-                        <input 
-                          name="name" 
-                          required 
-                          autoComplete="off"
-                          defaultValue={editingAbilityData?.name}
-                          className="border border-gray-300 p-2 rounded-lg font-ovo text-xl focus:outline-none focus:border-purple focus:ring-1 focus:ring-purple" 
-                          placeholder="Fireball" 
-                        />
-                      </div>
-                      
-                      {/* ROLL THE DIE? */}
-                      <div className="flex flex-col col-span-3 h-full">
-                        <label className="font-alegraya-sans ml-1 font-bold lowercase text-base">
-                          Roll the die?
-                        </label>
-                        <div className="flex w-full border h-full border-black rounded-lg overflow-hidden font-alegraya-sans font-bold text-lg">
-                          <button
-                            type="button"
-                            onClick={() => setRequiresRoll(true)}
-                            className={`flex-1 py-1 h-full cursor-pointer text-center transition-all ${
-                              requiresRoll 
-                                ? "bg-black text-white" 
-                                : "bg-white text-gray-400 hover:bg-gray-100"
-                            }`}
-                          >
-                            YES
-                          </button>
-                          
-                          <div className="w-px bg-black"></div>
-                          
-                          <button
-                            type="button"
-                            onClick={() => setRequiresRoll(false)}
-                            className={`flex-1 py-1 h-full cursor-pointer text-center transition-all ${
-                              !requiresRoll 
-                                ? "bg-black text-white" 
-                                : "bg-white text-gray-400 hover:bg-gray-100"
-                            }`}
-                          >
-                            NO
-                          </button>
+                      <div className="grid grid-cols-10 gap-2">
+                        {/* NOME */}
+                        <div className="flex flex-col col-span-7">
+                          <label className="font-alegraya-sans ml-1 font-bold lowercase text-base ">Ability Name</label>
+                          <input 
+                            name="name" 
+                            required 
+                            autoComplete="off"
+                            defaultValue={editingAbilityData?.name}
+                            className="border border-gray-300 p-2 rounded-lg font-ovo text-xl focus:outline-none focus:border-purple focus:ring-1 focus:ring-purple" 
+                            placeholder="Fireball" 
+                          />
                         </div>
-                      </div>
-
-                      {/* DESCRIÇÃO GERAL */}
-                      <div className="flex col-span-full flex-col gap-1">
-                        <label className="font-alegraya-sans ml-1 font-bold lowercase text-base">General Description</label>
-                        <textarea 
-                          name="description" 
-                          defaultValue={editingAbilityData?.description}
-                          className="border border-gray-300 p-2 rounded-lg font-ovo text-base/5 h-28 focus:outline-none focus:border-purple focus:ring-1 focus:ring-purple" 
-                          placeholder="You point your finger, and a ball of fire is hurled at that direction."
-                        ></textarea>
-                      </div>
-                      
-                      <hr className="col-span-full mt-2 border-gray-200"></hr>
-
-                      {/* LOOP DE EFEITOS DINÂMICOS */}
-                      {effectBlocks.map((blockId, index) => (
-                        <div key={blockId} className="col-span-full flex flex-col gap-2 relative mt-2">
-                          
-                          {effectBlocks.length > 1 && (
-                            <button 
-                              type="button" 
-                              onClick={() => setEffectBlocks(effectBlocks.filter(id => id !== blockId))}
-                              className="absolute top-0 cursor-pointer right-1 text-red-400 hover:text-red-600 font-alegraya-sans lowercase text-sm font-bold"
+                        
+                        {/* ROLL THE DIE? */}
+                        <div className="flex flex-col col-span-3 h-full">
+                          <label className="font-alegraya-sans ml-1 font-bold lowercase text-base">
+                            Roll the die?
+                          </label>
+                          <div className="flex w-full border h-full border-black rounded-lg overflow-hidden font-alegraya-sans font-bold text-lg">
+                            <button
+                              type="button"
+                              onClick={() => setRequiresRoll(true)}
+                              className={`flex-1 py-1 h-full cursor-pointer text-center transition-all ${
+                                requiresRoll 
+                                  ? "bg-black text-white" 
+                                  : "bg-white text-gray-400 hover:bg-gray-100"
+                              }`}
                             >
-                              <Trash2 className="size-5" />
+                              YES
                             </button>
-                          )}
-
-                          <div className="flex flex-col w-1/4">
-                            <label className="font-alegraya-sans ml-1 font-bold lowercase text-base">AP Cost</label>
-                            <input 
-                              name={`cost_${index}`} 
-                              type="text" 
-                              required
-                              defaultValue={editingAbilityData?.effects?.[index]?.cost}
-                              className="border border-gray-300 p-2 rounded-lg font-alegraya-sans text-xl focus:outline-none focus:border-purple focus:ring-1 focus:ring-purple text-center" 
-                              placeholder="3" 
-                            />
+                            
+                            <div className="w-px bg-black"></div>
+                            
+                            <button
+                              type="button"
+                              onClick={() => setRequiresRoll(false)}
+                              className={`flex-1 py-1 h-full cursor-pointer text-center transition-all ${
+                                !requiresRoll 
+                                  ? "bg-black text-white" 
+                                  : "bg-white text-gray-400 hover:bg-gray-100"
+                              }`}
+                            >
+                              NO
+                            </button>
                           </div>
-
-                          <div className="flex flex-col">
-                            <label className="font-alegraya-sans ml-1 font-bold lowercase text-base">Effect Description</label>
-                            <textarea 
-                              name={`effect_${index}`} 
-                              required 
-                              defaultValue={editingAbilityData?.effects?.[index]?.description}
-                              className="border border-gray-300 p-2 rounded-lg font-ovo text-base/5 h-20 focus:outline-none focus:border-purple focus:ring-1 focus:ring-purple" 
-                              placeholder="The fireball explodes on impact dealing 2 points of damage to everyone nearby."
-                            ></textarea>
-                          </div>
-
-                          {index < effectBlocks.length - 1 && <hr className="col-span-full mt-4 border-gray-200"></hr>}
                         </div>
-                      ))}
-                      
-                      {/* BOTÃO ADD ANOTHER EFFECT */}
-                      <div className="col-span-full mt-1">
-                        <Button 
-                          type="button" 
-                          onClick={() => setEffectBlocks([...effectBlocks, Date.now()])}
-                          className="w-full shadow-none text-base flex flex-row justify-center items-center border"
-                        >
-                          <Plus className="size-4 mr-2" /> Add another effect
-                        </Button>
+
+                        {/* DESCRIÇÃO GERAL */}
+                        <div className="flex col-span-full flex-col gap-1">
+                          <label className="font-alegraya-sans ml-1 font-bold lowercase text-base">General Description</label>
+                          <textarea 
+                            name="description" 
+                            defaultValue={editingAbilityData?.description}
+                            className="border border-gray-300 p-2 rounded-lg font-ovo text-base/5 h-28 focus:outline-none focus:border-purple focus:ring-1 focus:ring-purple" 
+                            placeholder="You point your finger, and a ball of fire is hurled at that direction."
+                          ></textarea>
+                        </div>
+                        
+                        <hr className="col-span-full mt-2 border-gray-200"></hr>
+
+                        {/* LOOP DE EFEITOS DINÂMICOS */}
+                        {effectBlocks.map((blockId, index) => (
+                          <div key={blockId} className="col-span-full flex flex-col gap-2 relative mt-2">
+                            
+                            {effectBlocks.length > 1 && (
+                              <button 
+                                type="button" 
+                                onClick={() => setEffectBlocks(effectBlocks.filter(id => id !== blockId))}
+                                className="absolute top-0 cursor-pointer right-1 text-red-400 hover:text-red-600 font-alegraya-sans lowercase text-sm font-bold"
+                              >
+                                <Trash2 className="size-5" />
+                              </button>
+                            )}
+
+                            <div className="flex flex-col w-1/4">
+                              <label className="font-alegraya-sans ml-1 font-bold lowercase text-base">AP Cost</label>
+                              <input 
+                                name={`cost_${index}`} 
+                                type="text" 
+                                required
+                                defaultValue={editingAbilityData?.effects?.[index]?.cost}
+                                className="border border-gray-300 p-2 rounded-lg font-alegraya-sans text-xl focus:outline-none focus:border-purple focus:ring-1 focus:ring-purple text-center" 
+                                placeholder="3" 
+                              />
+                            </div>
+
+                            <div className="flex flex-col">
+                              <label className="font-alegraya-sans ml-1 font-bold lowercase text-base">Effect Description</label>
+                              <textarea 
+                                name={`effect_${index}`} 
+                                required 
+                                defaultValue={editingAbilityData?.effects?.[index]?.description}
+                                className="border border-gray-300 p-2 rounded-lg font-ovo text-base/5 h-20 focus:outline-none focus:border-purple focus:ring-1 focus:ring-purple" 
+                                placeholder="The fireball explodes on impact dealing 2 points of damage to everyone nearby."
+                              ></textarea>
+                            </div>
+
+                            {index < effectBlocks.length - 1 && <hr className="col-span-full mt-4 border-gray-200"></hr>}
+                          </div>
+                        ))}
+                        
+                        {/* BOTÃO ADD ANOTHER EFFECT */}
+                        <div className="col-span-full mt-1">
+                          <Button 
+                            type="button" 
+                            onClick={() => setEffectBlocks([...effectBlocks, Date.now()])}
+                            className="w-full shadow-none text-base flex flex-row justify-center items-center border"
+                          >
+                            <Plus className="size-4 mr-2" /> Add another effect
+                          </Button>
+                        </div>
+
+                        {/* TABELA DE ROLAGEM */}
+                        {requiresRoll && (
+                          <>
+                            <hr className="col-span-full mt-2 border-gray-200"></hr>
+                            <div className="col-span-full flex flex-col gap-3 mt-2 bg-gray-100 p-3 border border-gray-200 rounded-lg animate-in fade-in slide-in-from-top-2 duration-300">
+                              <label className="font-alegraya-sans ml-1 font-bold lowercase text-base">Roll Outcomes</label>
+                              
+                              {rollBlocks.map((blockId, index) => (
+                                <div key={blockId} className="flex gap-2 relative group items-start">
+                                  {/* VALOR DO DADO */}
+                                  <input 
+                                    name={`roll_val_${index}`} 
+                                    type="text" 
+                                    required 
+                                    defaultValue={editingAbilityData?.rollTable?.[index]?.value}
+                                    className="w-1/4 border bg-white p-2 h-14 rounded-lg font-alegraya-sans text-xl text-center" 
+                                    placeholder="20" 
+                                  />
+                                  
+                                  {/* EFEITO DA ROLAGEM */}
+                                  <textarea 
+                                    name={`roll_desc_${index}`} 
+                                    required 
+                                    defaultValue={editingAbilityData?.rollTable?.[index]?.description}
+                                    className="w-3/4 border bg-white p-2 rounded-lg font-ovo text-sm/4 h-14" 
+                                    placeholder="The fireball is hurled perfectly..."
+                                  ></textarea>
+                                  
+                                  {/* REMOVER */}
+                                  {rollBlocks.length > 1 && (
+                                    <button 
+                                      type="button" 
+                                      onClick={() => setRollBlocks(rollBlocks.filter(id => id !== blockId))}
+                                      className="absolute cursor-pointer -right-2 -top-2 text-red-400 hover:text-red-600 bg-white border rounded-none p-1"
+                                    >
+                                      <Trash2 className="size-4" />
+                                    </button>
+                                  )}
+                                </div>
+                              ))}
+                              
+                              {/* BOTÃO ADD ROLAGEM */}
+                              <Button 
+                                type="button" 
+                                onClick={() => setRollBlocks([...rollBlocks, Date.now()])}
+                                className="w-full bg-white flex flex-row text-base justify-center items-center shadow-none border"
+                              >
+                                <Plus className="size-4 mr-2" /> Add another roll outcome
+                              </Button>
+                            </div>
+                          </>
+                        )}
+
                       </div>
 
-                      {/* TABELA DE ROLAGEM */}
-                      {requiresRoll && (
-                        <>
-                          <hr className="col-span-full mt-2 border-gray-200"></hr>
-                          <div className="col-span-full flex flex-col gap-3 mt-2 bg-gray-100 p-3 border border-gray-200 rounded-lg animate-in fade-in slide-in-from-top-2 duration-300">
-                            <label className="font-alegraya-sans ml-1 font-bold lowercase text-base">Roll Outcomes</label>
-                            
-                            {rollBlocks.map((blockId, index) => (
-                              <div key={blockId} className="flex gap-2 relative group items-start">
-                                {/* VALOR DO DADO */}
-                                <input 
-                                  name={`roll_val_${index}`} 
-                                  type="text" 
-                                  required 
-                                  defaultValue={editingAbilityData?.rollTable?.[index]?.value}
-                                  className="w-1/4 border bg-white p-2 h-14 rounded-lg font-alegraya-sans text-xl text-center" 
-                                  placeholder="20" 
-                                />
-                                
-                                {/* EFEITO DA ROLAGEM */}
-                                <textarea 
-                                  name={`roll_desc_${index}`} 
-                                  required 
-                                  defaultValue={editingAbilityData?.rollTable?.[index]?.description}
-                                  className="w-3/4 border bg-white p-2 rounded-lg font-ovo text-sm/4 h-14" 
-                                  placeholder="The fireball is hurled perfectly..."
-                                ></textarea>
-                                
-                                {/* REMOVER */}
-                                {rollBlocks.length > 1 && (
-                                  <button 
-                                    type="button" 
-                                    onClick={() => setRollBlocks(rollBlocks.filter(id => id !== blockId))}
-                                    className="absolute cursor-pointer -right-2 -top-2 text-red-400 hover:text-red-600 bg-white border rounded-none p-1"
-                                  >
-                                    <Trash2 className="size-4" />
-                                  </button>
-                                )}
-                              </div>
-                            ))}
-                            
-                            {/* BOTÃO ADD ROLAGEM */}
-                            <Button 
-                              type="button" 
-                              onClick={() => setRollBlocks([...rollBlocks, Date.now()])}
-                              className="w-full bg-white flex flex-row text-base justify-center items-center shadow-none border"
-                            >
-                              <Plus className="size-4 mr-2" /> Add another roll outcome
-                            </Button>
-                          </div>
-                        </>
-                      )}
+                      {/* BOTÕES FINALIZAR */}
+                      <DialogFooter className="mt-4 sm:justify-end gap-4">
+                        <Button type="button" onClick={closeDialog} className="text-black bg-transparent hover:bg-gray-100">Cancel</Button>
+                        <Button type="submit" className="bg-purple text-black border border-black hover:opacity-80">
+                          {editingAbilityId ? "Save Changes" : "Create Ability"}
+                        </Button>
+                      </DialogFooter>
+                    </form>
+                  </DialogContent>
+                </Dialog>
 
-                    </div>
-
-                    {/* BOTÕES FINALIZAR */}
-                    <DialogFooter className="mt-4 sm:justify-end gap-4">
-                      <Button type="button" onClick={closeDialog} className="text-black bg-transparent hover:bg-gray-100">Cancel</Button>
-                      <Button type="submit" className="bg-purple text-black border border-black hover:opacity-80">
-                        {editingAbilityId ? "Save Changes" : "Create Ability"}
-                      </Button>
-                    </DialogFooter>
-                  </form>
-                </DialogContent>
-              </Dialog>
-
-              {customAbilities.length === 0 && (
-                <div className="text-gray-500 font-alegraya-sans mt-4 text-center">
-                  You haven't created any custom abilities yet.
-                </div>
-              )}
-            </div>
-
-            <div className="flex flex-row w-full overflow-x-auto p-4 pt-35 gap-4">
-              {itemColumns.map((col, colIndex) => (
-                <div key={colIndex} className="flex shrink-0 flex-col max-w-70 w-full">
-                  <div className="mt-0.75"> 
-                    {col.map((item, index, array) => (
-                      <Card
-                        key={item.id}
-                        ability={item}
-                        editing
-                        isSelected={selectedAbilities.includes(item.id)}
-                        onClick={() => onToggleAbility(item.id)}
-                        isLast={index === array.length - 1}
-                        onDelete={deleteAbility}
-                        onEdit={handleEditAbility}
-                      />
-                    ))}
+                {customAbilities.length === 0 && (
+                  <div className="text-gray-500 font-alegraya-sans mt-4 text-center">
+                    You haven't created any custom abilities yet.
                   </div>
-                </div>
-              ))}
-            </div>
-            
-          </div>
-        )}
+                )}
+              </div>
 
-        {/* HABILIDADES PADRÃO */}
-        {selectedRole !== "Custom Abilities" && currentPaths.map((path) => (
-          <div key={path} className="flex shrink-0 flex-col max-w-70">
-            <div className="font-alegraya-sans text-xl lowercase text-center bg-white border">
-              {path}
-            </div>
-            <div className="mt-27 pb-0">
-              {displayedAbilities
-                .filter((a) => a.path === path)
-                .map((ability, index, array) => (
-                  <Card
-                    key={ability.id}
-                    ability={ability}
-                    editing
-                    isSelected={selectedAbilities.includes(ability.id)}
-                    onClick={() => onToggleAbility(ability.id)}
-                    isLast={index === array.length - 1}
-                  />
+              <div className="flex flex-row w-full overflow-x-auto p-4 pt-35 gap-4">
+                {itemColumns.map((col, colIndex) => (
+                  <div key={colIndex} className="flex shrink-0 flex-col max-w-70 w-full">
+                    <div className="mt-0.75"> 
+                      {col.map((item, index, array) => (
+                        <Card
+                          key={item.id}
+                          ability={item}
+                          editing
+                          isSelected={selectedAbilities.includes(item.id)}
+                          onClick={() => onToggleAbility(item.id)}
+                          isLast={index === array.length - 1}
+                          onDelete={deleteAbility}
+                          onEdit={handleEditAbility}
+                        />
+                      ))}
+                    </div>
+                  </div>
                 ))}
+              </div>
+              
             </div>
-          </div>
-        ))}
+          )}
 
+          {/* HABILIDADES PADRÃO */}
+          {selectedRole !== "Custom Abilities" && currentPaths.map((path) => (
+            <div key={path} className="flex shrink-0 flex-col max-w-70">
+              <div className="font-alegraya-sans text-xl lowercase text-center bg-white border">
+                {path}
+              </div>
+              <div className="mt-27 pb-0">
+                {displayedAbilities
+                  .filter((a) => a.path === path)
+                  .map((ability, index, array) => (
+                    <Card
+                      key={ability.id}
+                      ability={ability}
+                      editing
+                      isSelected={selectedAbilities.includes(ability.id)}
+                      onClick={() => onToggleAbility(ability.id)}
+                      isLast={index === array.length - 1}
+                    />
+                  ))}
+              </div>
+            </div>
+          ))}
+
+        </div>
       </div>
     </div>
   );

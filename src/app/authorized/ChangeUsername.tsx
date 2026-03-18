@@ -1,7 +1,7 @@
-import { doc, setDoc } from "firebase/firestore";
+import { doc, updateDoc } from "firebase/firestore";
 import { ArrowLeft } from 'lucide-react';
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Button from '../../components/ui/questbutton.tsx';
 import { useAuth } from '../contexts/authContext/authProvider.tsx';
 import { doUpdateDisplayName } from '../firebase/auth.ts';
@@ -33,7 +33,7 @@ const ChangeUsername = () => {
             }
             await doUpdateDisplayName(newNick);
             const docRef = doc(db, "users", currentUser.uid);
-            await setDoc(docRef, {
+            await updateDoc(docRef, {
                 username: newNick
             });
             
@@ -42,7 +42,7 @@ const ChangeUsername = () => {
             }
 
             setMessage({ type: 'success', text: 'Username updated successfully!' });
-            setTimeout(() => navigate('/'), 2000);
+            setTimeout(() => navigate(-1), 500);
             
         } catch (error) {
             setMessage({ type: 'error', text: 'Failed to update nickname. Try again.' });
@@ -54,9 +54,9 @@ const ChangeUsername = () => {
         <main className="flex items-center justify-center bg-purple/30 h-screen">
             <section className="w-full max-w-md p-8 mx-5 space-y-8 border bg-white shadow-btn2 relative">
                 <div className='absolute top-8 left-8'>
-                    <Link to="/" className="hover:opacity-70">
+                    <button onClick={() => navigate(-1)} className="hover:opacity-70">
                         <ArrowLeft className='hover:scale-110' />
-                    </Link>
+                    </button>
                 </div>
 
                 <div className="text-center pt-4">

@@ -2,7 +2,7 @@
 import { useAuth } from "@/app/contexts/authContext/authProvider.tsx";
 import { db } from "@/app/firebase/firebase.ts";
 import Card from "@/components/sheet/utils/Card.tsx";
-import type { Ability } from "@/data/interface.ts"; // Apesar do nome, a interface é usada para Itens também
+import type { Ability } from "@/data/interface.ts";
 import { bookItems } from "@/data/items/items.ts";
 import { arrayRemove, arrayUnion, doc, onSnapshot, setDoc, updateDoc } from "firebase/firestore";
 import { Plus, Trash2 } from "lucide-react";
@@ -17,7 +17,7 @@ import {
 import Button from "../ui/questbutton.tsx";
 
 interface ItemSelectorProps {
-  selectedItems: string[]; // Array de IDs
+  selectedItems: string[];
   onToggleItem: (id: string) => void;
 }
 

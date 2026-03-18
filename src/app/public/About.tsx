@@ -10,7 +10,7 @@ function About() {
                 <div className='max-md:border-b-2'>
                     <img 
                         src='src/assets/sombra-sm.png'
-                        className=' w-full h-full md:hidden'
+                        className=' w-full max-w-100 h-full md:hidden'
                         alt=''    
                     ></img>
                     <img 

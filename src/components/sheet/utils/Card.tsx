@@ -235,13 +235,18 @@ export default function Card({
           
           <div className="flex items-center justify-center gap-2 px-2 relative -mb-8 z-10 -top-4 max-w-75 bg-white">
             
-            <div className="flex shrink min-w-0 items-center h-full">
+            <div className="flex gap-2 shrink min-w-0 items-center h-full">
               <span 
                 className="font-alegraya-sans lowercase truncate block w-full font-extrabold text-2xl text-center"
                 title={ability.name}
               >
                 {ability.name}
               </span>
+              
+              {ability.path === "Item" && ability.damage && (
+                <div className="border-3 border-damage px-1.5 text-base/4 font-extrabold font-alegraya-sans text-damage">
+                  {ability.damage}
+                </div>)}
             </div>
             </div>
           <div

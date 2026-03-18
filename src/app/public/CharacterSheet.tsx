@@ -27,7 +27,7 @@ import { useEffect, useRef, useState } from "react";
 import { BsFillBackpack2Fill, BsFillFileTextFill } from "react-icons/bs";
 import { FaUser } from "react-icons/fa6";
 import { RiShareFill, RiSparkling2Fill } from "react-icons/ri";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import CharacterProfile from "../../components/sheet/CharacterProfile.tsx";
 import Stat from "../../components/sheet/Stat.tsx";
 import Card from "../../components/sheet/utils/Card.tsx";
@@ -419,19 +419,19 @@ function CharacterSheet() {
       </Alert>
 
       {/* Desktop */}
-      <div className="hidden md:block">
+      <div className="hidden md:block mx-5">
         <Button 
           onClick={rollD20}
-          className={`p-4! fixed bottom-10 right-10 z-999 bg-white `}>
+          className={`p-4! fixed bottom-10 right-10 z-9 bg-white `}>
           <img key={`roll-${spinKey}`} src={d20Icon} className={`${spinKey > 0 ? 'animate-[spin_0.7s_ease-out]' : ''} w-12 h-12 rounded-full`} />
         </Button>
         <div className="my-10 max-w-280 w-full flex flex-col gap-3 items-center">
-          <a href="/view" className="text-gray-400 flex flex-row gap-2 w-full">
+          <Link to="/view" className="text-gray-400 flex flex-row gap-2 w-full">
             <CircleArrowLeft />
             <span className="uppercase text-xl font-medium font-alegraya-sans">
               Back
             </span>
-          </a>
+          </Link>
           <div className="flex flex-row w-full justify-between items-center align-middle pb-5 border-b ">
             <div className="flex flex-col">
               <h1 className="font-alegraya font-bold text-5xl">{character.name}</h1>
@@ -696,7 +696,7 @@ function CharacterSheet() {
           
         </div>
       </div>
-      <span className="max-sm:hidden w-full">
+      <span className="max-md:hidden w-full">
         <Footer />
       </span>
 
@@ -846,7 +846,7 @@ function CharacterSheet() {
                 </div>
               </div>
 
-              <div className="max-sm:p-0 max-sm:bg-white max-sm:border-0 p-5 bg-gray-100 rounded-lg w-fit border border-gray-300">
+              <div className="max-sm:p-0 max-sm:bg-white max-sm:border-0 p-5 bg-gray-100 rounded-lg w-full border border-gray-300">
                 <div className="mt-23 flex-col grow-0">
                   {myAbilities.length === 0 && (
                     <p className="text-gray-500 font-alegraya-sans text-center">
@@ -899,7 +899,7 @@ function CharacterSheet() {
                 </div>
               </div>
 
-              <div className="max-sm:p-0 max-sm:bg-white max-sm:border-0 p-5 bg-gray-100 rounded-lg w-fit border border-gray-300">
+              <div className="max-sm:p-0 max-sm:bg-white max-sm:border-0 p-5 bg-gray-100 rounded-lg w-full border border-gray-300">
                 <div className="mt-23 flex-col grow-0">
                   {myItems.length === 0 && (
                     <p className="text-gray-500 font-alegraya-sans text-center">

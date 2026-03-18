@@ -1,6 +1,6 @@
 import { signOut } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
-import { ChevronDown, Menu, X } from 'lucide-react'; // Biblioteca de ícones (opcional)
+import { ChevronDown, Menu, X } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from "../../app/contexts/authContext/authProvider.tsx";
@@ -10,13 +10,17 @@ import { auth, db } from '../../app/firebase/firebase.ts';
 const Navbar = () => {
  const { currentUser, userLoggedIn } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
-  const [nameToDisplay, setNameToDisplay] = useState<string>('User');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+
+  const [nameToDisplay, setNameToDisplay] = useState<string>(() => {
+    return sessionStorage.getItem('keeper_username') || 'User';
+  });
 
   const logOut = async () => {
     try {
       await signOut(auth);
+      sessionStorage.removeItem('keeper_username');
       setIsUserMenuOpen(false);
     } catch (error) {
       console.error(error);
@@ -26,10 +30,17 @@ const Navbar = () => {
   useEffect(() => {
     const fetchUsername = async () => {
       if (currentUser) {
+        const fallbackName = currentUser.displayName || currentUser.email?.split('@')[0] || 'User';
         const docRef = doc(db, "users", currentUser.uid);
         const docSnap = await getDoc(docRef);
-        const name = docSnap.exists() ? docSnap.data().username : currentUser.displayName || currentUser.email?.split('@')[0] || 'User';
-        setNameToDisplay(name);
+        const finalName = docSnap.exists() && docSnap.data().username 
+          ? docSnap.data().username 
+          : fallbackName;
+          setNameToDisplay(finalName);
+        sessionStorage.setItem('keeper_username', finalName);
+      } else {
+        setNameToDisplay('User');
+        sessionStorage.removeItem('keeper_username');
       }
     };
     fetchUsername();
@@ -47,8 +58,8 @@ const Navbar = () => {
           <div className="hidden font-alegraya-sans lowercase text-xl md:flex space-x-8">
             <Link to="/" className="hover:text-gray-500 hover:underline-offset-3 hover:underline active:scale-95">Home</Link>
             <Link to="/about" className="hover:text-gray-500 hover:underline-offset-3 hover:underline active:scale-95">About Keeper</Link>
-            <a href="/create" className="hover:text-gray-500 hover:underline-offset-3 hover:underline active:scale-95">Create Character</a>
-            <a href="/view" className="hover:text-gray-500 hover:underline-offset-3 hover:underline active:scale-95">View Characters</a>
+            <Link to="/create" className="hover:text-gray-500 hover:underline-offset-3 hover:underline active:scale-95">Create Character</Link>
+            <Link to="/view" className="hover:text-gray-500 hover:underline-offset-3 hover:underline active:scale-95">View Characters</Link>
             {!userLoggedIn ? (
               <Link to="/login" className="hover:text-gray-500 hover:underline-offset-3 hover:underline">Log In</Link>
             ) : (
