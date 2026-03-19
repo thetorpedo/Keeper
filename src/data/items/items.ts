@@ -1,4 +1,4 @@
-import type { Ability } from '@/data/interface.ts'; // Ajuste o caminho se necessário
+import type { Ability } from '@/data/interface.ts';
 
 export const bookItems: Ability[] = [
     // ---------------------------------------------------------

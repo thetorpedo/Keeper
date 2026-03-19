@@ -1,24 +1,25 @@
-import { ArrowLeft } from 'lucide-react';
-import { useState } from 'react';
-import { Link, Navigate, NavLink, useNavigate } from 'react-router-dom';
-import Button from '../../components/ui/questbutton.tsx';
-import { useAuth } from '../contexts/authContext/authProvider.tsx';
-import { doCreateUserWithEmailAndPassword } from '../firebase/auth.ts';
+import { useGlobalAlert } from "@/app/contexts/alertContext/AlertProvider.tsx";
+import { ArrowLeft } from "lucide-react";
+import { useState } from "react";
+import { Link, Navigate, NavLink, useNavigate } from "react-router-dom";
+import Button from "../../components/ui/questbutton.tsx";
+import { useAuth } from "../contexts/authContext/AuthProvider.tsx";
+import { doCreateUserWithEmailAndPassword } from "../firebase/auth.ts";
 
 const Signup = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setconfirmPassword] = useState("");
+  const [isRegistering, setIsRegistering] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const { showAlert } = useGlobalAlert();
 
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [confirmPassword, setconfirmPassword] = useState('')
-  const [isRegistering, setIsRegistering] = useState(false)
-  const [errorMessage, setErrorMessage] = useState('')
-
-  const { userLoggedIn } = useAuth()
+  const { isUserLoggedIn } = useAuth();
   const navigate = useNavigate();
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setErrorMessage('');
+    setErrorMessage("");
 
     if (password !== confirmPassword) {
       setErrorMessage("Passwords do not match");
@@ -29,35 +30,35 @@ const Signup = () => {
       setIsRegistering(true);
       try {
         await doCreateUserWithEmailAndPassword(email, password);
-        navigate('/'); 
-        window.location.reload();
+        navigate("/");
       } catch (error) {
         if (error instanceof Error) {
           setErrorMessage(error.message);
         } else {
-          setErrorMessage("Failed to create account.");
+          showAlert("Failed to create account.", "Error", "error");
         }
-        setIsRegistering(false); 
+        setIsRegistering(false);
       }
     }
   };
 
   return (
-    <main className="flex items-center justify-center bg-purple/30 h-screen">
-      {userLoggedIn && (<Navigate to={'/'} replace={true} />)}
+    <main className="flex items-center justify-center bg-purple/30 min-h-screen p-5">
+      {isUserLoggedIn && <Navigate to={"/"} replace={true} />}
       <section className="relative w-full max-w-md mx-5 p-8 space-y-8 border bg-white shadow-btn2">
-        <div className='absolute'>
-          <Link to='/' className="text-5xl hover:opacity-70">
-            <ArrowLeft className='hover:scale-110' />
+        <div className="absolute">
+          <Link to="/" className="text-5xl hover:opacity-70">
+            <ArrowLeft className="hover:scale-110" />
           </Link>
         </div>
         <div className="text-center">
-          <Link to='/' className="text-5xl font-extrabold p-5 bg-white tracking-tight hover:opacity-70 font-alegraya ">
+          <Link
+            to="/"
+            className="text-5xl font-extrabold p-5 bg-white tracking-tight hover:opacity-70 font-alegraya "
+          >
             Keeper
           </Link>
-          <p className="mt-2 text-lg ">
-            Create a new account
-          </p>
+          <p className="mt-2 text-lg ">Create a new account</p>
         </div>
         <form className="mt-8 space-y-6" onSubmit={onSubmit}>
           <div className="space-y-3">
@@ -73,7 +74,10 @@ const Signup = () => {
                 required
                 className="relative block w-full px-3 py-2  placeholder-gray-500 border appearance-none focus:outline-none focus:ring-indigo-500 focus:border-purple-400 focus:z-10 sm:text-sm"
                 placeholder="E-mail"
-                value={email} onChange={(e) => { setEmail(e.target.value) }}
+                value={email}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                }}
               />
             </div>
             <div>
@@ -85,54 +89,62 @@ const Signup = () => {
                 id="password"
                 name="password"
                 type="password"
-                autoComplete="current-password"
+                autoComplete="new-password"
                 required
                 className="relative block w-full px-3 py-2  placeholder-gray-500 border appearance-none focus:outline-none focus:ring-indigo-500 focus:border-purple-400 focus:z-10 sm:text-sm"
                 placeholder="Password"
-                value={password} onChange={(e) => { setPassword(e.target.value) }}
+                value={password}
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                }}
               />
             </div>
             <div>
-              <label htmlFor="password" className="sr-only">
+              <label htmlFor="confirm-password" className="sr-only">
                 Confirm Password
               </label>
               <input
                 disabled={isRegistering}
-                id="password"
-                name="password"
+                id="confirm-password"
+                name="confirmPassword"
                 type="password"
-                autoComplete="off"
+                autoComplete="new-password"
                 required
                 className="relative block w-full px-3 py-2  placeholder-gray-500 border appearance-none focus:outline-none focus:ring-indigo-500 focus:border-purple-400 focus:z-10 sm:text-sm"
                 placeholder="Confirm Password"
-                value={confirmPassword} onChange={(e) => { setconfirmPassword(e.target.value) }}
+                value={confirmPassword}
+                onChange={(e) => {
+                  setconfirmPassword(e.target.value);
+                }}
               />
             </div>
             {errorMessage && (
-                            <span className='text-red-600 font-bold'>{errorMessage}</span>
-                        )}
+              <span className="text-red-600 font-bold">{errorMessage}</span>
+            )}
           </div>
 
-          <div className='flex justify-center'>
+          <div className="flex justify-center">
             <Button
               className=""
-              text={isRegistering ? 'Signing Up...' : 'Sign Up'}
+              text={isRegistering ? "Signing Up..." : "Sign Up"}
               isImportant
+              disabled={isRegistering}
               type="submit"
-              onClick={onSubmit}
-            >
-            </Button>
+            ></Button>
           </div>
         </form>
         <p className="mt-2 text-center ">
-          Already have an account?{' '}
-          <NavLink to="/login" className="font-medium text-xl font-alegraya-sans text-purple-900 hover:text-purple-900/40">
+          Already have an account?{" "}
+          <NavLink
+            to="/login"
+            className="font-medium text-xl font-alegraya-sans text-purple-900 hover:text-purple-900/40"
+          >
             sign in
           </NavLink>
         </p>
       </section>
     </main>
-  )
-}
+  );
+};
 
-export default Signup
+export default Signup;

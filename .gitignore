@@ -22,3 +22,16 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Variáveis de Ambiente 
+.env
+.env.*
+!.env.example
+
+# Firebase 
+.firebase/
+firebase-debug.log*
+
+# Cache do TypeScript e do ESLint
+*.tsbuildinfo
+.eslintcache

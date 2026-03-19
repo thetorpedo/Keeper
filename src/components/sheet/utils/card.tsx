@@ -41,7 +41,6 @@ export default function Card({
 
   const roleColor = ability.role.toLowerCase().replace(/\s+/g, "-");
 
-
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -58,40 +57,45 @@ export default function Card({
             )}
 
             {editing && (
-            <Button
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                onClick();
-              }}
-              // bottom-[110px] mantém ele sempre na mesma altura independente da animação
-              className={`absolute ${isLast ? "bottom-5" : "bottom-27.5"}  right-5 z-20 size-9 p-0! hidden group-hover:flex animate-in fade-in duration-200 justify-center items-center text-center text-4xl font-bold rounded-lg border  ${isSelected ? "bg-purple text-black" : "bg-white text-black hover:bg-gray-200"}`}
-            >
-              {isSelected ? (
-                <X className="mx-auto size-5" />
-              ) : (
-                <Plus className="mx-auto size-5" />
-              )}
-            </Button>
+              <Button
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  onClick();
+                }}
+                className={`absolute ${isLast ? "bottom-5" : "bottom-27.5"}  right-5 z-20 size-9 p-0! hidden group-hover:flex animate-in fade-in duration-200 justify-center items-center text-center text-4xl font-bold rounded-lg border  ${isSelected ? "bg-purple text-black" : "bg-white text-black hover:bg-gray-200"}`}
+              >
+                {isSelected ? (
+                  <X className="mx-auto size-5" />
+                ) : (
+                  <Plus className="mx-auto size-5" />
+                )}
+              </Button>
             )}
-            
 
             <div className="flex justify-center -mb-4">
               <div className="px-2 max-w-full">
                 <div className="flex items-center justify-center gap-2 px-2 relative max-w-full bg-white">
                   {/* AP */}
-                  {typeof baseCost === 'number' ? (
+                  {typeof baseCost === "number" ? (
                     <div className="flex shrink-0 items-center group relative">
                       <button
-                        onClick={isOwner ? ((e) => {
-                          if (editing) return;
-                          e.preventDefault(); 
-                          e.stopPropagation();
-                          if (onDeductAP && typeof baseCost === 'number') {
-                            onDeductAP(baseCost);
-                          }
-                        }) : undefined}
-                        className={`flex items-center tooltip relative h-full cursor-pointer ${editing || !isOwner ? ('') : ('hover:opacity-50 hover:scale-115 transition-all active:scale-95')}`}
+                        onClick={
+                          isOwner
+                            ? (e) => {
+                                if (editing) return;
+                                e.preventDefault();
+                                e.stopPropagation();
+                                if (
+                                  onDeductAP &&
+                                  typeof baseCost === "number"
+                                ) {
+                                  onDeductAP(baseCost);
+                                }
+                              }
+                            : undefined
+                        }
+                        className={`flex items-center tooltip relative h-full cursor-pointer ${editing || !isOwner ? "" : "hover:opacity-50 hover:scale-115 transition-all active:scale-95"}`}
                       >
                         <span className="bg-black px-1.5 py-0.5 text-white font-alegraya-sans font-bold leading-none flex items-center justify-center">
                           {baseCost}
@@ -123,16 +127,21 @@ export default function Card({
                       )
                     : ability.rollTheDie && (
                         <div className="flex shrink-0 items-center h-full">
-                          <button 
-                          onClick={isOwner ? ((e) => {
-                            if (editing) return;
-                            e.preventDefault();
-                            e.stopPropagation();
-                            if (onRoll) {
-                              onRoll();
+                          <button
+                            onClick={
+                              isOwner
+                                ? (e) => {
+                                    if (editing) return;
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                    if (onRoll) {
+                                      onRoll();
+                                    }
+                                  }
+                                : undefined
                             }
-                          }) : undefined}
-                          className={`font-alegraya-sans cursor-pointer ${editing || !isOwner ? ('') : ('hover:opacity-50 hover:scale-115 transition-all active:scale-95')} lowercase  text-[14px] leading-none flex items-center justify-center bg-gray-50`}>
+                            className={`font-alegraya-sans cursor-pointer ${editing || !isOwner ? "" : "hover:opacity-50 hover:scale-115 transition-all active:scale-95"} lowercase  text-[14px] leading-none flex items-center justify-center bg-gray-50`}
+                          >
                             <img
                               src="../../src/assets/d20.png"
                               className="size-5"
@@ -151,28 +160,33 @@ export default function Card({
             >
               {ability.path === "Item" && (
                 <div className="flex flex-wrap justify-center gap-1.5 mb-2 px-1">
-                  {/* Tag de Raridade (Role) */}
+                  {/* Rarity / Role */}
                   <span className="border border-black px-1.5 py-0.5 text-[10px] font-alegraya-sans font-bold uppercase tracking-wider leading-none">
                     {ability.role}
                   </span>
 
-                  {/* Tag de Espaço  */}
+                  {/* Slots  */}
                   <span className="border border-black px-1.5 py-0.5 text-[10px] font-alegraya-sans font-bold uppercase tracking-wider leading-none">
                     {ability.slots === 1 ? "1 slot" : `${ability.slots} slots`}
                   </span>
 
-                  {/* Tag de Rolar o Dado */}
+                  {/* Roll */}
                   {ability.rollTheDie && (
-                    <button 
-                    onClick={isOwner ? ((e) => {
-                      if (editing) return;
-                      e.preventDefault();
-                      e.stopPropagation();
-                      if (onRoll) {
-                        onRoll();
+                    <button
+                      onClick={
+                        isOwner
+                          ? (e) => {
+                              if (editing) return;
+                              e.preventDefault();
+                              e.stopPropagation();
+                              if (onRoll) {
+                                onRoll();
+                              }
+                            }
+                          : undefined
                       }
-                    }) : undefined}
-                    className={`border border-black px-1.5 py-0.5 text-[10px] ${editing || !isOwner ? ('') : ('hover:opacity-50 hover:scale-105 transition-all active:scale-95 cursor-pointer')} font-alegraya-sans font-bold uppercase tracking-wider leading-none`}>
+                      className={`border border-black px-1.5 py-0.5 text-[10px] ${editing || !isOwner ? "" : "hover:opacity-50 hover:scale-105 transition-all active:scale-95 cursor-pointer"} font-alegraya-sans font-bold uppercase tracking-wider leading-none`}
+                    >
                       ROLL THE DIE
                     </button>
                   )}
@@ -210,6 +224,7 @@ export default function Card({
                     <div className="p-1 pt-0 pb-0 text-sm font-ovo">
                       {ability.rollTable?.map((roll, index, array) => (
                         <div
+                          key={index}
                           className={`${index === array.length - 1 ? "" : "border-b"} border-gray-300`}
                         >
                           <span className="font-semibold font-alegraya-sans text-base">
@@ -224,7 +239,6 @@ export default function Card({
               </div>
             </div>
           </div>
-          {/* Title */}
         </div>
       </DialogTrigger>
       <DialogContent
@@ -232,56 +246,61 @@ export default function Card({
         className="sm:max-w-md max-h-[80vh] gap-0 z-100 overflow-y-auto font-alegraya-sans p-0 font-medium text-lg"
       >
         <div className="flex flex-col relative m-3 mt-7 justify-center items-center">
-          
           <div className="flex items-center justify-center gap-2 px-2 relative -mb-8 z-10 -top-4 max-w-75 bg-white">
-            
             <div className="flex gap-2 shrink min-w-0 items-center h-full">
-              <span 
+              <span
                 className="font-alegraya-sans lowercase truncate block w-full font-extrabold text-2xl text-center"
                 title={ability.name}
               >
                 {ability.name}
               </span>
-              
+
               {ability.path === "Item" && ability.damage && (
                 <div className="border-3 border-damage px-1.5 text-base/4 font-extrabold font-alegraya-sans text-damage">
                   {ability.damage}
-                </div>)}
+                </div>
+              )}
             </div>
-            </div>
+          </div>
           <div
             className={`border-4  w-full border-${roleColor} rounded-lg text-justify p-3 pt-0`}
           >
-            
-              <div className="flex flex-wrap justify-center gap-2 mb-2 mt-4 px-1">
-                {ability.path === "Item" && (<>
-                {/* Tag de Raridade (Role) */}
-                <span className="border border-black px-2 py-1 text-base font-alegraya-sans lowercase tracking-wider leading-none">
-                  {ability.role}
-                </span>
+            <div className="flex flex-wrap justify-center gap-2 mb-2 mt-4 px-1">
+              {ability.path === "Item" && (
+                <>
+                  {/* Rarity / Role) */}
+                  <span className="border border-black px-2 py-1 text-base font-alegraya-sans lowercase tracking-wider leading-none">
+                    {ability.role}
+                  </span>
 
-                {/* Tag de Espaço  */}
-                <span className="border border-black px-2 py-1 text-base font-alegraya-sans lowercase tracking-wider leading-none">
-                  {ability.slots === 1 ? "1 slot" : `${ability.slots} slots`}
-                </span></>
-                )}
-                {/* Tag de Rolar o Dado */}
-                {ability.rollTheDie && (
-                  <button 
-                    onClick={isOwner ? ((e) => {
-                      if (editing) return;
-                      e.preventDefault();
-                      e.stopPropagation();
-                      if (onRoll) {
-                        onRoll();
-                      }
-                    }) : undefined}
-                    className={`border border-black px-2 py-1 text-base ${editing || !isOwner ? ('') : ('cursor-pointer hover:opacity-50 hover:scale-110 transition-all active:scale-95')} font-alegraya-sans lowercase tracking-wider leading-none`}>
-                      ROLL THE DIE
-                    </button>
-                )}
-              </div>
-            
+                  {/* Slots  */}
+                  <span className="border border-black px-2 py-1 text-base font-alegraya-sans lowercase tracking-wider leading-none">
+                    {ability.slots === 1 ? "1 slot" : `${ability.slots} slots`}
+                  </span>
+                </>
+              )}
+              {/* Roll */}
+              {ability.rollTheDie && (
+                <button
+                  onClick={
+                    isOwner
+                      ? (e) => {
+                          if (editing) return;
+                          e.preventDefault();
+                          e.stopPropagation();
+                          if (onRoll) {
+                            onRoll();
+                          }
+                        }
+                      : undefined
+                  }
+                  className={`border border-black px-2 py-1 text-base ${editing || !isOwner ? "" : "cursor-pointer hover:opacity-50 hover:scale-110 transition-all active:scale-95"} font-alegraya-sans lowercase tracking-wider leading-none`}
+                >
+                  ROLL THE DIE
+                </button>
+              )}
+            </div>
+
             <div className="space-y-4 my-4">
               {ability.description && (
                 <p className="font-ovo text-base">{ability.description}</p>
@@ -293,15 +312,22 @@ export default function Card({
                     <div className="font-bold mr-2 inline-block gap-2 items-center">
                       <span className="flex shrink-0 items-center group relative">
                         <button
-                          onClick={isOwner ? ((e) => {
-                          if (editing) return;
-                          e.preventDefault(); 
-                          e.stopPropagation();
-                          if (onDeductAP && typeof baseCost === 'number') {
-                            onDeductAP(baseCost);
+                          onClick={
+                            isOwner
+                              ? (e) => {
+                                  if (editing) return;
+                                  e.preventDefault();
+                                  e.stopPropagation();
+                                  if (
+                                    onDeductAP &&
+                                    typeof baseCost === "number"
+                                  ) {
+                                    onDeductAP(baseCost);
+                                  }
+                                }
+                              : undefined
                           }
-                        }) : undefined}
-                          className={`flex items-center tooltip relative h-full ${editing || !isOwner ? ('') : ('hover:opacity-50 cursor-pointer hover:scale-115 transition-all active:scale-95')}  `}
+                          className={`flex items-center tooltip relative h-full ${editing || !isOwner ? "" : "hover:opacity-50 cursor-pointer hover:scale-115 transition-all active:scale-95"}  `}
                         >
                           <span className="bg-black px-1.5 py-0.5 text-white font-alegraya-sans font-bold leading-none flex items-center justify-center">
                             {effect.cost}
@@ -333,76 +359,81 @@ export default function Card({
                 )}
               </div>
             </div>
-            
           </div>
-          {/* BOTÕES DE EDIT E DELETE */}
-          {(ability.role === "Custom Abilities" || ability.role === "Custom Items") && editing && (
-            <div className="flex flex-row justify-between items-center w-full px-1 mt-2">
-              {/* BOTÃO DELETE */}
-              <Dialog>
-                <DialogTrigger asChild>
-                  <button className="font-alegraya-sans lowercase text-left cursor-pointer hover:underline transition-all hover:text-red-400 font-medium text-xl text-red-500">
-                    Delete this ability
+          {(ability.role === "Custom Abilities" ||
+            ability.role === "Custom Items") &&
+            editing && (
+              <div className="flex flex-row justify-between items-center w-full px-1 mt-2">
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <button className="font-alegraya-sans lowercase text-left cursor-pointer hover:underline transition-all hover:text-red-400 font-medium text-xl text-red-500">
+                      Delete this ability
+                    </button>
+                  </DialogTrigger>
+                  <DialogContent className="sm:max-w-md z-999">
+                    <DialogHeader>
+                      <DialogTitle>
+                        Are you sure you want to delete this{" "}
+                        {ability.path.toLowerCase()}?
+                      </DialogTitle>
+                      <DialogDescription className="text-base pb-5">
+                        This action CANNOT be undone!
+                      </DialogDescription>
+                    </DialogHeader>
+                    <DialogFooter className="sm:justify-between">
+                      <DialogClose asChild>
+                        <Button
+                          className="bg-red-400 text-white"
+                          onClick={() => onDelete && onDelete(ability.id)}
+                        >
+                          Delete
+                        </Button>
+                      </DialogClose>
+                      <DialogClose asChild>
+                        <Button>Close</Button>
+                      </DialogClose>
+                    </DialogFooter>
+                  </DialogContent>
+                </Dialog>
+
+                <DialogClose asChild>
+                  <button
+                    onClick={() => {
+                      if (onEdit) {
+                        onEdit(ability.id);
+                      }
+                    }}
+                    className="font-alegraya-sans lowercase text-right cursor-pointer hover:underline transition-all hover:text-purple-900/50 font-medium text-xl text-purple-900/70"
+                  >
+                    Edit
                   </button>
-                </DialogTrigger>
-                <DialogContent className="sm:max-w-md z-999">
-                  <DialogHeader>
-                    <DialogTitle>Are you sure you want to delete this {ability.path.toLowerCase()}?</DialogTitle>
-                    <DialogDescription className='text-base pb-5'>
-                      This action CANNOT be undone!
-                    </DialogDescription>
-                  </DialogHeader>
-                  <DialogFooter className="sm:justify-between">
-                    <DialogClose asChild>
-                      <Button 
-                        className='bg-red-400 text-white'
-                        onClick={() => onDelete && onDelete(ability.id)}
-                      >
-                        Delete
-                      </Button>
-                    </DialogClose>
-                    <DialogClose asChild>
-                      <Button>Close</Button>
-                    </DialogClose>
-                  </DialogFooter>
-                </DialogContent>
-              </Dialog>  
-
-              {/* BOTÃO EDIT */}
-              <DialogClose asChild>
-              <button 
-                onClick={() => {
-                  if (onEdit) {
-                    onEdit(ability.id);
-                  }
-                }}
-                className="font-alegraya-sans lowercase text-right cursor-pointer hover:underline transition-all hover:text-purple-900/50 font-medium text-xl text-purple-900/70"
-              >
-                Edit
-              </button>
-              </DialogClose>
-            </div>
-          )}
-
-          
-          
+                </DialogClose>
+              </div>
+            )}
         </div>
         <div className="flex justify-end gap-3 p-4 border-t border-gray-200">
-        <DialogClose asChild>
-            <Button type="button" className={`shrink rounded-lg text-lg ${!editing && 'w-full'}`}>Close</Button>
-                </DialogClose>
-            {editing && (
-<DialogClose asChild>
-                <Button 
-                    onClick={onClick} 
-                    className={isSelected ? `bg-purple hover:opacity-80 text-black border w-full rounded-lg text-lg/3` : 'w-full rounded-lg grow text-lg'}
-                >
-                    {isSelected ? 'Remove from Character' : 'Add to Character'}
-                </Button>
+          <DialogClose asChild>
+            <Button
+              type="button"
+              className={`shrink rounded-lg text-lg ${!editing && "w-full"}`}
+            >
+              Close
+            </Button>
+          </DialogClose>
+          {editing && (
+            <DialogClose asChild>
+              <Button
+                onClick={onClick}
+                className={
+                  isSelected
+                    ? `bg-purple hover:opacity-80 text-black border w-full rounded-lg text-lg/3`
+                    : "w-full rounded-lg grow text-lg"
+                }
+              >
+                {isSelected ? "Remove from Character" : "Add to Character"}
+              </Button>
             </DialogClose>
-
-            )}
-            
+          )}
         </div>
       </DialogContent>
     </Dialog>
