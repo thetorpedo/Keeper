@@ -3,7 +3,7 @@ import { useAuth } from "@/app/contexts/authContext/AuthProvider.tsx";
 import { db } from "@/app/firebase/firebase.ts";
 import indicatorImg from "@/assets/indicator.png";
 import Card from "@/components/sheet/utils/card.tsx";
-import { bookAbilities } from "@/data/abilities/wizard.ts";
+import { bookAbilities } from "@/data/abilities/index.ts";
 import type { Ability } from "@/data/interface.ts";
 import {
   arrayRemove,

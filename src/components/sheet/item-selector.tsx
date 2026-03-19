@@ -3,7 +3,7 @@ import { useAuth } from "@/app/contexts/authContext/AuthProvider.tsx";
 import { db } from "@/app/firebase/firebase.ts";
 import Card from "@/components/sheet/utils/card.tsx";
 import type { Ability } from "@/data/interface.ts";
-import { bookItems } from "@/data/items/items.ts";
+import { bookItems } from "@/data/items/index.ts";
 import {
   arrayRemove,
   arrayUnion,
@@ -35,10 +35,12 @@ export default function ItemSelector({
 }: ItemSelectorProps) {
   const itemCategories = [
     "All items",
+    "Weapons",
     "Useful",
     "Uncommon",
     "Rare",
     "Legendary",
+    "Supreme",
     "Custom Items",
   ];
 
