@@ -194,12 +194,12 @@ export default function Card({
               )}
               {/* Description */}
               <div>
-                <p className="text-sm mb-1">
+                <p className="text-sm mb-1 whitespace-pre-wrap">
                   {ability.description || ability.effects?.[0]?.description}
                 </p>
                 <div className="space-y-2">
                   {ability.effects?.map((effect, index) => (
-                    <div key={index} className="font-ovo text-sm">
+                    <div key={index} className="font-ovo text-sm whitespace-pre-wrap">
                       <div className="font-bold mr-2 inline-block gap-2 items-center">
                         <span className="flex shrink-0 items-center group relative">
                           <span
@@ -303,12 +303,12 @@ export default function Card({
 
             <div className="space-y-4 my-4">
               {ability.description && (
-                <p className="font-ovo text-base">{ability.description}</p>
+                <p className="font-ovo text-base whitespace-pre-wrap">{ability.description}</p>
               )}
 
               <div className="space-y-2">
                 {ability.effects?.map((effect, index) => (
-                  <div key={index} className="font-ovo text-base/snug">
+                  <div key={index} className="font-ovo text-base/snug text-left whitespace-pre-wrap">
                     <div className="font-bold mr-2 inline-block gap-2 items-center">
                       <span className="flex shrink-0 items-center group relative">
                         <button
@@ -347,7 +347,7 @@ export default function Card({
                   <div className="p-2 pb-0 text-base font-ovo">
                     {ability.rollTable?.map((roll, index, array) => (
                       <div
-                        className={`${index === array.length - 1 ? "" : "border-b"} border-gray-300`}
+                        className={`${index === array.length - 1 ? "" : "border-b"} border-gray-300 whitespace-pre-wrap`}
                       >
                         <span className="font-semibold font-alegraya-sans text-lg">
                           {roll.value}:{" "}

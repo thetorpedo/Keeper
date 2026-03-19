@@ -10,7 +10,7 @@ export const invokerAbilities: Ability[] = [
         "effects": [
             {
                 "cost": 0,
-                "description": "Once per scene, you may declare a reason for intervening in a matter, steeling your resolve. The reason should be based on your ideal and the scene’s context. For example, if you believe in order, you might tell highway robbers they’re breaking the law. Or if you believe in honor, you might say there’s no honor among thieves. Choose one result: • You immediately make a successful basic attack on a nearby foe. • You compel an NPC to explain what they are doing (they may lie to you). • You convince commoners to leave."
+                "description": "Once per scene, you may declare a reason for intervening in a matter, steeling your resolve. The reason should be based on your ideal and the scene’s context. For example, if you believe in order, you might tell highway robbers they’re breaking the law. Or if you believe in honor, you might say there’s no honor among thieves. Choose one result: \n\n• You immediately make a successful basic attack on a nearby foe. \n• You compel an NPC to explain what they are doing (they may lie to you). \n• You convince commoners to leave."
             }
         ]
     },
@@ -23,7 +23,7 @@ export const invokerAbilities: Ability[] = [
         "effects": [
             {
                 "cost": 2,
-                "description": "When you regroup, you may close your eyes and calm your body. You recite a short petition and receive a boon. You must recite a petition at the table that contains all of these parts: • An address line, like “in the name of the gods” or “for the love of wisdom.” • A request, like “I ask for strength.” • An adulation, like “for I am your humble servant” or “for you are the truth.” When you are finished reciting the petition, all of your hit points are restored."
+                "description": "When you regroup, you may close your eyes and calm your body. You recite a short petition and receive a boon. You must recite a petition at the table that contains all of these parts: \n\n• An address line, like “in the name of the gods” or “for the love of wisdom.” \n• A request, like “I ask for strength.” \n• An adulation, like “for I am your humble servant” or “for you are the truth.” \n\nWhen you are finished reciting the petition, all of your hit points are restored."
             }
         ]
     },
@@ -36,7 +36,7 @@ export const invokerAbilities: Ability[] = [
         "effects": [
             {
                 "cost": 3,
-                "description": "You leave your worldly body behind and create an astral projection of yourself. You must be in a quiet place with no other creatures around to begin the ritual. While in this trance, you can only vaguely sense if there is danger around your mortal body. You may exit the trance at any time. Your mind enters a liminal plane of existence. You experience this place like a dreamworld in the stars; it might be a lush paradise in a nebula, an idyllic homestead, or a temple in the fires of creation. If you have an allegiance to a deity, you meet with their avatar. If you hold no allegiance to a deity or if your deity is merely a figment of your character’s imagination, you meet with an avatar of supernatural wisdom. Set a timer. You may speak to the avatar for 1 minute about anything you like. If you ask any of these questions, the Guide will give you a truthful answer: • Am I on the right path to (fill in the blank)? • Is (fill in the blank) who they say they are? • Am I living up to my ideal? • Have my actions unknowingly caused anyone harm? • How can I redeem myself?"
+                "description": "You leave your worldly body behind and create an astral projection of yourself. You must be in a quiet place with no other creatures around to begin the ritual. While in this trance, you can only vaguely sense if there is danger around your mortal body. You may exit the trance at any time. Your mind enters a liminal plane of existence. You experience this place like a dreamworld in the stars; it might be a lush paradise in a nebula, an idyllic homestead, or a temple in the fires of creation. If you have an allegiance to a deity, you meet with their avatar. If you hold no allegiance to a deity or if your deity is merely a figment of your character’s imagination, you meet with an avatar of supernatural wisdom. \n\nSet a timer. You may speak to the avatar for 1 minute about anything you like. If you ask any of these questions, the Guide will give you a truthful answer: \n\n• Am I on the right path to (fill in the blank)? \n• Is (fill in the blank) who they say they are? \n• Am I living up to my ideal? \n• Have my actions unknowingly caused anyone harm? \n• How can I redeem myself?"
             }
         ]
     },
@@ -46,12 +46,10 @@ export const invokerAbilities: Ability[] = [
         "path": "Invocation",
         "name": "Vow",
         "rollTheDie": false,
-        "effects": [
-            {
-                "cost": 0,
-                "description": "You create a vow that permanently binds you in service of an ideal. You may only do this once. There is no turning back. You can express this bond as devotion to a deity, a people, a cause, or something else that represents or is served by your ideal. (You may use an ideal you chose when creating a character, or choose a new one.) You must be in a safe and quiet place to make the vow, and it must include: • Something you promise to actively do in service of your ideal, like helping the sick. • A person, place, or group you promise to protect when nearby. • A wrong from your past that you pledge to make amends for someday. Once the vow is created, you receive these ongoing benefits: • You can now use your Invoke ability once per game session for no AP cost. • The healing effect of your Petition ability now affects nearby party members in addition to you. • Your eyes now have a faint glow. You have a sacred obligation to fulfill the promises you have made. Each time you betray the promises of your vow in a serious way, you feel a sharp pain in your heart, and your maximum HP decreases by 1. You cannot be reduced below 5 maximum HP from this effect."
-            }
-        ]
+
+
+        "description": "You create a vow that permanently binds you in service of an ideal. You may only do this once. There is no turning back. You can express this bond as devotion to a deity, a people, a cause, or something else that represents or is served by your ideal. (You may use an ideal you chose when creating a character, or choose a new one.) \n\nYou must be in a safe and quiet place to make the vow, and it must include: \n• Something you promise to actively do in service of your ideal, like helping the sick. \n• A person, place, or group you promise to protect when nearby. \n• A wrong from your past that you pledge to make amends for someday. \n\nOnce the vow is created, you receive these ongoing benefits: \n• You can now use your Invoke ability once per game session for no AP cost. \n• The healing effect of your Petition ability now affects nearby party members in addition to you. \n• Your eyes now have a faint glow. \n\nYou have a sacred obligation to fulfill the promises you have made. \nEach time you betray the promises of your vow in a serious way, you feel a sharp pain in your heart, and your maximum HP decreases by 1. You cannot be reduced below 5 maximum HP from this effect."
+
     },
     {
         "id": "invoker_soul_gaze",
@@ -127,7 +125,7 @@ export const invokerAbilities: Ability[] = [
         "effects": [
             {
                 "cost": 1,
-                "description": "You inspire a nearby NPC by reciting a meaningful statement to them. You may invent a famous quote or proverb, or borrow one from the real world. The creature must be able to hear and understand you, and cannot currently be hostile toward you. Until the end of the day, the NPC shapes their behavior around their ideal, and cannot fall victim to their flaw."
+                "description": "You inspire a nearby NPC by reciting a meaningful statement to them. You may invent a famous quote or proverb, or borrow one from the real world. The creature must be able to hear and understand you, and cannot currently be hostile toward you. \n\nUntil the end of the day, the NPC shapes their behavior around their ideal, and cannot fall victim to their flaw."
             }
         ]
     },
@@ -173,7 +171,7 @@ export const invokerAbilities: Ability[] = [
         "effects": [
             {
                 "cost": 4,
-                "description": "You place your hand on an NPC, channeling the weight of your devotion and resolve. By speaking a word of power, you alleviate them of a character flaw. (You must already know one of their flaws.) They are effectively cured of the flaw and it no longer affects their behavior. This also has the effect of your Forgive ability and relieves the creature of any guilt for succumbing to their flaw in the past."
+                "description": "You place your hand on an NPC, channeling the weight of your devotion and resolve. By speaking a word of power, you alleviate them of a character flaw. (You must already know one of their flaws.) They are effectively cured of the flaw and it no longer affects their behavior. \n\nThis also has the effect of your Forgive ability and relieves the creature of any guilt for succumbing to their flaw in the past."
             }
         ]
     },
@@ -183,10 +181,11 @@ export const invokerAbilities: Ability[] = [
         "path": "Wrath",
         "name": "Fiery Avenger",
         "rollTheDie": false,
+        "description": "Choose a phrase to use for this spell.",
         "effects": [
             {
                 "cost": 1,
-                "description": "Choose a phrase to use for this spell. You speak the phrase of power, igniting your weapon in a magical flame of any color. While the weapon is on fire, it acts as a torch that casts light nearby. The flame increases the weapon’s damage by 1. The flame persists until you roll a failure or worse on an attack with the weapon. You may dismiss the flame at any time."
+                "description": " You speak the phrase of power, igniting your weapon in a magical flame of any color. While the weapon is on fire, it acts as a torch that casts light nearby. The flame increases the weapon’s damage by 1. The flame persists until you roll a failure or worse on an attack with the weapon. You may dismiss the flame at any time."
             }
         ]
     },
@@ -196,10 +195,11 @@ export const invokerAbilities: Ability[] = [
         "path": "Wrath",
         "name": "Thunderous Word",
         "rollTheDie": false,
+        "description": "Choose a word to use for this spell.",
         "effects": [
             {
                 "cost": 2,
-                "description": "Choose a word to use for this spell. You speak the word of power, releasing a thunderous shockwave in the direction you are facing. The wave knocks up to three creatures backward and hits them each for 2 damage. Creatures affected by the spell are briefly dazed and cannot use special abilities during their next turn."
+                "description": " You speak the word of power, releasing a thunderous shockwave in the direction you are facing. The wave knocks up to three creatures backward and hits them each for 2 damage. Creatures affected by the spell are briefly dazed and cannot use special abilities during their next turn."
             }
         ]
     },
@@ -212,7 +212,7 @@ export const invokerAbilities: Ability[] = [
         "effects": [
             {
                 "cost": 3,
-                "description": "You raise your hand to the sky and summon a spectral warhammer into your grip. The hammer is a one-handed weapon that deals 3 damage. It appears to crackle with blue-green light and leaves a deep, reverberating sound in its wake. If you roll a triumph when using the hammer, it releases a crackling boom and casts your Thunderous Word spell on the target. The hammer vanishes in smoke after one hour or when you dismiss it."
+                "description": "You raise your hand to the sky and summon a spectral warhammer into your grip. The hammer is a one-handed weapon that deals 3 damage. It appears to crackle with blue-green light and leaves a deep, reverberating sound in its wake. \n\nIf you roll a triumph when using the hammer, it releases a crackling boom and casts your Thunderous Word spell on the target. The hammer vanishes in smoke after one hour or when you dismiss it."
             }
         ]
     },
@@ -225,13 +225,9 @@ export const invokerAbilities: Ability[] = [
         "effects": [
             {
                 "cost": 5,
-                "description": "Speak a word or phrase, condemning a nearby creature that you can see. You engulf the target in radiant flame, hitting it for 10 HP. If the damage dealt is enough to kill the creature, it explodes into ash, and its body and spirit are permanently obliterated. If you destroy a creature with Smite, roll the die."
+                "description": "Speak a word or phrase, condemning a nearby creature that you can see. You engulf the target in radiant flame, hitting it for 10 HP. If the damage dealt is enough to kill the creature, it explodes into ash, and its body and spirit are permanently obliterated.\n\n If you destroy a creature with Smite, roll the die. On a 2-20, nothing happens. On a 1, the creature’s spirit becomes a dark passenger in your mind.You never know when it may decide to speak to you or observe your behavior"
             }
         ],
-        "rollTable": [
-            { "value": "2-20", "description": "Nothing happens." },
-            { "value": 1, "description": "The creature’s spirit becomes a dark passenger in your mind. You never know when it may decide to speak to you or observe your behavior." }
-        ]
     },
     {
         "id": "invoker_blazing_avenger",
@@ -242,7 +238,7 @@ export const invokerAbilities: Ability[] = [
         "effects": [
             {
                 "cost": 6,
-                "description": "You recite a magical statement about your ideal while holding a weapon, imbuing it with incredible power. The weapon gains the following benefits: • It now glows faintly at all times and glows brighter when enemies are nearby. • When holding the weapon, you may cast Fiery Avenger on it at will for no AP cost. • When you roll a 20 when making an attack with the weapon, it casts the Smite spell on your target. You can only cast Blazing Avenger on one weapon at a time; casting it again cancels the previous enchantment."
+                "description": "You recite a magical statement about your ideal while holding a weapon, imbuing it with incredible power. The weapon gains the following benefits: \n\n• It now glows faintly at all times and glows brighter when enemies are nearby. \n• When holding the weapon, you may cast Fiery Avenger on it at will for no AP cost. \n• When you roll a 20 when making an attack with the weapon, it casts the Smite spell on your target. \n\nYou can only cast Blazing Avenger on one weapon at a time; casting it again cancels the previous enchantment."
             }
         ]
     },
@@ -268,7 +264,7 @@ export const invokerAbilities: Ability[] = [
         "effects": [
             {
                 "cost": 2,
-                "description": "You draw a magic sigil on an object. The spell lasts until you cancel it or cast Sigil again. You can only cast the spell if no enemies are currently nearby. Choose a specific creature for the sigil to affect, or a type of creature, like spirits or werewolves. Then draw a circle on a piece of paper at the table. Draw the creature that will be affected by the spell inside of the circle. Alternatively, instead of drawing something, you may describe the specific creature through its sounds, smells, and/or behavior. Choose one of four effects for the spell: Option A: Lure. The sigil attracts creatures to its location, where they linger for a minute. Option B: Repel. Creatures who come nearby won’t move closer to the sigil or may turn back. Option C: Alert. Receive a signal in your mind when creatures pass by the sigil. Option D: Message. The sigil telepathically sends a short message of up to 10 words in your language to creatures passing nearby. If you used a drawing, you may keep your drawing and reuse it later when casting this spell again, and you can choose a new effect each time."
+                "description": "You draw a magic sigil on an object. The spell lasts until you cancel it or cast Sigil again. You can only cast the spell if no enemies are currently nearby. Choose a specific creature for the sigil to affect, or a type of creature, like spirits or werewolves. Then draw a circle on a piece of paper at the table. Draw the creature that will be affected by the spell inside of the circle. Alternatively, instead of drawing something, you may describe the specific creature through its sounds, smells, and/or behavior. Choose one of four effects for the spell: \n\nLure. The sigil attracts creatures to its location, where they linger for a minute. \n\nRepel. Creatures who come nearby won’t move closer to the sigil or may turn back. \n\nAlert. Receive a signal in your mind when creatures pass by the sigil. \n\nMessage. The sigil telepathically sends a short message of up to 10 words in your language to creatures passing nearby. \n\nIf you used a drawing, you may keep your drawing and reuse it later when casting this spell again, and you can choose a new effect each time."
             }
         ]
     },
@@ -343,12 +339,9 @@ export const invokerAbilities: Ability[] = [
         "path": "Legendary",
         "name": "Prophecy",
         "rollTheDie": false,
-        "effects": [
-            {
-                "cost": 0,
-                "description": "You delve through time to glimpse an NPC’s fate. You may only use this ability once during your entire story, so use it wisely. The choice you make shapes the story for everyone. The prophecy must come true; the Guide is obligated to honor the fate you have chosen at some point in the story. When and how it emerges is up to the Guide. You may keep your choice a secret from the party. Choose one of the following things. It will eventually become true, as you have foreseen. Option A: Savior. The creature will sacrifice their life to try to save someone or something. Option B: Betrayer. The creature will betray their allies at a pivotal moment in pursuit of a hidden agenda. Option C: Leader. The creature will acquire a meaningful amount of power and authority over a people or place. Option D: Disgraced. The creature will do something so morally ruinous that they become widely known for their misdeed. Option E: Paragon. The creature will do something so morally good that they become widely known for their righteousness."
-            }
-        ]
+
+        "description": "You delve through time to glimpse an NPC’s fate. You may only use this ability once during your entire story, so use it wisely. The choice you make shapes the story for everyone. The prophecy must come true; the Guide is obligated to honor the fate you have chosen at some point in the story. When and how it emerges is up to the Guide. You may keep your choice a secret from the party. Choose one of the following things. It will eventually become true, as you have foreseen. \n\nSavior. The creature will sacrifice their life to try to save someone or something. \n\nBetrayer. The creature will betray their allies at a pivotal moment in pursuit of a hidden agenda. \n\nLeader. The creature will acquire a meaningful amount of power and authority over a people or place. \n\nDisgraced. The creature will do something so morally ruinous that they become widely known for their misdeed. \n\nParagon. The creature will do something so morally good that they become widely known for their righteousness."
+
     },
     {
         "id": "invoker_eternity_gate",

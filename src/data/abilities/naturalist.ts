@@ -66,7 +66,7 @@ export const naturalistAbilities: Ability[] = [
         "effects": [
             {
                 "cost": 3,
-                "description": "This is a master version of your Animal Form spell. The rules are the same, except for these differences: • You can choose a creature no smaller than a housefly and no larger than an elephant. • You have 10 HP in animal form. • Your animal form attacks hit for 3 HP. • You can send messages telepathically to members of the party."
+                "description": "This is a master version of your Animal Form spell. The rules are the same, except for these differences: \n\n• You can choose a creature no smaller than a housefly and no larger than an elephant. \n• You have 10 HP in animal form. \n• Your animal form attacks hit for 3 HP. \n• You can send messages telepathically to members of the party."
             }
         ]
     },
@@ -122,7 +122,7 @@ export const naturalistAbilities: Ability[] = [
         "effects": [
             {
                 "cost": 5,
-                "description": "Your eyes glitter like dancing wisps as you conjure a dazzling prismatic aurora above you in the sky. The aurora is visible to creatures up to a kilometer away and lasts for the next 10 minutes. Commoners: Any common folk who can see the aurora are dazzled and stop what they are doing to stare at it. Minions: Minions are also dazzled by the spell and stop what they are doing to stare at it. Hitting a minion frees them from the spell’s effects. Bosses: The Guide must roll the die."
+                "description": "Your eyes glitter like dancing wisps as you conjure a dazzling prismatic aurora above you in the sky. The aurora is visible to creatures up to a kilometer away and lasts for the next 10 minutes. \n\nCommoners: Any common folk who can see the aurora are dazzled and stop what they are doing to stare at it. \n\nMinions: Minions are also dazzled by the spell and stop what they are doing to stare at it. Hitting a minion frees them from the spell’s effects. \n\nBosses: The Guide must roll the die."
             }
         ],
         "rollTable": [
@@ -152,11 +152,11 @@ export const naturalistAbilities: Ability[] = [
         "effects": [
             {
                 "cost": 0,
-                "description": "Option A: You blow cool air, creating freezing winds that swirl around a nearby creature or object. Affected creatures feel a deep chill in their bones and are hit for 1 HP. You can use the spell to snuff out small fires."
+                "description": "You blow cool air, creating freezing winds that swirl around a nearby creature or object. Affected creatures feel a deep chill in their bones and are hit for 1 HP. You can use the spell to snuff out small fires."
             },
             {
                 "cost": 2,
-                "description": "Option B: You freeze a nearby commoner, minion, or object, encasing it in ice until you leave the scene. If you freeze a creature, it cannot move or act. The ice shatters, and the creature is freed if it takes any additional damage."
+                "description": "You freeze a nearby commoner, minion, or object, encasing it in ice until you leave the scene. If you freeze a creature, it cannot move or act. The ice shatters, and the creature is freed if it takes any additional damage."
             }
         ]
     },
@@ -169,11 +169,11 @@ export const naturalistAbilities: Ability[] = [
         "effects": [
             {
                 "cost": 0,
-                "description": "Option A: You blow hot air, creating scorching winds that swirl around a nearby creature or object. The heat is enough to make the creatures very uncomfortable but not enough to harm them."
+                "description": "You blow hot air, creating scorching winds that swirl around a nearby creature or object. The heat is enough to make the creatures very uncomfortable but not enough to harm them."
             },
             {
                 "cost": 1,
-                "description": "Option B: You overcharge the spell and ignite the target in flame instead, hitting it for 2 damage and setting it ablaze."
+                "description": "You overcharge the spell and ignite the target in flame instead, hitting it for 2 damage and setting it ablaze."
             }
         ]
     },
@@ -245,7 +245,7 @@ export const naturalistAbilities: Ability[] = [
         "effects": [
             {
                 "cost": 3,
-                "description": "You close your eyes and stir the air, shaping the winds around you. A gale forms that you can spread across an area of any size and shape in your scene, as long as you can see its area of effect. Inside the area of effect, wind blows at ferocious speeds, kicking up dust and sending small objects flying. Creatures inside can’t see far away, only what’s nearby. When you begin the spell, the gust knocks creatures to the ground and sends them tumbling backward until they leave the area of effect. Creatures outside of the gust cannot enter it unless they are larger than the area of effect."
+                "description": "You close your eyes and stir the air, shaping the winds around you. A gale forms that you can spread across an area of any size and shape in your scene, as long as you can see its area of effect. Inside the area of effect, wind blows at ferocious speeds, kicking up dust and sending small objects flying. Creatures inside can’t see far away, only what’s nearby. \n\nWhen you begin the spell, the gust knocks creatures to the ground and sends them tumbling backward until they leave the area of effect. Creatures outside of the gust cannot enter it unless they are larger than the area of effect."
             }
         ]
     },
@@ -271,23 +271,23 @@ export const naturalistAbilities: Ability[] = [
         "effects": [
             {
                 "cost": 2,
-                "description": "Option A: You produce a circle of dark, electrically charged clouds somewhere you can see in the sky. The storm lasts until you leave the scene. While the storm is active, you may call upon it to produce specific effects."
+                "description": "You produce a circle of dark, electrically charged clouds somewhere you can see in the sky. The storm lasts until you leave the scene. While the storm is active, you may call upon it to produce specific effects."
             },
             {
                 "cost": 1,
-                "description": "Option B: You cause a downpour."
+                "description": "You cause a downpour."
             },
             {
                 "cost": 1,
-                "description": "Option C: A deafening crack of thunder shakes the ground. All creatures under the storm cannot hear anything beyond their reach until the end of the scene."
+                "description": "A deafening crack of thunder shakes the ground. All creatures under the storm cannot hear anything beyond their reach until the end of the scene."
             },
             {
                 "cost": 3,
-                "description": "Option D: If you have learned the Shock ability, you may use it for 3 AP."
+                "description": "If you have learned the Shock ability, you may use it for 3 AP."
             },
             {
-                "cost": "1 per target",
-                "description": "Option E: A bolt of chain lightning rips through NPCs you can see, hitting them each for 4 HP. Spend 1 AP per target."
+                "cost": "X",
+                "description": "A bolt of chain lightning rips through NPCs you can see, hitting them each for 4 HP. Spend 1 AP per target."
             }
         ]
     },
@@ -300,15 +300,15 @@ export const naturalistAbilities: Ability[] = [
         "effects": [
             {
                 "cost": 1,
-                "description": "Option A: Eagle. You gain eagle-eye vision for the next minute. You can see anything in your line of sight clearly, even if it is far away, and you can detect faraway movement that would be imperceptible to a normal person."
+                "description": "Eagle. You gain eagle-eye vision for the next minute. You can see anything in your line of sight clearly, even if it is far away, and you can detect faraway movement that would be imperceptible to a normal person."
             },
             {
                 "cost": 2,
-                "description": "Option B: Cat. You purr softly under your breath, imbuing up to 6 nearby creatures with the spirit of the cat. For the next hour, affected creatures gain the ability to see things nearby in complete darkness as if they were in a dimly lit room. The effect cannot pierce magical darkness. Affected creatures may occasionally feel the urge to stop what they are doing and clean themselves."
+                "description": "Cat. You purr softly under your breath, imbuing up to 6 nearby creatures with the spirit of the cat. For the next hour, affected creatures gain the ability to see things nearby in complete darkness as if they were in a dimly lit room. The effect cannot pierce magical darkness. Affected creatures may occasionally feel the urge to stop what they are doing and clean themselves."
             },
             {
                 "cost": 2,
-                "description": "Option C: Wolf. You howl, imbuing up to 6 nearby creatures with haste. (Howl at the table.) For the next hour, creatures affected by the spell can outrun any other creatures while traveling by foot."
+                "description": "Wolf. You howl, imbuing up to 6 nearby creatures with haste. (Howl at the table.) For the next hour, creatures affected by the spell can outrun any other creatures while traveling by foot."
             }
         ]
     },
@@ -334,7 +334,7 @@ export const naturalistAbilities: Ability[] = [
         "effects": [
             {
                 "cost": 3,
-                "description": "You extend your senses for the next hour. Choose two options each time you use this ability: Option A: Aurasight. Detect a faint outline around anything that is currently affected by a spell. Option B: Infrasight. Detect objects nearby whose relative heat makes them stand out, like creatures with warm bodies. This works through walls. Option C: Darksight. See in darkness nearby as if it were dimly lit. Option D: Mirrorsight. See around corners inside of enclosed spaces, like buildings. You must be within reach of the corner. (For example, you can see around the bend of a hallway.) Option E: Realsight. Detect whether something is an illusion. Illusions you detect with this spell appear to flicker."
+                "description": "You extend your senses for the next hour. Choose two options each time you use this ability: \n\nAurasight. Detect a faint outline around anything that is currently affected by a spell. \n\nInfrasight. Detect objects nearby whose relative heat makes them stand out, like creatures with warm bodies. This works through walls. \n\nDarksight. See in darkness nearby as if it were dimly lit. \n\nMirrorsight. See around corners inside of enclosed spaces, like buildings. You must be within reach of the corner. (For example, you can see around the bend of a hallway.) \n\nRealsight. Detect whether something is an illusion. Illusions you detect with this spell appear to flicker."
             }
         ]
     },
@@ -347,11 +347,11 @@ export const naturalistAbilities: Ability[] = [
         "effects": [
             {
                 "cost": 0,
-                "description": "Option A: You whisper a rhyming couplet to the living plants around you. You can write your own or borrow one from another author. Use one that plants might appreciate, like “Hear my voice ring, and welcome the spring.” Your brief poem entreats the plants to produce a harmless effect by moving or growing slightly. The things you want to manipulate must be within range. You may make trees rustle, cause leaves to fall, get plants to bloom, vines to expand, and seeds to sprout."
+                "description": "You whisper a rhyming couplet to the living plants around you. You can write your own or borrow one from another author. Use one that plants might appreciate, like “Hear my voice ring, and welcome the spring.” Your brief poem entreats the plants to produce a harmless effect by moving or growing slightly. The things you want to manipulate must be within range. You may make trees rustle, cause leaves to fall, get plants to bloom, vines to expand, and seeds to sprout."
             },
             {
                 "cost": 1,
-                "description": "Option B: If you can explain how, you can have the effect deal 2 HP of damage to a nearby target. For example, you might have vines grow thorns and lash a creature, or have a tree shake its acorns on their head violently."
+                "description": "If you can explain how, you can have the effect deal 2 HP of damage to a nearby target. For example, you might have vines grow thorns and lash a creature, or have a tree shake its acorns on their head violently."
             }
         ]
     },
@@ -364,7 +364,7 @@ export const naturalistAbilities: Ability[] = [
         "effects": [
             {
                 "cost": 3,
-                "description": "If you encounter a stone monument, like a mountain, canyon, or statue, you may touch it to channel its ancient wisdom. You must tell the stone a story about your family — perhaps a memory of a gathering, like a holiday. Give this story at the table. The monument reciprocates your offering by sharing its wisdom. • You sense whether this world is real and natural, or some kind of machination. • You sense whether there are any long-lost monuments beneath the surface, like hidden temples or ancient vaults. • You vaguely sense the most powerful lost artifact in this world and the region where it might be located."
+                "description": "If you encounter a stone monument, like a mountain, canyon, or statue, you may touch it to channel its ancient wisdom. You must tell the stone a story about your family — perhaps a memory of a gathering, like a holiday. Give this story at the table. The monument reciprocates your offering by sharing its wisdom. \n\n• You sense whether this world is real and natural, or some kind of machination. \n• You sense whether there are any long-lost monuments beneath the surface, like hidden temples or ancient vaults. \n• You vaguely sense the most powerful lost artifact in this world and the region where it might be located."
             }
         ]
     },
@@ -397,7 +397,7 @@ export const naturalistAbilities: Ability[] = [
         "effects": [
             {
                 "cost": 7,
-                "description": "You channel elemental fury. You create a storm centered on you with a radius of 1 kilometer. It lasts as long as you wish to channel it, but you take 1 HP of damage for each turn you spend maintaining the spell. You may choose the size of the storm eye, which is safe inside. Choose the nature of the disaster each time you cast this spell: Option A: Lightning. Electricity streaks through the storm, arcing through conductive objects and lashing any NPCs caught in it. Each NPC caught in the storm is hit for 2 HP during each turn you cast the spell. Option B: Blizzard. Water condenses in the storm field, turning into apple-sized balls of hail. The air temperature in the storm field is freezing. NPCs in the storm field are hit for 1 HP during each turn you maintain the spell. Creatures cannot see beyond their reach in the howling whirl of ice. Option C: Hurricane. Sustained winds of terrifying force whip through the storm field. Weak buildings are completely destroyed, all windows are shattered, many roofs will cave in, and trees may be uprooted. Most unsecured objects are picked up by the storm and sent flying far away. Any NPCs caught in the storm field are blown around, can’t move, and are hit for 4 HP for each turn you cast the spell."
+                "description": "You channel elemental fury. You create a storm centered on you with a radius of 1 kilometer. It lasts as long as you wish to channel it, but you take 1 HP of damage for each turn you spend maintaining the spell. You may choose the size of the storm eye, which is safe inside. Choose the nature of the disaster each time you cast this spell: \n\nLightning. Electricity streaks through the storm, arcing through conductive objects and lashing any NPCs caught in it. Each NPC caught in the storm is hit for 2 HP during each turn you cast the spell. \n\nBlizzard. Water condenses in the storm field, turning into apple-sized balls of hail. The air temperature in the storm field is freezing. NPCs in the storm field are hit for 1 HP during each turn you maintain the spell. Creatures cannot see beyond their reach in the howling whirl of ice. \n\nHurricane. Sustained winds of terrifying force whip through the storm field. Weak buildings are completely destroyed, all windows are shattered, many roofs will cave in, and trees may be uprooted. Most unsecured objects are picked up by the storm and sent flying far away. Any NPCs caught in the storm field are blown around, can’t move, and are hit for 4 HP for each turn you cast the spell."
             }
         ]
     },
@@ -407,12 +407,9 @@ export const naturalistAbilities: Ability[] = [
         "path": "Legendary",
         "name": "Wild Evolution",
         "rollTheDie": false,
-        "effects": [
-            {
-                "cost": 0,
-                "description": "Your physical essence becomes permanently intertwined with that of a chosen animal’s form. The animal can be no smaller than a mouse and no larger than an elephant. You may only choose this form once. You may morph back and forth between your original form and your chosen form at will. When you change between forms, you maintain your current hit points. You adopt the animal’s natural capabilities while you are transformed. For example, if you transform into an eagle, you may fly. Your basic attacks in animal form hit for 3 damage. You may now cast spells in animal form and speak telepathically to your allies. You can still use the Animal Form and Shapeshift abilities, and the rules for those abilities still function as usual."
-            }
-        ]
+
+        "description": "Your physical essence becomes permanently intertwined with that of a chosen animal’s form. The animal can be no smaller than a mouse and no larger than an elephant. You may only choose this form once. You may morph back and forth between your original form and your chosen form at will. When you change between forms, you maintain your current hit points. You adopt the animal’s natural capabilities while you are transformed. For example, if you transform into an eagle, you may fly. Your basic attacks in animal form hit for 3 damage. You may now cast spells in animal form and speak telepathically to your allies. You can still use the Animal Form and Shapeshift abilities, and the rules for those abilities still function as usual."
+
     },
     {
         "id": "naturalist_to_dust",
@@ -423,7 +420,7 @@ export const naturalistAbilities: Ability[] = [
         "effects": [
             {
                 "cost": 3,
-                "description": "You return a crafted object to nature, instantly reducing it to dust. The object must be small enough to fit inside a 10x10-meter cube. The transformation is permanent and cannot be reversed."
+                "description": "You return a crafted object to nature, instantly reducing it to dust. \n\nThe object must be small enough to fit inside a 10x10-meter cube. The transformation is permanent and cannot be reversed."
             }
         ]
     },
@@ -433,11 +430,8 @@ export const naturalistAbilities: Ability[] = [
         "path": "Legendary",
         "name": "World Wish",
         "rollTheDie": false,
-        "effects": [
-            {
-                "cost": 0,
-                "description": "You become the seed for a new world. Casting this spell consumes your life forever; you can never be brought back. Your entire knowledge of nature manifests in the spell. When you cast it, your body dissipates in radiant light, becoming a cascading wave of energy that transforms the planet you are on. The wave of energy first alters the atmosphere, making it capable of supporting life if it is not already suitable. Then, a blooming cascade of living flora emanates from your location, rapidly growing and overtaking the planet’s surface. The bloom radiates outward from your location until the entire planet is transformed. The spell forms oceans and rivers if they do not already exist. If you choose at the time of casting, the spell disintegrates any constructed objects, like buildings or infrastructure, returning the land to nature. Any objects that are destroyed in this way are done so gracefully, such that existing living things, like people and animals, are lowered to the ground unharmed. This is a permanent transformation that cannot be stopped, interrupted, or reversed by countermagic."
-            }
-        ]
+
+        "description": "You become the seed for a new world. Casting this spell consumes your life forever; you can never be brought back. Your entire knowledge of nature manifests in the spell. When you cast it, your body dissipates in radiant light, becoming a cascading wave of energy that transforms the planet you are on. The wave of energy first alters the atmosphere, making it capable of supporting life if it is not already suitable. Then, a blooming cascade of living flora emanates from your location, rapidly growing and overtaking the planet’s surface. \n\nThe bloom radiates outward from your location until the entire planet is transformed. The spell forms oceans and rivers if they do not already exist. If you choose at the time of casting, the spell disintegrates any constructed objects, like buildings or infrastructure, returning the land to nature. \n\nAny objects that are destroyed in this way are done so gracefully, such that existing living things, like people and animals, are lowered to the ground unharmed. This is a permanent transformation that cannot be stopped, interrupted, or reversed by countermagic."
+
     }
 ]

@@ -11,7 +11,7 @@ export const fighterAbilities: Ability[] = [
         "effects": [
             {
                 "cost": 0,
-                "description": "When an enemy within reach rolls a tough choice or worse on a basic attack against you, you parry their attack and take no damage. If they roll a failure or worse, you may also immediately roll the die to make a basic attack on them. This counterattack does not count as a turn."
+                "description": `When an enemy within reach rolls a tough choice or worse on a basic attack against you, you parry their attack and take no damage. If they roll a failure or worse, you may also immediately roll the die to make a basic attack on them. \n\nThis counterattack does not count as a turn.`
             }
         ]
     },
@@ -44,7 +44,7 @@ export const fighterAbilities: Ability[] = [
         "effects": [
             {
                 "cost": 1,
-                "description": "You use your strength to overpower a commoner or minion within reach. (You cannot use this ability on bosses.) Describe how you overpower them. You put the target in a compromised position until they spend a turn getting out of it. During this time, basic attacks hit them for double damage."
+                "description": "You use your strength to overpower a commoner or minion within reach. (You cannot use this ability on bosses.) Describe how you overpower them. \n\nYou put the target in a compromised position until they spend a turn getting out of it. During this time, basic attacks hit them for double damage."
             }
         ]
     },
@@ -70,7 +70,7 @@ export const fighterAbilities: Ability[] = [
         "effects": [
             {
                 "cost": 1,
-                "description": "You compel a nearby creature to fight you in single combat. (The creature must already be hostile toward you.) If you have the Quest Core Deck, take your Basic Attack, Wild Attack, Overpower, and Disarm cards. (If you don’t have this deck, assign these abilities to a standard deck of cards.) Choose three of these cards to use and place them facedown on the table, keeping it secret from the Guide. The Guide must guess the identity of each card. Reveal the card after each guess. If the Guide guesses correctly, you fail to use the ability on that card. If they guess incorrectly, you use the ability immediately at no AP cost, and it is automatically successful. If the Guide guesses all three correctly, your foe immediately makes a successful counterattack against you. But if they get all three guesses wrong, you may extend the Duel for another round of three guesses."
+                "description": "You compel a nearby creature to fight you in single combat. (The creature must already be hostile toward you.) If you have the Quest Core Deck, take your Basic Attack, Wild Attack, Overpower, and Disarm cards. (If you don’t have this deck, assign these abilities to a standard deck of cards.) Choose three of these cards to use and place them facedown on the table, keeping it secret from the Guide. The Guide must guess the identity of each card. Reveal the card after each guess. \n\nIf the Guide guesses correctly, you fail to use the ability on that card. If they guess incorrectly, you use the ability immediately at no AP cost, and it is automatically successful. If the Guide guesses all three correctly, your foe immediately makes a successful counterattack against you. But if they get all three guesses wrong, you may extend the Duel for another round of three guesses."
             }
         ]
     },
@@ -96,7 +96,7 @@ export const fighterAbilities: Ability[] = [
         "effects": [
             {
                 "cost": 1,
-                "description": "If a nearby NPC is about to attack someone, you may rush to intercept the attack. (You must say you’re using this ability as soon as the Guide declares the attack.) The NPC makes their attack on you instead. When you intercept the attack, the attacker immediately becomes affected by your Provoke ability."
+                "description": "If a nearby NPC is about to attack someone, you may rush to intercept the attack. (You must say you’re using this ability as soon as the Guide declares the attack.) The NPC makes their attack on you instead. \n\nWhen you intercept the attack, the attacker immediately becomes affected by your Provoke ability."
             }
         ]
     },
@@ -122,7 +122,7 @@ export const fighterAbilities: Ability[] = [
         "effects": [
             {
                 "cost": 2,
-                "description": "You Provoke all nearby enemies to give your allies cover to retreat. If you are in combat, one nearby enemy immediately gets a chance to attack you. You and any willing allies can then safely and expeditiously disengage from a fight and leave the scene. Commoners and minions will not pursue you, but bosses may still choose to give chase."
+                "description": "You Provoke all nearby enemies to give your allies cover to retreat. If you are in combat, one nearby enemy immediately gets a chance to attack you. \n\nYou and any willing allies can then safely and expeditiously disengage from a fight and leave the scene. Commoners and minions will not pursue you, but bosses may still choose to give chase."
             }
         ]
     },
@@ -141,7 +141,7 @@ export const fighterAbilities: Ability[] = [
         "rollTable": [
             { "value": 20, "description": "You strike all enemies within reach, hitting them for double damage." },
             { "value": "11-19", "description": "You strike all enemies within reach, hitting them for double damage." },
-            { "value": "6-10", "description": "You hit all enemies within reach. Choose one: you deal half damage or your weapon breaks after dealing damage." },
+            { "value": "6-10", "description": "You hit all enemies within reach. \nChoose one: you deal half damage or your weapon breaks after dealing damage." },
             { "value": "2-5", "description": "You hit one enemy within reach, then your weapon goes flying in the air." },
             { "value": 1, "description": "You spin wildly until you feel sick, and an enemy disarms you." }
         ]
@@ -155,7 +155,7 @@ export const fighterAbilities: Ability[] = [
         "effects": [
             {
                 "cost": 1,
-                "description": "When you regroup, you bolster the spirits of your party by reciting a poem. You must recite a poem at the table for your friends. You can write your own or read one from another author, like from a book, movie, or TV show. When completed, your party recovers an additional 3 HP from regrouping."
+                "description": "When you regroup, you bolster the spirits of your party by reciting a poem. You must recite a poem at the table for your friends. You can write your own or read one from another author, like from a book, movie, or TV show. \n\nWhen completed, your party recovers an additional 3 HP from regrouping."
             }
         ]
     },
@@ -168,7 +168,7 @@ export const fighterAbilities: Ability[] = [
         "effects": [
             {
                 "cost": 2,
-                "description": "You inspire your allies with a rousing speech. You can write your own or borrow one from a play or movie. It can be short; reading a few powerful lines is enough. You must give the speech at the table. When you complete it, each member of the party gains the option to redo their next roll. This option expires at the end of your scene if it has not been used."
+                "description": "You inspire your allies with a rousing speech. You can write your own or borrow one from a play or movie. It can be short; reading a few powerful lines is enough. \n\nYou must give the speech at the table. When you complete it, each member of the party gains the option to redo their next roll. This option expires at the end of your scene if it has not been used."
             }
         ]
     },
@@ -178,12 +178,7 @@ export const fighterAbilities: Ability[] = [
         "path": "Camaraderie",
         "name": "War Story",
         "rollTheDie": false,
-        "effects": [
-            {
-                "cost": 0,
-                "description": "Once per game session, you may earn 2 AP by recounting a battle from your past adventures. You can only use this ability during downtime in the story, like when you regroup or undertake a journey. (You can’t spout history during combat.) You must recount a different conflict each time you use this ability. If there is no battle to recount, you can make one up from your character’s past."
-            }
-        ]
+        "description": "Once per game session, you may earn 2 AP by recounting a battle from your past adventures. You can only use this ability during downtime in the story, like when you regroup or undertake a journey. (You can’t spout history during combat.) \n\nYou must recount a different conflict each time you use this ability. If there is no battle to recount, you can make one up from your character’s past.",
     },
     {
         "id": "fighter_marshal",
@@ -194,7 +189,7 @@ export const fighterAbilities: Ability[] = [
         "effects": [
             {
                 "cost": 1,
-                "description": "When you face a serious test of strength, you can organize the help of your allies to overcome it. The whole party must be nearby and able to participate. Everyone in the party must roll the die. If a majority of players scores a success or better, you are able to overcome the challenge. You can use this for feats that would be improbable to accomplish alone, like breaking through a reinforced door, lifting a wooden beam off of someone, or winning a tug-of-war contest against a giant. The Guide will decide what is outside of the limits of this ability."
+                "description": "When you face a serious test of strength, you can organize the help of your allies to overcome it. The whole party must be nearby and able to participate. \n\nEveryone in the party must roll the die. If a majority of players scores a success or better, you are able to overcome the challenge. \n\nYou can use this for feats that would be improbable to accomplish alone, like breaking through a reinforced door, lifting a wooden beam off of someone, or winning a tug-of-war contest against a giant. The Guide will decide what is outside of the limits of this ability."
             }
         ]
     },
@@ -207,7 +202,7 @@ export const fighterAbilities: Ability[] = [
         "effects": [
             {
                 "cost": 0,
-                "description": "Choose a member of your party to form a special partnership with. They must want to form the bond with you. You may only bond with one party member at a time, and the bond cannot be broken until your partner dies or abandons the party. • You may now use your Intercept ability for no AP to defend your partner from an attack. • You can now sense when your partner is in danger, even if you are separated. • You are immune to fear when your partner is at death’s door. • You notice your heart beating stronger when your partner is nearby."
+                "description": "Choose a member of your party to form a special partnership with. They must want to form the bond with you. You may only bond with one party member at a time, and the bond cannot be broken until your partner dies or abandons the party. \n\n• You may now use your Intercept ability for no AP to defend your partner from an attack. \n• You can now sense when your partner is in danger, even if you are separated. \n• You are immune to fear when your partner is at death’s door. \n• You notice your heart beating stronger when your partner is nearby."
             }
         ]
     },
@@ -220,7 +215,7 @@ export const fighterAbilities: Ability[] = [
         "effects": [
             {
                 "cost": 0,
-                "description": "You evaluate the capabilities of a nearby creature or group of creatures. The Guide will give you useful insight into their capabilities, strength, vulnerabilities, and/or resistances. At a minimum, you will receive an accurate assessment from the Guide about whether they would pose a fair fight. The Guide will deliver this information to you narratively. For example, they might say “you notice the giant spider flinching at the sight of your torch,” rather than telling you it is vulnerable to fire damage."
+                "description": "You evaluate the capabilities of a nearby creature or group of creatures. The Guide will give you useful insight into their capabilities, strength, vulnerabilities, and/or resistances. At a minimum, you will receive an accurate assessment from the Guide about whether they would pose a fair fight. \n\nThe Guide will deliver this information to you narratively. For example, they might say “you notice the giant spider flinching at the sight of your torch,” rather than telling you it is vulnerable to fire damage."
             }
         ]
     },
@@ -269,12 +264,7 @@ export const fighterAbilities: Ability[] = [
         "path": "Body",
         "name": "Technique",
         "rollTheDie": false,
-        "effects": [
-            {
-                "cost": 0,
-                "description": "You are always deadly, even when not holding a weapon. Attacks with your body (like punches and kicks) now hit for 2 HP."
-            }
-        ]
+        "description": "You are always deadly, even when not holding a weapon. Attacks with your body (like punches and kicks) now hit for 2 HP."
     },
     {
         "id": "fighter_flow",
@@ -285,7 +275,7 @@ export const fighterAbilities: Ability[] = [
         "effects": [
             {
                 "cost": 1,
-                "description": "When you roll a 20 on a basic attack, you may briefly enter a state of intense focus. After completing your initial attack, you may immediately make one basic attack on each enemy within reach. These attacks are automatically successful."
+                "description": "When you roll a 20 on a basic attack, you may briefly enter a state of intense focus. \n\nAfter completing your initial attack, you may immediately make one basic attack on each enemy within reach. These attacks are automatically successful."
             }
         ]
     },
@@ -318,15 +308,15 @@ export const fighterAbilities: Ability[] = [
         "effects": [
             {
                 "cost": 3,
-                "description": "Option A: You immediately use your Flow ability, even if you didn’t roll a 20."
+                "description": "You immediately use your Flow ability, even if you didn’t roll a 20."
             },
             {
                 "cost": 4,
-                "description": "Option B: You become wind; until the end of your current fight, minions cannot hit you with basic attacks unless they roll 20. This effect ends if you are hit."
+                "description": "You become wind; until the end of your current fight, minions cannot hit you with basic attacks unless they roll 20. This effect ends if you are hit."
             },
             {
                 "cost": 5,
-                "description": "Option C: You purge a poison or illness from your body."
+                "description": "You purge a poison or illness from your body."
             }
         ]
     },
@@ -339,7 +329,7 @@ export const fighterAbilities: Ability[] = [
         "effects": [
             {
                 "cost": 4,
-                "description": "If you would die from an enemy’s attack, you may overcome fate to make a last stand. Instead of dying, you stay on your feet but remain at 0 HP. If you also make an appeal to your dream, you recover 1 hit point. You must say something that references your dream — to declare why you now live to die another day. You laugh at death, but death demands a toll. Each time you use this ability, you increase a supernatural bounty on your head. In quiet moments, you begin to feel as if the shadows are watching you."
+                "description": "If you would die from an enemy’s attack, you may overcome fate to make a last stand. Instead of dying, you stay on your feet but remain at 0 HP. If you also make an appeal to your dream, you recover 1 hit point. You must say something that references your dream — to declare why you now live to die another day. \n\nYou laugh at death, but death demands a toll. Each time you use this ability, you increase a supernatural bounty on your head. In quiet moments, you begin to feel as if the shadows are watching you."
             }
         ]
     },
@@ -353,15 +343,15 @@ export const fighterAbilities: Ability[] = [
         "effects": [
             {
                 "cost": 7,
-                "description": "Option A: You single-handedly rout all nearby minions that you can see in a stunning display of martial fury. You may choose to kill or intimidate any number of them. Describe how you clear the scene of these foes."
+                "description": "You single-handedly rout all nearby minions that you can see in a stunning display of martial fury. You may choose to kill or intimidate any number of them. Describe how you clear the scene of these foes."
             },
             {
                 "cost": 4,
-                "description": "Option B: You mark an enemy, beginning a relentless assault on them. You automatically make three successful basic attacks on them. Then, you may continue making basic attacks on them until you roll lower than a success."
+                "description": "You mark an enemy, beginning a relentless assault on them. You automatically make three successful basic attacks on them. Then, you may continue making basic attacks on them until you roll lower than a success."
             },
             {
                 "cost": 3,
-                "description": "Option C: You briefly gain unbelievable strength to perform one task. You can do things that were previously impossible, like single-handedly lifting a giant boulder, running through a brick wall, or knocking a giant to the ground. You can now do things that were just beyond your reach, but not things that are absurd. (You can’t move a mountain or lasso the moon.) The Guide will decide what’s possible."
+                "description": "You briefly gain unbelievable strength to perform one task. You can do things that were previously impossible, like single-handedly lifting a giant boulder, running through a brick wall, or knocking a giant to the ground. You can now do things that were just beyond your reach, but not things that are absurd. (You can’t move a mountain or lasso the moon.) The Guide will decide what’s possible."
             }
         ]
     },
@@ -371,12 +361,7 @@ export const fighterAbilities: Ability[] = [
         "path": "Legendary",
         "name": "Champion",
         "rollTheDie": false,
-        "effects": [
-            {
-                "cost": 0,
-                "description": "Tales of your heroic deeds have spread through the lands, elevating your stature into the stratosphere. You are now a hero, especially to those who value power. Authoritarian-minded people are especially vulnerable to your reputation, and most will defer to you in reverence. This includes town guards, bandits, and others who enjoy using force. You gain the Recruit ability if you do not already have it, and you may use it for no AP cost on your fans or those who are awestruck by your prestige. You also gain the Attendant ability. It now costs 4 AP to use."
-            }
-        ]
+        "description": "Tales of your heroic deeds have spread through the lands, elevating your stature into the stratosphere. You are now a hero, especially to those who value power. Authoritarian-minded people are especially vulnerable to your reputation, and most will defer to you in reverence. This includes town guards, bandits, and others who enjoy using force. \n\nYou gain the Recruit ability if you do not already have it, and you may use it for no AP cost on your fans or those who are awestruck by your prestige. \n\nYou also gain the Attendant ability. It now costs 4 AP to use."
     },
     {
         "id": "fighter_steel_pact",
@@ -388,11 +373,11 @@ export const fighterAbilities: Ability[] = [
         "effects": [
             {
                 "cost": 0,
-                "description": "Option A: When you roll a failure when using this weapon, you may reroll the die once. You must take the result of the reroll."
+                "description": "When you roll a failure when using this weapon, you may reroll the die once. You must take the result of the reroll."
             },
             {
                 "cost": 0,
-                "description": "Option B: When you roll a 20 on an attack against a minion while using this weapon, you automatically kill it, unless it has immunity against weapon attacks."
+                "description": "When you roll a 20 on an attack against a minion while using this weapon, you automatically kill it, unless it has immunity against weapon attacks."
             }
         ]
     },
