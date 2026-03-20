@@ -56,7 +56,7 @@ const Navbar = () => {
             </Link>
           </div>
 
-          <div className="hidden font-alegraya-sans lowercase text-xl md:flex space-x-8">
+          <div className="hidden font-alegraya-sans lowercase text-xl lg:flex space-x-8">
             <Link
               to="/"
               className="hover:text-gray-500 hover:underline-offset-3 hover:underline active:scale-95"
@@ -127,7 +127,7 @@ const Navbar = () => {
             )}
           </div>
 
-          <div className="md:hidden flex items-center">
+          <div className="lg:hidden flex items-center">
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               className="focus:outline-none cursor-pointer"
@@ -139,7 +139,7 @@ const Navbar = () => {
       </div>
 
       <div
-        className={`${isMobileMenuOpen ? "block" : "hidden"} md:hidden bg-black text-white`}
+        className={`${isMobileMenuOpen ? "block" : "hidden"} lg:hidden bg-black text-white`}
       >
         <div className="px-4 pt-2 pb-6 space-y-2 font-alegraya-sans lowercase text-xl">
           {isUserLoggedIn && (

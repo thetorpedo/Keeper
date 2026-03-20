@@ -203,7 +203,7 @@ export default function ItemSelector({
   });
 
   return (
-    <div className="flex flex-col max-w-[90vw] w-full mx-auto gap-4">
+    <div className="flex flex-col max-w-[85vw] sm:max-w-[70vw] w-full mx-auto gap-4">
       {/* Filters */}
       <div className="flex flex-row justify-center gap-2 z-20 flex-wrap">
         {itemCategories.map((category) => (
@@ -222,7 +222,7 @@ export default function ItemSelector({
       </div>
 
       {/* Card Area */}
-      <div className="relative sm:w-250 min-h-110">
+      <div className="relative w-full min-h-110">
         <div className="absolute top-4 left-0 right-0 bottom-0 w-full bg-gray-200 border border-gray-300 rounded-lg h-[92%]"></div>
         <div
           className={`relative z-10 flex flex-row gap-4 ${selectedItemCategory === "Custom Items" ? "" : "px-4"} pb-4 mb-4 pt-9 -mt-4 overflow-y-clip overflow-x-auto w-full h-full`}
@@ -460,7 +460,7 @@ export default function ItemSelector({
                 )}
               </div>
 
-              <div className="flex flex-row w-full overflow-x-auto p-4 pt-43 gap-4">
+              <div  className="flex flex-row w-full overflow-x-auto p-4 pt-43 gap-4">
                 {itemColumns.map((col, colIndex) => (
                   <div
                     key={colIndex}

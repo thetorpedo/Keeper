@@ -22,20 +22,22 @@
   --color-spy: #4c3896;
   --color-magician: #ed028c;
   --color-wizard: #e2c121;
-  --color-custom-abilities: #3a2e66;
+  --color-custom-abilities: #595c69;
   --color-item: #242021;
-  --color-custom-items: #8a2e66;
+  --color-custom-items: #595c69;
   --color-damage: #d32f2f;
   --color-useful: #25203b;
   --color-common: #25203b;
   --color-uncommon: #25203b;
   --color-rare: #25203b;
   --color-legendary: #25203b;
+  --color-weapons: #25203b;
+  --color-supreme: #25203b;
 }
 
-@source inline("border-{fighter,invoker,ranger,naturalist,doctor,spy,magician,wizard,custom-abilities,item,custom-items,useful,common,uncommon,rare,legendary,damage}");
-@source inline("from-{fighter,invoker,ranger,naturalist,doctor,spy,magician,wizard,custom-abilities,item,custom-items,useful,common,uncommon,rare,legendary}{,/50}");
-@source inline("bg-{fighter,invoker,ranger,naturalist,doctor,spy,magician,wizard,custom-abilities,item,custom-items,useful,common,uncommon,rare,legendary,damage}{,/10}");
+@source inline("border-{fighter,invoker,ranger,naturalist,doctor,spy,magician,wizard,custom-abilities,item,custom-items,useful,common,uncommon,rare,legendary,damage,weapons,supreme}");
+@source inline("from-{fighter,invoker,ranger,naturalist,doctor,spy,magician,wizard,custom-abilities,item,custom-items,useful,common,uncommon,rare,legendary,weapons,supreme}{,/50}");
+@source inline("bg-{fighter,invoker,ranger,naturalist,doctor,spy,magician,wizard,custom-abilities,item,custom-items,useful,common,uncommon,rare,legendary,damage,weapons,supreme}{,/10}");
 @source inline("text-{damage}");
 
 

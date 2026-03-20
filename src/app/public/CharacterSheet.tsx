@@ -483,10 +483,10 @@ function CharacterSheet() {
             </Alert>
 
             {/* Desktop */}
-            <div className="hidden md:block mx-5">
+            <div className="hidden md:block w-full mx-5">
                 <Button
                     onClick={rollD20}
-                    className={`p-4! fixed bottom-10 right-10 z-9 bg-white `}
+                    className={`p-4! fixed bottom-10 right-10 z-10 bg-white `}
                 >
                     <img
                         key={`roll-${spinKey}`}
@@ -494,7 +494,7 @@ function CharacterSheet() {
                         className={`${spinKey > 0 ? "animate-[spin_0.7s_ease-out]" : ""} w-12 h-12 rounded-full`}
                     />
                 </Button>
-                <div className="my-10 max-w-280 w-full flex flex-col gap-3 items-center">
+                <div className="my-10 max-w-280 w-screen px-5 mx-auto flex flex-col gap-3 items-center">
                     <Link
                         to="/view"
                         className="text-gray-400 flex flex-row gap-2 w-full"
@@ -504,9 +504,9 @@ function CharacterSheet() {
                             Back
                         </span>
                     </Link>
-                    <div className="flex flex-row w-full justify-between items-center align-middle pb-5 border-b ">
-                        <div className="flex flex-col">
-                            <h1 className="font-alegraya font-bold text-5xl">
+                    <div className="flex flex-row w-full justify-between gap-2 items-center align-middle pb-5 border-b ">
+                        <div className="flex flex-col min-w-0 shrink">
+                            <h1 className="font-alegraya font-bold truncate text-5xl">
                                 {character.name}
                             </h1>
                             <h2 className="font-alegraya-sans text-gray-500 uppercase font-medium text-xl">
@@ -658,14 +658,22 @@ function CharacterSheet() {
                                         </div>
                                         <div className="mr-1">
                                             {isOwner && (
-                                                <Dialog>
+                                                <Dialog modal={true}
+                                                >
                                                     <DialogTrigger asChild>
                                                         <Button className="flex text-lg py-0.5! items-center cursor-pointer">
                                                             <Pencil className="size-4 mr-2" />{" "}
                                                             Edit
                                                         </Button>
                                                     </DialogTrigger>
-                                                    <DialogContent className="w-fit max-w-[90vw]! max-h-[90vh] overflow-y-auto p-10 bg-white">
+                                                    <DialogContent 
+                                                        onWheel={(e) => {
+                                                            e.stopPropagation();
+                                                        }}
+                                                        onTouchMove={(e) => {
+                                                            e.stopPropagation();
+                                                        }}
+                                                        className="w-fit max-w-[90vw]! max-h-[90vh] overflow-y-auto p-10 bg-white">
                                                         <AbilitySelector
                                                             selectedAbilities={
                                                                 character.abilities ||
@@ -688,14 +696,21 @@ function CharacterSheet() {
 
                                         <div className="mr-1">
                                             {isOwner && (
-                                                <Dialog>
+                                                <Dialog modal={true}>
                                                     <DialogTrigger asChild>
                                                         <Button className="flex text-lg py-0.5! items-center cursor-pointer">
                                                             <Pencil className="size-4 mr-2" />{" "}
                                                             Edit
                                                         </Button>
                                                     </DialogTrigger>
-                                                    <DialogContent className="w-fit max-w-[90vw]! max-h-[90vh] overflow-y-auto p-10 bg-white">
+                                                    <DialogContent 
+                                                        onWheel={(e) => {
+                                                            e.stopPropagation();
+                                                        }}
+                                                        onTouchMove={(e) => {
+                                                            e.stopPropagation();
+                                                        }}
+                                                        className="w-fit max-w-[90vw]! max-h-[90vh] overflow-y-auto p-10 bg-white">
                                                         <ItemSelector
                                                             selectedItems={
                                                                 character.items ||
@@ -826,18 +841,18 @@ function CharacterSheet() {
             </span>
 
             {/* Mobile */}
-            <div className="block md:hidden pb-20">
-                <div className="flex flex-row w-full px-5 justify-between items-center align-middle pb-5 ">
+            <div className="block md:hidden w-screen pb-20">
+                <div className="flex flex-row px-5 justify-between items-center align-middle pb-5 ">
                     <div className="flex flex-col gap-2 w-full pb-5 border-b">
                         <div className="flex flex-row w-full gap-4 justify-between items-center">
                             <div className="flex flex-col h-full w-2/3 justify-between items-between gap-1">
                                 <div>
                                     <h1
-                                        className={`font-alegraya font-bold line-clamp-2 ${character.name.length < 11 ? "text-5xl/8 pb-3 pt-1" : "text-3xl/8"}`}
+                                        className={`font-alegraya font-bold truncate ${character.name.length < 10 ? "text-5xl/8 pb-3 pt-1" : "text-3xl/8"}`}
                                     >
                                         {character.name}
                                     </h1>
-                                    <h2 className="font-alegraya-sans line-clamp-1 text-gray-500 uppercase font-medium">
+                                    <h2 className="font-alegraya-sans truncate text-gray-500 uppercase font-medium">
                                         The {character.role}
                                     </h2>
                                 </div>
@@ -969,14 +984,21 @@ function CharacterSheet() {
                                 </div>
                                 <div className="mr-1">
                                     {isOwner && (
-                                        <Dialog>
+                                        <Dialog modal={true}>
                                             <DialogTrigger asChild>
                                                 <Button className="flex text-lg py-0! items-center cursor-pointer">
                                                     <Pencil className="size-4 mr-2" />{" "}
                                                     Edit
                                                 </Button>
                                             </DialogTrigger>
-                                            <DialogContent className="w-fit max-w-[95vw]! max-h-[85vh] p-2 pt-8 max-sm:w-[95vw] -mt-8 overflow-y-auto sm:p-10 bg-white">
+                                            <DialogContent 
+                                                onWheel={(e) => {
+                                                    e.stopPropagation();
+                                                }}
+                                                onTouchMove={(e) => {
+                                                    e.stopPropagation();
+                                                }}
+                                                className="w-fit max-w-[95vw]! max-h-[90vh] p-2 pt-10 max-sm:w-[95vw] overflow-y-auto sm:p-10 bg-white">
                                                 <AbilitySelector
                                                     selectedAbilities={
                                                         character.abilities ||
@@ -1031,14 +1053,21 @@ function CharacterSheet() {
 
                                 <div className="mr-1">
                                     {isOwner && (
-                                        <Dialog>
+                                        <Dialog modal={true}>
                                             <DialogTrigger asChild>
                                                 <Button className="flex text-lg py-0! items-center cursor-pointer">
                                                     <Pencil className="size-4 mr-2" />{" "}
                                                     Edit
                                                 </Button>
                                             </DialogTrigger>
-                                            <DialogContent className="w-fit max-w-[95vw]! max-h-[85vh] p-2 pt-8 max-sm:w-[95vw] -mt-8 overflow-y-auto sm:p-10 bg-white">
+                                            <DialogContent 
+                                                onWheel={(e) => {
+                                                    e.stopPropagation();
+                                                }}
+                                                onTouchMove={(e) => {
+                                                    e.stopPropagation();
+                                                }}
+                                                className="w-fit max-w-[95vw]! max-h-[90vh] p-2 pt-10 max-sm:w-[95vw] overflow-y-auto sm:p-10 bg-white">
                                                 <ItemSelector
                                                     selectedItems={
                                                         character.items || []

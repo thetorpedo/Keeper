@@ -179,7 +179,7 @@ function CreateCharacter() {
     return (
         <div className="flex flex-col justify-between items-center bg-white min-h-screen">
             <Navbar />
-            <div className="my-10 max-sm:max-w-[90%] max-w-4/6 w-250 space-y-5 flex flex-col items-center">
+            <div className="my-10 max-sm:max-w-[90%] max-w-5/6 w-250 space-y-5 flex flex-col items-center">
                 <div className="flex flex-col border-b pb-3 w-full text-center">
                     <h1 className="text-4xl font-extrabold font-alegraya">
                         Creating a character
@@ -207,7 +207,7 @@ function CreateCharacter() {
                         </span>
                     </span>
                 </div>
-                <div className="flex flex-col max-w-280">
+                <div className="flex flex-col max-w-280 w-full">
                     {step === 1 && (
                         <CharacterProfile
                             characterData={newCharacter}

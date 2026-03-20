@@ -1,7 +1,6 @@
 import { useGlobalAlert } from "@/app/contexts/alertContext/AlertProvider.tsx";
 import { useAuth } from "@/app/contexts/authContext/AuthProvider.tsx";
 import { db } from "@/app/firebase/firebase.ts";
-import indicatorImg from "@/assets/indicator.png";
 import Card from "@/components/sheet/utils/card.tsx";
 import { bookAbilities } from "@/data/abilities/index.ts";
 import type { Ability } from "@/data/interface.ts";
@@ -45,7 +44,7 @@ export default function AbilitySelector({
     "Wizard",
     "Custom Abilities",
   ];
-  const [selectedRole, setSelectedRole] = useState<string>("Wizard");
+  const [selectedRole, setSelectedRole] = useState<string>("Fighter");
   const [requiresRoll, setRequiresRoll] = useState(false);
   const [effectBlocks, setEffectBlocks] = useState([Date.now()]);
   const [rollBlocks, setRollBlocks] = useState([Date.now() + 1]);
@@ -222,7 +221,7 @@ export default function AbilitySelector({
   };
 
   return (
-    <div className="flex flex-col relative max-w-[90vw] w-full mx-auto gap-4">
+    <div className="flex flex-col relative max-w-[85vw] sm:max-w-[70vw] w-full mx-auto gap-4">
       {/* Filters */}
       <div className="flex flex-row justify-center gap-2 flex-wrap">
         {roles.map((role) => (
@@ -242,14 +241,14 @@ export default function AbilitySelector({
 
       {/* Cards Area */}
       <div className=" relative">
-        {selectedRole !== "Custom Abilities" && (
+        {/* {selectedRole !== "Custom Abilities" && (
           <img
             src={indicatorImg}
             className="h-100 absolute max-md:hidden -left-8 top-1/2 transform -translate-y-1/2"
           ></img>
-        )}
-        <div
-          className={`bg-gray-200 overflow-auto ${selectedRole === "Custom Abilities" ? "" : "p-4"} gap-4 flex flex-row border w-250 max-sm:w-full border-gray-300 rounded-lg min-h-100`}
+        )} */}
+        <div 
+          className={`bg-gray-200 overflow-auto ${selectedRole === "Custom Abilities" ? "" : "p-4"} gap-4 flex flex-row border w-full max-sm:w-full border-gray-300 rounded-lg min-h-100`}
         >
           {currentPaths.length === 0 && selectedRole !== "Custom Abilities" && (
             <div className="w-full flex gap-4 flex-col items-center justify-center text-gray-500 font-alegraya-sans text-xl h-full">
