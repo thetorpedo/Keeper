@@ -8,12 +8,9 @@ export const weaponItems: Ability[] = [
         "name": "Sword",
         "damage": 2,
         "slots": 1,
-        "effects": [
-            {
-                "cost": 0,
-                "description": "A reliable common sword, balanced for offense and defense."
-            }
-        ]
+
+        "description": "A reliable common sword, balanced for offense and defense."
+
     },
     {
         "id": "weapon_bow",
@@ -22,12 +19,9 @@ export const weaponItems: Ability[] = [
         "name": "Bow",
         "damage": 2,
         "slots": 1,
-        "effects": [
-            {
-                "cost": 0,
-                "description": "A common bow for ranged attacks. Requires an additional item slot for ammunition."
-            }
-        ]
+
+        "description": "A common bow for ranged attacks. Requires an additional item slot for ammunition."
+
     },
     {
         "id": "weapon_crossbow",
@@ -36,12 +30,9 @@ export const weaponItems: Ability[] = [
         "name": "Crossbow",
         "damage": 2,
         "slots": 1,
-        "effects": [
-            {
-                "cost": 0,
-                "description": "A mechanical common crossbow. Powerful and precise. Requires an additional item slot for ammunition."
-            }
-        ]
+
+        "description": "A mechanical common crossbow. Powerful and precise. Requires an additional item slot for ammunition."
+
     },
     {
         "id": "weapon_spear",
@@ -50,12 +41,9 @@ export const weaponItems: Ability[] = [
         "name": "Spear",
         "damage": 2,
         "slots": 1,
-        "effects": [
-            {
-                "cost": 0,
-                "description": "A common spear, excellent for keeping enemies at a distance."
-            }
-        ]
+
+        "description": "A common spear, excellent for keeping enemies at a distance."
+
     },
     {
         "id": "weapon_hammer",
@@ -64,12 +52,9 @@ export const weaponItems: Ability[] = [
         "name": "Hammer",
         "damage": 2,
         "slots": 1,
-        "effects": [
-            {
-                "cost": 0,
-                "description": "A heavy common hammer, perfect for crushing armor and obstacles."
-            }
-        ]
+
+        "description": "A heavy common hammer, perfect for crushing armor and obstacles."
+
     },
     {
         "id": "weapon_knife",
@@ -78,12 +63,9 @@ export const weaponItems: Ability[] = [
         "name": "Knife",
         "damage": 2,
         "slots": 1,
-        "effects": [
-            {
-                "cost": 0,
-                "description": "A small common knife or dagger, easily concealed and quick to draw."
-            }
-        ]
+
+        "description": "A small common knife or dagger, easily concealed and quick to draw."
+
     },
     {
         "id": "weapon_staff",
@@ -92,12 +74,9 @@ export const weaponItems: Ability[] = [
         "name": "Staff",
         "damage": 2,
         "slots": 1,
-        "effects": [
-            {
-                "cost": 0,
-                "description": "A sturdy common wooden staff, useful for both defense and blunt strikes."
-            }
-        ]
+
+        "description": "A sturdy common wooden staff, useful for both defense and blunt strikes."
+
     },
     {
         "id": "weapon_ammunition",
@@ -105,11 +84,8 @@ export const weaponItems: Ability[] = [
         "path": "Item",
         "name": "Ammunition",
         "slots": 1,
-        "effects": [
-            {
-                "cost": 0,
-                "description": "A bundle of arrows, bolts, or stones. Required to use ranged weapons. You don’t need to keep track of how much ammunition you have, but you might run out if you lose equipment."
-            }
-        ]
+
+        "description": "A bundle of arrows, bolts, or stones. Required to use ranged weapons. You don’t need to keep track of how much ammunition you have, but you might run out if you lose equipment."
+
     }
 ]

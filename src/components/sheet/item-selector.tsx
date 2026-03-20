@@ -73,12 +73,19 @@ export default function ItemSelector({
     return () => unsubscribe();
   }, [currentUser]);
 
-  const displayedItems =
-    selectedItemCategory === "Custom Items"
-      ? customItems
-      : selectedItemCategory === "All items"
-        ? bookItems
-        : bookItems.filter((i) => i.role === selectedItemCategory);
+  const displayedItems = (() => {
+    let baseItems = [];
+    
+    if (selectedItemCategory === "Custom Items") {
+      baseItems = customItems;
+    } else if (selectedItemCategory === "All items") {
+      baseItems = bookItems;
+    } else {
+      baseItems = bookItems.filter((i) => i.role === selectedItemCategory);
+    }
+  
+    return [...baseItems].sort((a, b) => a.name.localeCompare(b.name));
+  })();
 
   const handleCreateCustomItem = async (
     e: React.FormEvent<HTMLFormElement>,

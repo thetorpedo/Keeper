@@ -318,7 +318,7 @@ export default function Card({
 
             <div className="space-y-4 my-4">
               {ability.description && (
-                <p className="font-ovo text-base whitespace-pre-wrap">{renderFormattedText(ability.description)}</p>
+                <p className="font-ovo text-base text-left whitespace-pre-wrap">{renderFormattedText(ability.description)}</p>
               )}
 
               <div className="space-y-2">
