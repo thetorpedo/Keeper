@@ -261,10 +261,10 @@ export default function Card({
         className="sm:max-w-md max-h-[80vh] gap-0 z-100 overflow-y-auto font-alegraya-sans p-0 font-medium text-lg"
       >
         <div className="flex flex-col relative m-3 mt-7 justify-center items-center">
-          <div className="flex items-center justify-center gap-2 px-2 relative -mb-8 z-10 -top-4 max-w-75 bg-white">
+          <div className="flex items-center justify-center gap-2 px-2 relative -mb-8 z-10 -top-4 max-w-5/6 bg-white">
             <div className="flex gap-2 shrink min-w-0 items-center h-full">
               <span
-                className="font-alegraya-sans lowercase truncate block w-full font-extrabold text-2xl text-center"
+                className="font-alegraya-sans lowercase  min-w-0 block w-full font-extrabold text-2xl text-center"
                 title={ability.name}
               >
                 {ability.name}
