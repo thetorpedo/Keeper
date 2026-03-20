@@ -23,7 +23,7 @@ export const rangerAbilities: Ability[] = [
         "effects": [
             {
                 "cost": 2,
-                "description": "You sing a song that kindles strong feelings in NPCs nearby. (The song has no effect on hostile creatures.) Read or sing the chorus of a song at the table and describe your performance. You may write your own or use one from another songwriter. Choose a mood to set for your audience: \n\nBright. Hearts swell with friendly enthusiasm, sparking joyful conversations. \n\nSomber. The audience falls silent and begins a sorrowful reflection on their suffering. \n\nProud. Zealous feelings are ignited, making the crowd noisy and excitable."
+                "description": "You sing a song that kindles strong feelings in NPCs nearby. (The song has no effect on hostile creatures.) Read or sing the chorus of a song at the table and describe your performance. You may write your own or use one from another songwriter. Choose a mood to set for your audience: \n\n**Bright.** Hearts swell with friendly enthusiasm, sparking joyful conversations. \n\n**Somber.** The audience falls silent and begins a sorrowful reflection on their suffering. \n\n**Proud.** Zealous feelings are ignited, making the crowd noisy and excitable."
             }
         ]
     },
@@ -36,7 +36,7 @@ export const rangerAbilities: Ability[] = [
         "effects": [
             {
                 "cost": 3,
-                "description": "You appeal to a local myth to gain the favor of a commoner. You create the myth using four parts: an obligation, a lesson, a subject, and a story. \n\nPart 1: Obligation. Decide how the myth affects your target. Choose one: \n• They offer you and your allies food, shelter, and secrecy in their home. \n• They offer you the best reasonable trade on an item they are selling. \n• They go on a small mission, like fetching an item or delivering a message. \n• They admit to a recent wrongdoing. \n• They forgive you for a transgression. \n• They spread a rumor you create. \n• An obligation of your choice, as long as it does not harm them. \n\nPart 2: Lesson. Using the obligation, say what the lesson of the myth is, like “Give refuge to strangers” or “Always be a fair dealer.” \n\nPart 3: Subject. Name a central person or event. \n\nPart 4: Story. Describe a dramatic situation the person or event is famous for. Perhaps they were a missionary who fed the hungry or it was a great flood that killed many. Share the myth with your friends at the table. \n\nYou may reuse a myth you have created without describing it in full."
+                "description": "You appeal to a local myth to gain the favor of a commoner. You create the myth using four parts: an obligation, a lesson, a subject, and a story. \n\n**Obligation.** Decide how the myth affects your target. Choose one: \n• They offer you and your allies food, shelter, and secrecy in their home. \n• They offer you the best reasonable trade on an item they are selling. \n• They go on a small mission, like fetching an item or delivering a message. \n• They admit to a recent wrongdoing. \n• They forgive you for a transgression. \n• They spread a rumor you create. \n• An obligation of your choice, as long as it does not harm them. \n\n**Lesson.** Using the obligation, say what the lesson of the myth is, like “Give refuge to strangers” or “Always be a fair dealer.” \n\n**Subject.** Name a central person or event. \n\n**Story.** Describe a dramatic situation the person or event is famous for. Perhaps they were a missionary who fed the hungry or it was a great flood that killed many. Share the myth with your friends at the table. \n\nYou may reuse a myth you have created without describing it in full."
             }
         ]
     },
@@ -122,7 +122,7 @@ export const rangerAbilities: Ability[] = [
             },
             {
                 "cost": 1,
-                "description": "You navigate your party to one of these areas: an oasis, a shelter, ruins, or a nest. \n\nOasis. You find a reprieve that has a small amount of nourishment. \n\nShelter. You find a natural cave that offers shelter from harsh weather. \n\nRuins. You find minor ruins, like an abandoned keep or a withered statue. \n\nNest. You find the home of an animal or group of animals, like an otter’s den."
+                "description": "You navigate your party to one of these areas: an oasis, a shelter, ruins, or a nest. \n\n**Oasis.** You find a reprieve that has a small amount of nourishment. \n\n**Shelter.** You find a natural cave that offers shelter from harsh weather. \n\n**Ruins.** You find minor ruins, like an abandoned keep or a withered statue. \n\n**Nest.** You find the home of an animal or group of animals, like an otter’s den."
             }
         ]
     },
@@ -149,11 +149,11 @@ export const rangerAbilities: Ability[] = [
         "effects": [
             {
                 "cost": 2,
-                "description": "You ask the tree to search the forest. For example, you may ask to locate a specific creature, an object laying somewhere, or a location, like a cave or building. The tree will commune with its friends and then tell you where it is, how to get there, and how long it will take."
+                "description": "**Seek.** You ask the tree to search the forest. For example, you may ask to locate a specific creature, an object laying somewhere, or a location, like a cave or building. The tree will commune with its friends and then tell you where it is, how to get there, and how long it will take."
             },
             {
                 "cost": 2,
-                "description": "You ask the tree to watch over the party. Until you leave the forest, trees will begin to sway and rustle if you approach a trap or a dangerous creature. The rustling increases as you draw nearer to danger."
+                "description": "**Warn.** You ask the tree to watch over the party. Until you leave the forest, trees will begin to sway and rustle if you approach a trap or a dangerous creature. The rustling increases as you draw nearer to danger."
             }
         ]
     },

@@ -41,6 +41,19 @@ export default function Card({
 
   const roleColor = ability.role.toLowerCase().replace(/\s+/g, "-");
 
+  const renderFormattedText = (text: string) => {
+    if (!text) return "";
+    
+    const parts = text.split(/(\*\*.*?\*\*)/g);
+    
+    return parts.map((part, index) => {
+      if (part.startsWith("**") && part.endsWith("**")) {
+        return <strong key={index} className="font-alegraya-sans lowercase text-[19px]/2 font-medium">{part.slice(2, -2)}</strong>;
+      }
+      return part;
+    });
+  };
+
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -195,10 +208,12 @@ export default function Card({
               {/* Description */}
               <div>
                 <p className="text-sm mb-1 whitespace-pre-wrap">
-                  {ability.description || ability.effects?.[0]?.description}
+                  {renderFormattedText(ability.description ?? '') || renderFormattedText(ability.effects?.[0]?.description ?? "")}
                 </p>
                 <div className="space-y-2">
-                  {ability.effects?.map((effect, index) => (
+                {ability.effects
+                  ?.slice(ability.description ? 0 : 1)
+                  .map((effect, index) => (
                     <div key={index} className="font-ovo text-sm whitespace-pre-wrap">
                       <div className="font-bold mr-2 inline-block gap-2 items-center">
                         <span className="flex shrink-0 items-center group relative">
@@ -217,7 +232,7 @@ export default function Card({
                           </span>
                         </span>
                       </div>
-                      {effect.description}
+                      {renderFormattedText(effect.description)}
                     </div>
                   ))}
                   {ability.rollTable && (
@@ -303,7 +318,7 @@ export default function Card({
 
             <div className="space-y-4 my-4">
               {ability.description && (
-                <p className="font-ovo text-base whitespace-pre-wrap">{ability.description}</p>
+                <p className="font-ovo text-base whitespace-pre-wrap">{renderFormattedText(ability.description)}</p>
               )}
 
               <div className="space-y-2">
@@ -340,7 +355,7 @@ export default function Card({
                         </button>
                       </span>
                     </div>
-                    {effect.description}
+                    {renderFormattedText(effect.description)}
                   </div>
                 ))}
                 {ability.rollTable && (

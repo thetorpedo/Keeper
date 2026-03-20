@@ -122,7 +122,7 @@ export const naturalistAbilities: Ability[] = [
         "effects": [
             {
                 "cost": 5,
-                "description": "Your eyes glitter like dancing wisps as you conjure a dazzling prismatic aurora above you in the sky. The aurora is visible to creatures up to a kilometer away and lasts for the next 10 minutes. \n\nCommoners: Any common folk who can see the aurora are dazzled and stop what they are doing to stare at it. \n\nMinions: Minions are also dazzled by the spell and stop what they are doing to stare at it. Hitting a minion frees them from the spell’s effects. \n\nBosses: The Guide must roll the die."
+                "description": "Your eyes glitter like dancing wisps as you conjure a dazzling prismatic aurora above you in the sky. The aurora is visible to creatures up to a kilometer away and lasts for the next 10 minutes. \n\n**Commoners:** Any common folk who can see the aurora are dazzled and stop what they are doing to stare at it. \n\n**Minions:** Minions are also dazzled by the spell and stop what they are doing to stare at it. Hitting a minion frees them from the spell’s effects. \n\n**Bosses:** The Guide must roll the die."
             }
         ],
         "rollTable": [
@@ -300,15 +300,15 @@ export const naturalistAbilities: Ability[] = [
         "effects": [
             {
                 "cost": 1,
-                "description": "Eagle. You gain eagle-eye vision for the next minute. You can see anything in your line of sight clearly, even if it is far away, and you can detect faraway movement that would be imperceptible to a normal person."
+                "description": "**Eagle.** You gain eagle-eye vision for the next minute. You can see anything in your line of sight clearly, even if it is far away, and you can detect faraway movement that would be imperceptible to a normal person."
             },
             {
                 "cost": 2,
-                "description": "Cat. You purr softly under your breath, imbuing up to 6 nearby creatures with the spirit of the cat. For the next hour, affected creatures gain the ability to see things nearby in complete darkness as if they were in a dimly lit room. The effect cannot pierce magical darkness. Affected creatures may occasionally feel the urge to stop what they are doing and clean themselves."
+                "description": "**Cat.** You purr softly under your breath, imbuing up to 6 nearby creatures with the spirit of the cat. For the next hour, affected creatures gain the ability to see things nearby in complete darkness as if they were in a dimly lit room. The effect cannot pierce magical darkness. Affected creatures may occasionally feel the urge to stop what they are doing and clean themselves."
             },
             {
                 "cost": 2,
-                "description": "Wolf. You howl, imbuing up to 6 nearby creatures with haste. (Howl at the table.) For the next hour, creatures affected by the spell can outrun any other creatures while traveling by foot."
+                "description": "**Wolf.** You howl, imbuing up to 6 nearby creatures with haste. (Howl at the table.) For the next hour, creatures affected by the spell can outrun any other creatures while traveling by foot."
             }
         ]
     },
@@ -334,7 +334,7 @@ export const naturalistAbilities: Ability[] = [
         "effects": [
             {
                 "cost": 3,
-                "description": "You extend your senses for the next hour. Choose two options each time you use this ability: \n\nAurasight. Detect a faint outline around anything that is currently affected by a spell. \n\nInfrasight. Detect objects nearby whose relative heat makes them stand out, like creatures with warm bodies. This works through walls. \n\nDarksight. See in darkness nearby as if it were dimly lit. \n\nMirrorsight. See around corners inside of enclosed spaces, like buildings. You must be within reach of the corner. (For example, you can see around the bend of a hallway.) \n\nRealsight. Detect whether something is an illusion. Illusions you detect with this spell appear to flicker."
+                "description": "You extend your senses for the next hour. Choose two options each time you use this ability: \n\n**Aurasight.** Detect a faint outline around anything that is currently affected by a spell. \n\n**Infrasight.** Detect objects nearby whose relative heat makes them stand out, like creatures with warm bodies. This works through walls. \n\n**Darksight.** See in darkness nearby as if it were dimly lit. \n\n**Mirrorsight.** See around corners inside of enclosed spaces, like buildings. You must be within reach of the corner. (For example, you can see around the bend of a hallway.) \n\n**Realsight.** Detect whether something is an illusion. Illusions you detect with this spell appear to flicker."
             }
         ]
     },
@@ -397,7 +397,7 @@ export const naturalistAbilities: Ability[] = [
         "effects": [
             {
                 "cost": 7,
-                "description": "You channel elemental fury. You create a storm centered on you with a radius of 1 kilometer. It lasts as long as you wish to channel it, but you take 1 HP of damage for each turn you spend maintaining the spell. You may choose the size of the storm eye, which is safe inside. Choose the nature of the disaster each time you cast this spell: \n\nLightning. Electricity streaks through the storm, arcing through conductive objects and lashing any NPCs caught in it. Each NPC caught in the storm is hit for 2 HP during each turn you cast the spell. \n\nBlizzard. Water condenses in the storm field, turning into apple-sized balls of hail. The air temperature in the storm field is freezing. NPCs in the storm field are hit for 1 HP during each turn you maintain the spell. Creatures cannot see beyond their reach in the howling whirl of ice. \n\nHurricane. Sustained winds of terrifying force whip through the storm field. Weak buildings are completely destroyed, all windows are shattered, many roofs will cave in, and trees may be uprooted. Most unsecured objects are picked up by the storm and sent flying far away. Any NPCs caught in the storm field are blown around, can’t move, and are hit for 4 HP for each turn you cast the spell."
+                "description": "You channel elemental fury. You create a storm centered on you with a radius of 1 kilometer. It lasts as long as you wish to channel it, but you take 1 HP of damage for each turn you spend maintaining the spell. You may choose the size of the storm eye, which is safe inside. Choose the nature of the disaster each time you cast this spell: \n\n**Lightning.** Electricity streaks through the storm, arcing through conductive objects and lashing any NPCs caught in it. Each NPC caught in the storm is hit for 2 HP during each turn you cast the spell. \n\n**Blizzard.** Water condenses in the storm field, turning into apple-sized balls of hail. The air temperature in the storm field is freezing. NPCs in the storm field are hit for 1 HP during each turn you maintain the spell. Creatures cannot see beyond their reach in the howling whirl of ice. \n\n**Hurricane.** Sustained winds of terrifying force whip through the storm field. Weak buildings are completely destroyed, all windows are shattered, many roofs will cave in, and trees may be uprooted. Most unsecured objects are picked up by the storm and sent flying far away. Any NPCs caught in the storm field are blown around, can’t move, and are hit for 4 HP for each turn you cast the spell."
             }
         ]
     },
