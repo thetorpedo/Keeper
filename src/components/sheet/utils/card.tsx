@@ -268,7 +268,7 @@ export default function Card({
           <div className="flex items-center justify-center gap-2 px-2 relative -mb-8 z-10 -top-4 max-w-5/6 bg-white">
             <div className="flex gap-2 shrink min-w-0 items-center h-full">
               <span
-                className="font-alegraya-sans lowercase  min-w-0 block w-full font-extrabold text-2xl text-center"
+                className="font-alegraya-sans lowercase wrap-anywhere min-w-0 block w-full font-extrabold text-2xl text-center"
                 title={ability.name}
               >
                 {ability.name}
