@@ -52,6 +52,9 @@ export default function EditableText({
       e.preventDefault();
       handleUpdate();
     }
+    if (e.key === "Tab") {
+      handleUpdate();
+    }
     if (e.key === "Escape") {
       if (textRef.current) textRef.current.innerText = value;
       setIsEditing(false);
@@ -62,10 +65,12 @@ export default function EditableText({
 
   return (
     <span
+      tabIndex={isOwner ? 0 : -1}
       ref={textRef}
       contentEditable={isEditing}
       suppressContentEditableWarning={true}
       spellCheck={false}
+      onFocus={isOwner && !isEditing ? () => setIsEditing(true) : undefined}
       onClick={isOwner && !isEditing ? () => setIsEditing(true) : undefined}
       onBlur={isEditing ? handleUpdate : undefined}
       onKeyDown={isEditing ? handleKeyDown : undefined}
