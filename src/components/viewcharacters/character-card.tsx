@@ -1,9 +1,11 @@
+import statVector from "@/assets/StatVector.svg";
 import { Check, Copy } from "lucide-react";
 import { useState } from "react";
 import { RiShareFill } from "react-icons/ri";
 import { Link } from "react-router-dom";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog.tsx";
 import Button from "../ui/questbutton.tsx";
+
 
 interface CharacterCardProps {
   name: string;
@@ -38,7 +40,7 @@ export default function CharacterCard({ name, role, createdAt, id, pfp }: Charac
             <Button className='border rounded-lg relative p-5 w-full col-span-1 flex flex-col justify-center sm:pt-8 pt-5 items-center gap-1 sm:pb-4'>
                 <div className='font-alegraya-sans flex justify-center w-full max-w-[90%] items-center absolute sm:-top-[20.5px] -top-[14.5px]  text-white font-bold'>
                     <img 
-                    src="../../src/assets/StatVector.svg" 
+                    src={statVector}
                     className="h-7 w-auto shrink-0 block object-contain" 
                     alt=""
                     />
@@ -46,7 +48,7 @@ export default function CharacterCard({ name, role, createdAt, id, pfp }: Charac
                       <span className="max-sm:text-[16px] truncate block text-[25px]">{name}</span>
                     </div>
                     <img 
-                    src="../../src/assets/StatVector.svg" 
+                    src={statVector}
                     className="h-7 w-auto shrink-0 block object-contain rotate-180" 
                     alt=""
                     />

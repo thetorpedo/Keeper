@@ -1,3 +1,5 @@
+import apVector from "@/assets/APVector.svg";
+import d20 from "@/assets/d20.png";
 import {
   Dialog,
   DialogClose,
@@ -11,6 +13,8 @@ import {
 import Button from "@/components/ui/questbutton.tsx";
 import type { Ability } from "@/data/interface.ts";
 import { Plus, X } from "lucide-react";
+
+
 
 interface CardProps {
   ability: Ability;
@@ -114,7 +118,7 @@ export default function Card({
                           {baseCost}
                         </span>
                         <img
-                          src="../../src/assets/APVector.svg"
+                          src={apVector}
                           className="h-5 w-auto block"
                           alt=""
                         />
@@ -156,7 +160,7 @@ export default function Card({
                             className={`font-alegraya-sans cursor-pointer ${editing || !isOwner ? "" : "hover:opacity-50 hover:scale-115 transition-all active:scale-95"} lowercase  text-[14px] leading-none flex items-center justify-center bg-gray-50`}
                           >
                             <img
-                              src="../../src/assets/d20.png"
+                              src={d20}
                               className="size-5"
                               alt=""
                             />
@@ -225,7 +229,7 @@ export default function Card({
                               {effect.cost}
                             </span>
                             <img
-                              src="../../src/assets/APVector.svg"
+                              src={apVector}
                               className="h-5 w-auto block"
                               alt=""
                             />
@@ -348,7 +352,7 @@ export default function Card({
                             {effect.cost}
                           </span>
                           <img
-                            src="../../src/assets/APVector.svg"
+                            src={apVector}
                             className="h-5 w-auto block"
                             alt=""
                           />
