@@ -339,9 +339,9 @@ export default function Card({
                                   e.stopPropagation();
                                   if (
                                     onDeductAP &&
-                                    typeof baseCost === "number"
+                                    typeof effect.cost === "number"
                                   ) {
-                                    onDeductAP(baseCost);
+                                    onDeductAP(effect.cost);
                                   }
                                 }
                               : undefined
