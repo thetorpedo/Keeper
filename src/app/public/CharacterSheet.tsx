@@ -495,15 +495,18 @@ function CharacterSheet() {
                     />
                 </Button>
                 <div className="my-10 max-w-280 w-screen px-5 mx-auto flex flex-col gap-3 items-center">
+                    <div className="w-full">
                     <Link
                         to="/view"
-                        className="text-gray-400 flex flex-row gap-2 w-full"
+                        className="text-gray-400 flex flex-row gap-2 w-fit"
                     >
                         <CircleArrowLeft />
                         <span className="uppercase text-xl font-medium font-alegraya-sans">
                             Back
                         </span>
                     </Link>
+                    </div>
+                    
                     <div className="flex flex-row w-full justify-between gap-2 items-center align-middle pb-5 border-b ">
                         <div className="flex flex-col min-w-0 shrink">
                             <h1 className="font-alegraya font-bold truncate text-5xl">
@@ -856,10 +859,56 @@ function CharacterSheet() {
                                         The {character.role}
                                     </h2>
                                 </div>
-                                <Button className="font-medium mr-1 px-3! w-fit flex items-center justify-center">
-                                    <RiShareFill className="inline-block mr-2 size-3" />
-                                    <span className="text-sm">Share</span>
-                                </Button>
+                                <Dialog>
+                                    <DialogTrigger asChild>
+                                        <Button className="font-medium mr-1 px-3! w-fit flex items-center justify-center">
+                                            <RiShareFill className="inline-block mr-2 size-3" />
+                                            <span className="text-sm">Share</span>
+                                        </Button>
+                                    </DialogTrigger>
+
+                                    <DialogContent className="sm:max-w-md p-6 gap-0 bg-white border- border-black rounded-xl">
+                                    <DialogHeader className="mb-2">
+                                        <DialogTitle className="text-3xl font-alegraya font-extrabold text-black">
+                                            Share this character!
+                                        </DialogTitle>
+                                        <DialogDescription className="text-lg font-alegraya-sans text-gray-600">
+                                            Anyone with this link can view this
+                                            character.
+                                        </DialogDescription>
+                                    </DialogHeader>
+
+                                    <div className="flex items-center w-full mt-2 mb-4 border border-black overflow-hidden bg-gray-50 focus-within:ring-2 focus-within:ring-purple/50 transition-all">
+                                        <input
+                                            className="flex-1 bg-transparent px-3 py-2 font-ovo text-[17px] text-gray-700 outline-none cursor-text truncate"
+                                            readOnly
+                                            value={window.location.href
+                                                .replace("http://", "")
+                                                .replace("https://", "")}
+                                        />
+                                        <button
+                                            onClick={handleCopyLink}
+                                            className={`px-4 py-3 font-bold font-alegraya-sans border-l border-black transition-colors flex items-center gap-2 cursor-pointer w-28 justify-center
+                        ${isCopied ? "bg-purple text-black hover:bg-purple/80" : "bg-purple text-black hover:bg-purple/80"}
+                      `}
+                                        >
+                                            {isCopied ? (
+                                                <Check className="size-5" />
+                                            ) : (
+                                                <Copy className="size-4" />
+                                            )}
+                                            {isCopied ? "COPIED!" : "COPY"}
+                                        </button>
+                                    </div>
+
+                                    <DialogFooter className="sm:justify-start">
+                                        <p className="text-base/tight font-ovo text-gray-500 italic">
+                                            Viewers cannot edit any character
+                                            information or read their notes.
+                                        </p>
+                                    </DialogFooter>
+                                </DialogContent>
+                                </Dialog>
                             </div>
 
                             <div className="flex flex-col h-full w-2/5 items-between gap-2">
