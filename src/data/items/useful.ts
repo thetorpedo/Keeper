@@ -2,7 +2,7 @@ import type { Ability } from '@/data/interface.ts';
 
 export const usefulItems: Ability[] = [
     {
-        "id": "item_lockpicks",
+        "id": "item_useful_lockpicks",
         "role": "Useful",
         "path": "Item",
         "name": "Lockpicks",
@@ -12,7 +12,7 @@ export const usefulItems: Ability[] = [
 
     },
     {
-        "id": "item_magic_rope",
+        "id": "item_useful_magic_rope",
         "role": "Useful",
         "path": "Item",
         "name": "Magic rope",
@@ -22,7 +22,7 @@ export const usefulItems: Ability[] = [
 
     },
     {
-        "id": "item_magic_flask",
+        "id": "item_useful_magic_flask",
         "role": "Useful",
         "path": "Item",
         "name": "Magic flask",
@@ -32,7 +32,7 @@ export const usefulItems: Ability[] = [
 
     },
     {
-        "id": "item_magic_candle",
+        "id": "item_useful_magic_candle",
         "role": "Useful",
         "path": "Item",
         "name": "Magic candle",
@@ -42,7 +42,7 @@ export const usefulItems: Ability[] = [
 
     },
     {
-        "id": "item_kiln_gauze",
+        "id": "item_useful_kiln_gauze",
         "role": "Useful",
         "path": "Item",
         "name": "Kiln gauze",
@@ -52,7 +52,7 @@ export const usefulItems: Ability[] = [
 
     },
     {
-        "id": "item_friend_flute",
+        "id": "item_useful_friend_flute",
         "role": "Useful",
         "path": "Item",
         "name": "Friend flute",
@@ -62,7 +62,7 @@ export const usefulItems: Ability[] = [
 
     },
     {
-        "id": "item_skycaller_amulets_useful",
+        "id": "item_useful_skycaller_amulets_useful",
         "role": "Useful",
         "path": "Item",
         "name": "Skycaller amulets",
@@ -73,7 +73,7 @@ export const usefulItems: Ability[] = [
 
     },
     {
-        "id": "item_brells_tent_in_a_tin",
+        "id": "item_useful_brells_tent_in_a_tin",
         "role": "Useful",
         "path": "Item",
         "name": "Brell’s tent in a tin",
