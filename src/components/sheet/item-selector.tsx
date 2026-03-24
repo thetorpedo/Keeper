@@ -302,7 +302,7 @@ export default function ItemSelector({
                           <label className="font-alegraya-sans ml-1 font-bold lowercase text-base">
                             Roll the die?
                           </label>
-                          <div className="flex w-full border border-black rounded-lg h-10.5 overflow-hidden font-alegraya-sans font-bold text-lg">
+                          <div className="flex w-full border border-black rounded-lg h-full overflow-hidden font-alegraya-sans font-bold text-lg">
                             <button
                               type="button"
                               onClick={() => setRequiresRoll(true)}
@@ -430,7 +430,7 @@ export default function ItemSelector({
                                 onClick={() =>
                                   setRollBlocks([...rollBlocks, Date.now()])
                                 }
-                                className="w-full bg-white flex flex-row text-base justify-center items-center shadow-none border border-gray-300"
+                                className="w-full bg-white flex flex-row text-base justify-center items-center shadow-none border"
                               >
                                 <Plus className="size-4 mr-2" /> Add another
                                 roll outcome
