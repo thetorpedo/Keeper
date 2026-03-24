@@ -45,6 +45,10 @@
   height: 100vh;
 }
 
+html::selection {
+  background: #efd1ff;
+}
+
 .StatInput::-webkit-outer-spin-button,
 .StatInput::-webkit-inner-spin-button {
   -webkit-appearance: none;
