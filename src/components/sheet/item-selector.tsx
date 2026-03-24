@@ -49,6 +49,7 @@ export default function ItemSelector({
 
   const [requiresRoll, setRequiresRoll] = useState(false);
   const [rollBlocks, setRollBlocks] = useState([Date.now()]);
+  const [effectBlocks, setEffectBlocks] = useState<number[]>([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [customItems, setCustomItems] = useState<Ability[]>([]);
 
@@ -93,6 +94,17 @@ export default function ItemSelector({
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
 
+    const dynamicEffects = effectBlocks.map((_, index) => {
+      const costVal = formData.get(`cost_${index}`) as string;
+      const parsedCost =
+        costVal && !isNaN(Number(costVal)) ? Number(costVal) : costVal || 0;
+
+      return {
+        cost: parsedCost,
+        description: formData.get(`effect_${index}`) as string,
+      };
+    });
+
     const rollTable: { value: string | number; description: string }[] = [];
     if (requiresRoll) {
       rollBlocks.forEach((_, index) => {
@@ -117,6 +129,7 @@ export default function ItemSelector({
       name: formData.get("name") as string,
       slots: Number(formData.get("slots")) || 1,
       description: formData.get("description") as string,
+      effects: dynamicEffects,
       rollTheDie: requiresRoll,
       ...(hasDamage && { damage: Number(damageInput) }),
       ...(rollTable.length > 0 && { rollTable }),
@@ -179,6 +192,11 @@ export default function ItemSelector({
 
     setEditingItemData(itemToEdit);
     setEditingItemId(id);
+
+    const newEffectBlocks = itemToEdit.effects?.map(
+      (_, i) => Date.now() + i,
+    ) || [Date.now()];
+    setEffectBlocks(newEffectBlocks);
 
     setRequiresRoll(itemToEdit.rollTheDie || false);
     const newRollBlocks = itemToEdit.rollTable?.map(
@@ -366,11 +384,79 @@ export default function ItemSelector({
                           </label>
                           <textarea
                             name="description"
-                            required
                             defaultValue={editingItemData?.description}
                             className="border border-gray-300 p-2 rounded-lg font-ovo text-base/5 h-28 focus:outline-none focus:border-purple focus:ring-1 focus:ring-purple"
                             placeholder="A glowing sword that emits a faint blue light. It feels warm to the touch."
                           ></textarea>
+                        </div>
+                        
+                        {effectBlocks.map((blockId, index) => (
+                          <div
+                            key={blockId}
+                            className="col-span-full flex flex-col gap-2 relative mt-2"
+                          >
+                            {effectBlocks.length > 0 && (
+                              <button
+                                type="button"
+                                onClick={() =>
+                                  setEffectBlocks(
+                                    effectBlocks.filter((id) => id !== blockId),
+                                  )
+                                }
+                                className="absolute top-0 cursor-pointer right-1 text-red-400 hover:text-red-600 font-alegraya-sans lowercase text-sm font-bold"
+                              >
+                                <Trash2 className="size-5" />
+                              </button>
+                            )}
+
+                            <div className="flex flex-col w-1/4">
+                              <label className="font-alegraya-sans ml-1 font-bold lowercase text-base">
+                                AP Cost
+                              </label>
+                              <input
+                                name={`cost_${index}`}
+                                type="text"
+                                required
+                                defaultValue={
+                                  editingItemData?.effects?.[index]?.cost
+                                }
+                                className="border border-gray-300 p-2 rounded-lg font-alegraya-sans text-xl focus:outline-none focus:border-purple focus:ring-1 focus:ring-purple text-center"
+                                placeholder="3"
+                              />
+                            </div>
+
+                            <div className="flex flex-col">
+                              <label className="font-alegraya-sans ml-1 font-bold lowercase text-base">
+                                Effect Description
+                              </label>
+                              <textarea
+                                name={`effect_${index}`}
+                                required
+                                defaultValue={
+                                  editingItemData?.effects?.[index]
+                                    ?.description
+                                }
+                                className="border border-gray-300 p-2 rounded-lg font-ovo text-base/5 h-20 focus:outline-none focus:border-purple focus:ring-1 focus:ring-purple"
+                                placeholder="The fireball explodes on impact dealing 2 points of damage to everyone nearby."
+                              ></textarea>
+                            </div>
+
+                            {index < effectBlocks.length - 1 && (
+                              <hr className="col-span-full mt-4 border-gray-200"></hr>
+                            )}
+                          </div>
+                        ))}
+
+                        <div className="col-span-full mt-1">
+                          <Button
+                            type="button"
+                            onClick={() =>
+                              setEffectBlocks([...effectBlocks, Date.now()])
+                            }
+                            className="w-full shadow-none text-base flex flex-row justify-center items-center border"
+                          >
+                            <Plus className="size-4 mr-2" /> {effectBlocks.length > 0 ? 'Add another effect' : 'Add an effect'}
+                          </Button>
                         </div>
 
                         {/* Roll Table */}
