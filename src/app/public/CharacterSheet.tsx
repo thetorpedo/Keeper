@@ -536,9 +536,9 @@ function CharacterSheet() {
                                         </DialogDescription>
                                     </DialogHeader>
 
-                                    <div className="flex items-center w-full mt-2 mb-4 border border-black overflow-hidden bg-gray-50 focus-within:ring-2 focus-within:ring-purple/50 transition-all">
+                                    <div className="flex items-center w-full mt-2 mb-4 border border-black overflow-hidden bg-gray-50 transition-all">
                                         <input
-                                            className="flex-1 bg-transparent px-3 py-2 font-ovo text-[17px] text-gray-700 outline-none cursor-text truncate"
+                                            className=" flex-0 shrink bg-transparent  px-3 py-2 font-ovo text-[17px] text-gray-700 outline-none cursor-text truncate"
                                             readOnly
                                             value={window.location.href
                                                 .replace("http://", "")
@@ -546,7 +546,7 @@ function CharacterSheet() {
                                         />
                                         <button
                                             onClick={handleCopyLink}
-                                            className={`px-4 py-3 font-bold font-alegraya-sans border-l border-black transition-colors flex items-center gap-2 cursor-pointer w-28 justify-center
+                                            className={`px-4 py-3 font-bold grow font-alegraya-sans border-l  border-black transition-colors flex items-center gap-2 cursor-pointer w-28 justify-center
                         ${isCopied ? "bg-purple text-black hover:bg-purple/80" : "bg-purple text-black hover:bg-purple/80"}
                       `}
                                         >
@@ -880,7 +880,7 @@ function CharacterSheet() {
 
                                     <div className="flex items-center w-full mt-2 mb-4 border border-black overflow-hidden bg-gray-50 focus-within:ring-2 focus-within:ring-purple/50 transition-all">
                                         <input
-                                            className="flex-1 bg-transparent px-3 py-2 font-ovo text-[17px] text-gray-700 outline-none cursor-text truncate"
+                                            className="shrink bg-transparent px-3 py-2 min-w-0 w-full font-ovo text-[17px] text-gray-700 outline-none cursor-text truncate"
                                             readOnly
                                             value={window.location.href
                                                 .replace("http://", "")
@@ -888,7 +888,7 @@ function CharacterSheet() {
                                         />
                                         <button
                                             onClick={handleCopyLink}
-                                            className={`px-4 py-3 font-bold font-alegraya-sans border-l border-black transition-colors flex items-center gap-2 cursor-pointer w-28 justify-center
+                                            className={`px-4 py-3 font-bold font-alegraya-sans border-l flex-none border-black transition-colors flex items-center gap-2 cursor-pointer w-28 justify-center
                         ${isCopied ? "bg-purple text-black hover:bg-purple/80" : "bg-purple text-black hover:bg-purple/80"}
                       `}
                                         >
