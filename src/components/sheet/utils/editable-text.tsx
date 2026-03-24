@@ -29,7 +29,6 @@ export default function EditableText({
       const range = document.createRange();
       const sel = window.getSelection();
       range.selectNodeContents(textRef.current);
-      range.collapse(false);
       sel?.removeAllRanges();
       sel?.addRange(range);
     }
