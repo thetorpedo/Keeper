@@ -333,7 +333,7 @@ export default function ItemSelector({
                         <div className="flex flex-row col-span-full gap-4 mt-2">
                           <div className="flex flex-col w-1/2 gap-1">
                             <label className="font-alegraya-sans ml-1 font-bold lowercase text-base">
-                              Inventory Slots
+                              Inventory Space
                             </label>
                             <input
                               name="slots"
@@ -345,8 +345,8 @@ export default function ItemSelector({
                             />
                           </div>
                           <div className="flex flex-col w-1/2 gap-1">
-                            <label className="font-alegraya-sans ml-1 font-bold lowercase text-base text-gray-600">
-                              Damage (Optional)
+                            <label className="font-alegraya-sans ml-1 font-bold lowercase text-base ">
+                              Damage
                             </label>
                             <input
                               name="damage"

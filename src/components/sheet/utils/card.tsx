@@ -184,7 +184,7 @@ export default function Card({
 
                   {/* Slots  */}
                   <span className="border border-black px-1.5 py-0.5 text-[10px] font-alegraya-sans font-bold uppercase tracking-wider leading-none">
-                    {ability.slots === 1 ? "1 slot" : `${ability.slots} slots`}
+                    {ability.slots === 1 ? "1 space" : `${ability.slots} spaces`}
                   </span>
 
                   {/* Roll */}
@@ -294,7 +294,7 @@ export default function Card({
 
                   {/* Slots  */}
                   <span className="border border-black px-2 py-1 text-base font-alegraya-sans lowercase tracking-wider leading-none">
-                    {ability.slots === 1 ? "1 slot" : `${ability.slots} slots`}
+                    {ability.slots === 1 ? "1 space" : `${ability.slots} spaces`}
                   </span>
                 </>
               )}
