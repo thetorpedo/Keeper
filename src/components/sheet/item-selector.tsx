@@ -211,6 +211,7 @@ export default function ItemSelector({
     setIsDialogOpen(false);
     setEditingItemId(null);
     setEditingItemData(null);
+    setEffectBlocks([]);
     setRollBlocks([Date.now() + 1]);
     setRequiresRoll(false);
     if (formRef.current) formRef.current.reset();

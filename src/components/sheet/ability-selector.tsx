@@ -46,7 +46,7 @@ export default function AbilitySelector({
   ];
   const [selectedRole, setSelectedRole] = useState<string>("Fighter");
   const [requiresRoll, setRequiresRoll] = useState(false);
-  const [effectBlocks, setEffectBlocks] = useState([Date.now()]);
+  const [effectBlocks, setEffectBlocks] = useState<number[]>([]);
   const [rollBlocks, setRollBlocks] = useState([Date.now() + 1]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [customAbilities, setCustomAbilities] = useState<Ability[]>([]);
@@ -214,7 +214,7 @@ export default function AbilitySelector({
     setIsDialogOpen(false);
     setEditingAbilityId(null);
     setEditingAbilityData(null);
-    setEffectBlocks([Date.now()]);
+    setEffectBlocks([]);
     setRollBlocks([Date.now() + 1]);
     setRequiresRoll(false);
     if (formRef.current) formRef.current.reset();
@@ -272,7 +272,7 @@ export default function AbilitySelector({
                       onClick={() => {
                         setEditingAbilityId(null);
                         setEditingAbilityData(null);
-                        setEffectBlocks([Date.now()]);
+                        setEffectBlocks([]);
                         setRollBlocks([Date.now() + 1]);
                         setRequiresRoll(false);
                       }}
@@ -367,7 +367,7 @@ export default function AbilitySelector({
                             key={blockId}
                             className="col-span-full flex flex-col gap-2 relative mt-2"
                           >
-                            {effectBlocks.length > 1 && (
+                            {effectBlocks.length > 0 && (
                               <button
                                 type="button"
                                 onClick={() =>
@@ -427,7 +427,7 @@ export default function AbilitySelector({
                             }
                             className="w-full shadow-none text-base flex flex-row justify-center items-center border"
                           >
-                            <Plus className="size-4 mr-2" /> Add another effect
+                            <Plus className="size-4 mr-2" /> {effectBlocks.length > 0 ? 'Add another effect' : 'Add an effect'}
                           </Button>
                         </div>
 
