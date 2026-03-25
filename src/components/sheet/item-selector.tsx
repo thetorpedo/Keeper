@@ -48,8 +48,8 @@ export default function ItemSelector({
     useState<string>("All items");
 
   const [requiresRoll, setRequiresRoll] = useState(false);
-  const [rollBlocks, setRollBlocks] = useState([Date.now()]);
-  const [effectBlocks, setEffectBlocks] = useState<number[]>([]);
+  const [rollBlocks, setRollBlocks] = useState([crypto.randomUUID()]);
+  const [effectBlocks, setEffectBlocks] = useState<string[]>([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [customItems, setCustomItems] = useState<Ability[]>([]);
 
@@ -123,7 +123,7 @@ export default function ItemSelector({
     const newItem: Ability = {
       id:
         editingItemId ||
-        `item_${currentUser?.uid.substring(0, 6)}_${Date.now()}`,
+        `item_${currentUser?.uid.substring(0, 6)}_${crypto.randomUUID()}`,
       role: "Custom Items",
       path: "Item",
       name: formData.get("name") as string,
@@ -193,15 +193,11 @@ export default function ItemSelector({
     setEditingItemData(itemToEdit);
     setEditingItemId(id);
 
-    const newEffectBlocks = itemToEdit.effects?.map(
-      (_, i) => Date.now() + i,
-    ) || [Date.now()];
+    const newEffectBlocks = itemToEdit.effects?.map(() => crypto.randomUUID()) || [crypto.randomUUID()];
     setEffectBlocks(newEffectBlocks);
 
     setRequiresRoll(itemToEdit.rollTheDie || false);
-    const newRollBlocks = itemToEdit.rollTable?.map(
-      (_, i) => Date.now() + 100 + i,
-    ) || [Date.now() + 1];
+    const newRollBlocks = itemToEdit.rollTable?.map(() => crypto.randomUUID()) || [crypto.randomUUID()];
     setRollBlocks(newRollBlocks);
 
     setIsDialogOpen(true);
@@ -212,7 +208,7 @@ export default function ItemSelector({
     setEditingItemId(null);
     setEditingItemData(null);
     setEffectBlocks([]);
-    setRollBlocks([Date.now() + 1]);
+    setRollBlocks([crypto.randomUUID()]);
     setRequiresRoll(false);
     if (formRef.current) formRef.current.reset();
   };
@@ -276,7 +272,7 @@ export default function ItemSelector({
                       onClick={() => {
                         setEditingItemId(null);
                         setEditingItemData(null);
-                        setRollBlocks([Date.now() + 1]);
+                        setRollBlocks([crypto.randomUUID()]);
                         setRequiresRoll(false);
                       }}
                       className="bg-white absolute mt-4 max-sm:text-base max-sm:w-[90%] max-sm:left-[5%] w-1/3 left-1/3 top-1 font-bold flex flex-row justify-center items-center text-black border border-black hover:bg-gray-100"
@@ -452,7 +448,7 @@ export default function ItemSelector({
                           <Button
                             type="button"
                             onClick={() =>
-                              setEffectBlocks([...effectBlocks, Date.now()])
+                              setEffectBlocks([...effectBlocks, crypto.randomUUID()])
                             }
                             className="w-full shadow-none text-base flex flex-row justify-center items-center border"
                           >
@@ -515,7 +511,7 @@ export default function ItemSelector({
                               <Button
                                 type="button"
                                 onClick={() =>
-                                  setRollBlocks([...rollBlocks, Date.now()])
+                                  setRollBlocks([...rollBlocks, crypto.randomUUID()])
                                 }
                                 className="w-full bg-white flex flex-row text-base justify-center items-center shadow-none border"
                               >

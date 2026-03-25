@@ -35,7 +35,7 @@ export default function NotesManager({
 
   const handleCreateNew = () => {
     setCurrentNote({
-      id: Date.now().toString(),
+      id: crypto.randomUUID().toString(),
       title: "",
       content: "",
       updatedAt: Date.now(),

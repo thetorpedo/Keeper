@@ -46,8 +46,8 @@ export default function AbilitySelector({
   ];
   const [selectedRole, setSelectedRole] = useState<string>("Fighter");
   const [requiresRoll, setRequiresRoll] = useState(false);
-  const [effectBlocks, setEffectBlocks] = useState<number[]>([]);
-  const [rollBlocks, setRollBlocks] = useState([Date.now() + 1]);
+  const [effectBlocks, setEffectBlocks] = useState<string[]>([]);
+  const [rollBlocks, setRollBlocks] = useState([crypto.randomUUID()]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [customAbilities, setCustomAbilities] = useState<Ability[]>([]);
   const [editingAbilityId, setEditingAbilityId] = useState<string | null>(null);
@@ -114,7 +114,7 @@ export default function AbilitySelector({
     const newAbility: Ability = {
       id:
         editingAbilityId ||
-        `ability_${currentUser?.uid.substring(0, 6)}_${Date.now()}`,
+        `ability_${currentUser?.uid.substring(0, 6)}_${crypto.randomUUID()}`,
       role: "Custom Abilities",
       path: "Custom",
       name: formData.get("name") as string,
@@ -196,15 +196,11 @@ export default function AbilitySelector({
     setEditingAbilityData(abilityToEdit);
     setEditingAbilityId(id);
 
-    const newEffectBlocks = abilityToEdit.effects?.map(
-      (_, i) => Date.now() + i,
-    ) || [Date.now()];
+    const newEffectBlocks = abilityToEdit.effects?.map(() => crypto.randomUUID()) || [crypto.randomUUID()];
     setEffectBlocks(newEffectBlocks);
 
     setRequiresRoll(abilityToEdit.rollTheDie || false);
-    const newRollBlocks = abilityToEdit.rollTable?.map(
-      (_, i) => Date.now() + 100 + i,
-    ) || [Date.now() + 1];
+    const newRollBlocks = abilityToEdit.rollTable?.map(() => crypto.randomUUID()) || [crypto.randomUUID()];
     setRollBlocks(newRollBlocks);
 
     setIsDialogOpen(true);
@@ -215,7 +211,7 @@ export default function AbilitySelector({
     setEditingAbilityId(null);
     setEditingAbilityData(null);
     setEffectBlocks([]);
-    setRollBlocks([Date.now() + 1]);
+    setRollBlocks([crypto.randomUUID()]);
     setRequiresRoll(false);
     if (formRef.current) formRef.current.reset();
   };
@@ -273,7 +269,7 @@ export default function AbilitySelector({
                         setEditingAbilityId(null);
                         setEditingAbilityData(null);
                         setEffectBlocks([]);
-                        setRollBlocks([Date.now() + 1]);
+                        setRollBlocks([crypto.randomUUID()]);
                         setRequiresRoll(false);
                       }}
                       className="bg-white absolute mt-4 max-sm:text-base max-sm:w-[90%] max-sm:left-[5%] w-1/3 left-1/3 top-1 font-bold flex flex-row justify-center items-center text-black border border-black hover:bg-gray-100"
@@ -423,7 +419,7 @@ export default function AbilitySelector({
                           <Button
                             type="button"
                             onClick={() =>
-                              setEffectBlocks([...effectBlocks, Date.now()])
+                              setEffectBlocks([...effectBlocks, crypto.randomUUID()])
                             }
                             className="w-full shadow-none text-base flex flex-row justify-center items-center border"
                           >
@@ -492,7 +488,7 @@ export default function AbilitySelector({
                               <Button
                                 type="button"
                                 onClick={() =>
-                                  setRollBlocks([...rollBlocks, Date.now()])
+                                  setRollBlocks([...rollBlocks, crypto.randomUUID()])
                                 }
                                 className="w-full bg-white flex flex-row text-base justify-center items-center shadow-none border"
                               >
