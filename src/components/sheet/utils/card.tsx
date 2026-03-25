@@ -52,7 +52,7 @@ export default function Card({
     
     return parts.map((part, index) => {
       if (part.startsWith("**") && part.endsWith("**")) {
-        return <strong key={index} className="font-alegraya-sans lowercase text-[19px]/2 font-medium">{part.slice(2, -2)}</strong>;
+        return <strong key={`${ability.id}-card-${index}`} className="font-alegraya-sans lowercase text-[19px]/2 font-medium">{part.slice(2, -2)}</strong>;
       }
       return part;
     });
@@ -243,7 +243,7 @@ export default function Card({
                     <div className="p-1 pt-0 pb-0 text-sm font-ovo">
                       {ability.rollTable?.map((roll, index, array) => (
                         <div
-                          key={index}
+                        key={`${ability.id}-roll-${index}`}
                           className={`${index === array.length - 1 ? "" : "border-b"} border-gray-300`}
                         >
                           <span className="font-semibold font-alegraya-sans text-base">
@@ -327,7 +327,7 @@ export default function Card({
 
               <div className="space-y-2">
                 {ability.effects?.map((effect, index) => (
-                  <div key={index} className="font-ovo text-base/snug text-left whitespace-pre-wrap">
+                  <div key={`${ability.id}-dlg-eff-${index}`} className="font-ovo text-base/snug text-left whitespace-pre-wrap">
                     <div className="font-bold mr-2 inline-block gap-2 items-center">
                       <span className="flex shrink-0 items-center group relative">
                         <button
@@ -366,6 +366,7 @@ export default function Card({
                   <div className="p-2 pb-0 text-base font-ovo">
                     {ability.rollTable?.map((roll, index, array) => (
                       <div
+                        key={`${ability.id}-dlg-roll-${index}`}
                         className={`${index === array.length - 1 ? "" : "border-b"} border-gray-300 whitespace-pre-wrap`}
                       >
                         <span className="font-semibold font-alegraya-sans text-lg">

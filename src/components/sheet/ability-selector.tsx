@@ -88,22 +88,21 @@ export default function AbilitySelector({
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
 
-    const dynamicEffects = effectBlocks.map((_, index) => {
-      const costVal = formData.get(`cost_${index}`) as string;
-      const parsedCost =
-        costVal && !isNaN(Number(costVal)) ? Number(costVal) : costVal || 0;
-
+    const dynamicEffects = effectBlocks.map((blockId) => {
+      const costVal = formData.get(`cost_${blockId}`) as string; 
+      const parsedCost = costVal && !isNaN(Number(costVal)) ? Number(costVal) : costVal || 0;
+  
       return {
         cost: parsedCost,
-        description: formData.get(`effect_${index}`) as string,
+        description: formData.get(`effect_${blockId}`) as string, 
       };
     });
 
     const rollTable: { value: string | number; description: string }[] = [];
     if (requiresRoll) {
-      rollBlocks.forEach((_, index) => {
-        const rVal = formData.get(`roll_val_${index}`) as string;
-        const rDesc = formData.get(`roll_desc_${index}`) as string;
+      rollBlocks.forEach((blockId) => {
+        const rVal = formData.get(`roll_val_${blockId}`) as string;
+        const rDesc = formData.get(`roll_desc_${blockId}`) as string;
 
         if (rVal?.trim() && rDesc?.trim()) {
           rollTable.push({ value: rVal, description: rDesc });
@@ -382,7 +381,7 @@ export default function AbilitySelector({
                                 AP Cost
                               </label>
                               <input
-                                name={`cost_${index}`}
+                                name={`cost_${blockId}`}
                                 type="text"
                                 required
                                 defaultValue={
@@ -398,7 +397,7 @@ export default function AbilitySelector({
                                 Effect Description
                               </label>
                               <textarea
-                                name={`effect_${index}`}
+                                name={`effect_${blockId}`}
                                 required
                                 defaultValue={
                                   editingAbilityData?.effects?.[index]
@@ -443,7 +442,7 @@ export default function AbilitySelector({
                                 >
                                   {/* Value */}
                                   <input
-                                    name={`roll_val_${index}`}
+                                    name={`roll_val_${blockId}`}
                                     type="text"
                                     required
                                     defaultValue={
@@ -456,7 +455,7 @@ export default function AbilitySelector({
 
                                   {/* Roll Effect */}
                                   <textarea
-                                    name={`roll_desc_${index}`}
+                                    name={`roll_desc_${blockId}`}
                                     required
                                     defaultValue={
                                       editingAbilityData?.rollTable?.[index]
