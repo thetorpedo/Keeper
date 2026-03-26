@@ -354,6 +354,7 @@ function CharacterSheet() {
     const deleteCharacter = async () => {
         try {
             if (!id) return;
+            await deleteDoc(doc(db, "characters", id, "private", "notes"));
             await deleteDoc(doc(db, "characters", id));
 
             navigate("/view");
