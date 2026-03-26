@@ -25,11 +25,11 @@ function About() {
                 </div>
 
                 <div className="flex flex-col space-y-2 max-w-140">
-                    <h1 className="font-alegraya text-4xl md:text-5xl font-extrabold text-center md:text-left">
+                    <h1 className="font-alegraya text-4xl md:text-5xl font-extrabold text-center md:text-center">
                         About Keeper
                     </h1>
 
-                    <div className="space-y-4 text-justify font-ovo text-lg/relaxed">
+                    <div className="space-y-4 mt-2 text-justify font-ovo text-lg/relaxed">
                         <p>
                         Hi, I'm Thiago! I built Keeper because I love TTRPGs and wanted a simpler, more intuitive way to create character sheets for Quest.
                         </p>
