@@ -526,7 +526,8 @@ function CharacterSheet() {
                         "Oh no.\nYou automatically fail, and you may suffer a severe setback."}
                 </AlertDescription>
             </Alert>
-
+            
+            
             {/* Desktop */}
             <div className="hidden md:block w-full mx-5">
                 <Button
@@ -536,6 +537,7 @@ function CharacterSheet() {
                     <img
                         key={`roll-${spinKey}`}
                         src={d20Icon}
+                        alt="Roll d20 die"
                         className={`${spinKey > 0 ? "animate-[spin_0.7s_ease-out]" : ""} w-12 h-12 rounded-full`}
                     />
                 </Button>
@@ -634,7 +636,7 @@ function CharacterSheet() {
                                                     defaultPfp
                                                 }
                                                 className="object-cover w-full h-full transition-all group-hover:scale-105 group-hover:opacity-90"
-                                                alt="Profile"
+                                                alt={`Profile picture of ${character.name}`}
                                             />
 
                                             {/* Overlay */}
@@ -973,7 +975,7 @@ function CharacterSheet() {
                                                     defaultPfp
                                                 }
                                                 className="object-cover w-full h-full transition-all group-hover:scale-105 group-hover:opacity-90"
-                                                alt="Profile"
+                                                alt={`Profile picture of ${character.name}`}
                                             />
 
                                             {/* Overlay */}
