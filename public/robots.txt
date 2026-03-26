@@ -3,4 +3,4 @@ Allow: /
 Disallow: /view/      # Impede que o Google tente indexar a lista privada de fichas
 Disallow: /user/      # Impede indexar páginas de perfil/configuração
 
-Sitemap: https://keeper-db.web.app/sitemap.xml
+Sitemap: https://keeper-db-e5d6d.web.app/sitemap.xml
