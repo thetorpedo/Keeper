@@ -37,6 +37,7 @@ import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { Check, CircleArrowLeft, Copy, Pencil, Upload } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import CropperOriginal from "react-easy-crop";
+import { Helmet } from "react-helmet-async";
 import { BsFillBackpack2Fill, BsFillFileTextFill } from "react-icons/bs";
 import { FaUser } from "react-icons/fa6";
 import { RiShareFill, RiSparkling2Fill } from "react-icons/ri";
@@ -408,6 +409,23 @@ function CharacterSheet() {
 
     return (
         <div className="flex max-sm:justify-start relative flex-col justify-between items-center bg-white min-h-screen w-full">
+            {character && (
+            <Helmet>
+                <title>{`${character.name} | Keeper`}</title>
+                <meta name="description" content={`View the character sheet of ${character.name} in Keeper.`} />
+                
+                {/* Open Graph (WhatsApp, Discord, Facebook) */}
+                <meta property="og:title" content={`${character.name} - The ${character.role}`} />
+                <meta property="og:description" content="Manage your Quest RPG character sheet with Keeper." />
+                <meta property="og:image" content={character.profileImage || "/defaultpfp.png"} />
+                <meta property="og:type" content="website" />
+                
+                {/* Twitter */}
+                <meta name="twitter:card" content="summary_large_image" />
+                <meta name="twitter:title" content={`${character.name} | Keeper`} />
+                <meta name="twitter:description" content={`The ${character.role}`} />
+            </Helmet>
+        )}
             <Navbar />
             <Dialog
                 open={!!imageToCrop}
