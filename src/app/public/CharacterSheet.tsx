@@ -30,6 +30,7 @@ import {
     doc,
     getDoc,
     onSnapshot,
+    setDoc,
     updateDoc,
 } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
@@ -96,6 +97,7 @@ function CharacterSheet() {
     const { showAlert } = useGlobalAlert();
 
     const [character, setCharacter] = useState<any>(null);
+    const [notes, setNotes] = useState<Note[]>([]);
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
 
@@ -162,6 +164,23 @@ function CharacterSheet() {
 
         return () => unsubscribe();
     }, [character]);
+
+    useEffect(() => {
+        if (!id || !isOwner || !currentUser) {
+            setNotes([]); 
+            return;
+        }
+    
+        const notesRef = doc(db, "characters", id, "private", "notes");
+        
+        const unsubscribe = onSnapshot(notesRef, (docSnap) => {
+            if (docSnap.exists()) {
+                setNotes(docSnap.data().content || []);
+            }
+        });
+    
+        return () => unsubscribe();
+    }, [id, isOwner, currentUser]);
 
     const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
@@ -349,14 +368,21 @@ function CharacterSheet() {
     };
 
     const handleUpdateNotes = async (newNotes: Note[]) => {
-        if (!character || !id) return;
-
-        setCharacter((prev: any) => ({
-            ...prev,
-            notes: newNotes,
-        }));
-
-        await updateDoc(doc(db, "characters", id), { notes: newNotes });
+        if (!id || !isOwner) return;
+    
+        try {
+            const notesRef = doc(db, "characters", id, "private", "notes");
+            
+            await setDoc(notesRef, { 
+                content: newNotes,
+                updatedAt: new Date() 
+            }, { merge: true });
+    
+            setNotes(newNotes); 
+        } catch (error) {
+            console.error("Could not save private notes.", error);
+            showAlert("Could not save private notes.", "Security Error", "error");
+        }
     };
 
     const rollD20 = () => {
@@ -639,7 +665,7 @@ function CharacterSheet() {
                             {/* Notes */}
                             <NotesManager
                                 isOwner={isOwner}
-                                notes={character.notes || []}
+                                notes={notes}
                                 onUpdateNotes={handleUpdateNotes}
                             />
                         </div>
