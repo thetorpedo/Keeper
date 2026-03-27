@@ -141,7 +141,7 @@ const Navbar = () => {
       <div
         className={`${isMobileMenuOpen ? "block" : "hidden"} lg:hidden bg-black text-white`}
       >
-        <div className="px-4 pt-2 pb-6 space-y-2 font-alegraya-sans lowercase text-xl">
+        <div className="px-4 pt-2 pb-6 mb-10 space-y-2 font-alegraya-sans lowercase text-xl">
           {isUserLoggedIn && (
             <div className="py-4 border-b border-white/10 mb-2">
               <p className="text-gray-400 text-sm">welcome back,</p>

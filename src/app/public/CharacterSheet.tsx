@@ -1,54 +1,21 @@
 import { useGlobalAlert } from "@/app/contexts/alertContext/AlertProvider.tsx";
 import { useAuth } from "@/app/contexts/authContext/AuthProvider.tsx";
 import d20Icon from "@/assets/d20.png";
-import defaultPfp from "@/assets/defaultpfp.png";
-import AbilitySelector from "@/components/sheet/ability-selector.tsx";
-import ItemSelector from "@/components/sheet/item-selector.tsx";
-import NotesManager, { type Note } from "@/components/sheet/notes-manager.tsx";
+import { DesktopSheet } from "@/components/sheet/desktop-sheet.tsx";
+import { useCharacter } from "@/components/sheet/hooks/useCharacter.tsx";
+import { useDiceRoller } from "@/components/sheet/hooks/useDiceRoller.tsx";
+import { MobileSheet } from "@/components/sheet/mobile-sheet.tsx";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert.tsx";
-import {
-    Dialog,
-    DialogClose,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
-} from "@/components/ui/dialog.tsx";
-import {
-    Tabs,
-    TabsContent,
-    TabsList,
-    TabsTrigger,
-} from "@/components/ui/tabs.tsx";
-import { bookAbilities } from "@/data/abilities/index.ts";
-import type { Ability } from "@/data/interface.ts";
-import { bookItems } from "@/data/items/index.ts";
-import {
-    deleteDoc,
-    doc,
-    getDoc,
-    onSnapshot,
-    setDoc,
-    updateDoc,
-} from "firebase/firestore";
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog.tsx";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import { Check, CircleArrowLeft, Copy, Pencil, Upload } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import CropperOriginal from "react-easy-crop";
 import { Helmet } from "react-helmet-async";
-import { BsFillBackpack2Fill, BsFillFileTextFill } from "react-icons/bs";
-import { FaUser } from "react-icons/fa6";
-import { RiShareFill, RiSparkling2Fill } from "react-icons/ri";
-import { Link, useNavigate, useParams } from "react-router-dom";
-import CharacterProfile from "../../components/sheet/character-profile.tsx";
-import Stat from "../../components/sheet/stats.tsx";
-import Card from "../../components/sheet/utils/card.tsx";
+import { useParams } from "react-router-dom";
 import Footer from "../../components/ui/footer.tsx";
 import Navbar from "../../components/ui/navbar.tsx";
 import Button from "../../components/ui/questbutton.tsx";
-import { db, storage } from "../firebase/firebase.ts";
+import { storage } from "../firebase/firebase.ts";
 
 const Cropper = CropperOriginal as any;
 
@@ -60,32 +27,14 @@ const getCroppedImg = (imageSrc: string, pixelCrop: any): Promise<Blob> => {
         image.onload = () => {
             const canvas = document.createElement("canvas");
             const ctx = canvas.getContext("2d");
-
             if (!ctx) return reject(new Error("No 2d context"));
-
             canvas.width = pixelCrop.width;
             canvas.height = pixelCrop.height;
-
-            ctx.drawImage(
-                image,
-                pixelCrop.x,
-                pixelCrop.y,
-                pixelCrop.width,
-                pixelCrop.height,
-                0,
-                0,
-                pixelCrop.width,
-                pixelCrop.height,
-            );
-
-            canvas.toBlob(
-                (blob) => {
-                    if (!blob) return reject(new Error("Canvas is empty"));
-                    resolve(blob);
-                },
-                "image/jpeg",
-                0.7,
-            );
+            ctx.drawImage(image, pixelCrop.x, pixelCrop.y, pixelCrop.width, pixelCrop.height, 0, 0, pixelCrop.width, pixelCrop.height);
+            canvas.toBlob((blob) => {
+                if (!blob) return reject(new Error("Canvas is empty"));
+                resolve(blob);
+            }, "image/jpeg", 0.7);
         };
         image.onerror = (error) => reject(error);
     });
@@ -94,24 +43,10 @@ const getCroppedImg = (imageSrc: string, pixelCrop: any): Promise<Blob> => {
 function CharacterSheet() {
     const { id } = useParams();
     const { currentUser } = useAuth();
-
     const { showAlert } = useGlobalAlert();
-
-    const [character, setCharacter] = useState<any>(null);
-    const [notes, setNotes] = useState<Note[]>([]);
-    const [loading, setLoading] = useState(true);
-    const navigate = useNavigate();
-
-    const [isRolling, setIsRolling] = useState(false);
-    const [rollResult, setRollResult] = useState(0);
-
-    const [userCustomAbilities, setUserCustomAbilities] = useState<Ability[]>(
-        [],
-    );
-    const [userCustomItems, setUserCustomItems] = useState<Ability[]>([]);
-
-    const rollTimeoutRef = useRef<any>(null);
-    const [spinKey, setSpinKey] = useState(0);
+    
+    const characterData = useCharacter(id, currentUser);
+    const diceData = useDiceRoller();
 
     const [uploadingImage, setUploadingImage] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
@@ -120,1129 +55,153 @@ function CharacterSheet() {
     const [zoom, setZoom] = useState(1);
     const [croppedAreaPixels, setCroppedAreaPixels] = useState<any>(null);
 
-    const isOwner = Boolean(
-        currentUser && character && character.ownerId === currentUser.uid,
-    );
-
-    const [isCopied, setIsCopied] = useState(false);
-
-    useEffect(() => {
-        const fetchCharacter = async () => {
-            if (!id) return;
-            try {
-                const docRef = doc(db, "characters", id);
-                const docSnap = await getDoc(docRef);
-
-                if (docSnap.exists()) {
-                    setCharacter(docSnap.data());
-                } else {
-                    console.log("Ficha não encontrada!");
-                }
-            } catch (error) {
-                console.error("Erro ao buscar personagem:", error);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchCharacter();
-    }, [id]);
-
-    useEffect(() => {
-        const ownerId =
-            character?.ownerId || character?.userId || character?.uid;
-
-        if (!ownerId) return;
-
-        const docRef = doc(db, "users", ownerId);
-        const unsubscribe = onSnapshot(docRef, (docSnap) => {
-            if (docSnap.exists()) {
-                const data = docSnap.data();
-                setUserCustomAbilities(data.custom_abilities || []);
-                setUserCustomItems(data.custom_items || []);
-            }
-        });
-
-        return () => unsubscribe();
-    }, [character]);
-
-    useEffect(() => {
-        if (!id || !isOwner || !currentUser) {
-            setNotes([]); 
-            return;
-        }
-    
-        const notesRef = doc(db, "characters", id, "private", "notes");
-        
-        const unsubscribe = onSnapshot(notesRef, (docSnap) => {
-            if (docSnap.exists()) {
-                setNotes(docSnap.data().content || []);
-            }
-        });
-    
-        return () => unsubscribe();
-    }, [id, isOwner, currentUser]);
-
     const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
         if (!file) return;
-
         if (!file.type.startsWith("image/")) {
-            showAlert(
-                "Please upload a valid image file.",
-                "Invalid Format",
-                "error",
-            );
+            showAlert("Please upload a valid image file.", "Invalid Format", "error");
             return;
         }
-
-        const imageUrl = URL.createObjectURL(file);
-        setImageToCrop(imageUrl);
-
+        setImageToCrop(URL.createObjectURL(file));
         if (fileInputRef.current) fileInputRef.current.value = "";
-    };
-
-    const onCropComplete = (_croppedArea: any, croppedAreaPixels: any) => {
-        setCroppedAreaPixels(croppedAreaPixels);
     };
 
     const handleCropAndUpload = async () => {
         if (!imageToCrop || !croppedAreaPixels || !id) return;
-
         try {
             setUploadingImage(true);
-
-            const croppedBlob = await getCroppedImg(
-                imageToCrop,
-                croppedAreaPixels,
-            );
-
+            const croppedBlob = await getCroppedImg(imageToCrop, croppedAreaPixels);
             const imageRef = ref(storage, `characters/${id}/profile.jpg`);
             await uploadBytes(imageRef, croppedBlob);
             const downloadURL = await getDownloadURL(imageRef);
-
-            await updateCharacterField("profileImage", downloadURL);
-
+            await characterData.updateField("profileImage", downloadURL);
             setImageToCrop(null);
         } catch (error) {
-            showAlert(
-                "Failed to upload image. Please try again.",
-                "Upload Error",
-                "error",
-            );
+            showAlert("Failed to upload image. Please try again.", "Upload Error", "error");
         } finally {
             setUploadingImage(false);
         }
     };
 
-    if (loading) {
+    if (characterData.loading) {
         return (
             <div className="flex flex-col min-h-screen bg-white">
                 <Navbar />
-                <div className="flex-1 flex items-center justify-center font-alegraya text-2xl">
-                    Loading Character...
-                </div>
+                <div className="flex-1 flex items-center justify-center font-alegraya text-2xl">Loading Character...</div>
                 <Footer />
             </div>
         );
     }
 
-    if (!character) {
+    if (!characterData.character) {
         return (
             <div className="flex flex-col h-screen bg-white">
                 <Navbar />
-                <div className="flex-1 flex items-center justify-center font-alegraya text-2xl text-red-500">
-                    Character not found!
-                </div>
+                <div className="flex-1 flex items-center justify-center font-alegraya text-2xl text-red-500">Character not found!</div>
                 <Footer />
             </div>
         );
     }
 
-    const allAbilities = [...bookAbilities, ...userCustomAbilities];
-    const allItems = [...bookItems, ...userCustomItems];
-
-    const myAbilities = allAbilities.filter((ability) =>
-        character.abilities?.includes(ability.id),
-    );
-
-    const myItems = allItems.filter((item) =>
-        character.items?.includes(item.id),
-    );
-
-    const usedSlots = myItems.reduce(
-        (total, item) => total + (item.slots || 1),
-        0,
-    );
-
-    const removeAbility = async (abilityId: string) => {
-        if (!character || !id) return;
-        const updatedAbilities = character.abilities.filter(
-            (a: string) => a !== abilityId,
-        );
-        setCharacter({ ...character, abilities: updatedAbilities });
-        await updateDoc(doc(db, "characters", id), {
-            abilities: updatedAbilities,
-        });
-    };
-
-    const removeItem = async (itemId: string) => {
-        if (!character || !id) return;
-        const updatedItems = character.items.filter(
-            (i: string) => i !== itemId,
-        );
-        setCharacter({ ...character, items: updatedItems });
-        await updateDoc(doc(db, "characters", id), { items: updatedItems });
-    };
-
-    const toggleAbility = async (abilityId: string) => {
-        if (!character || !id) return;
-        const currentAbilities = character.abilities || [];
-        const updatedAbilities = currentAbilities.includes(abilityId)
-            ? currentAbilities.filter((a: string) => a !== abilityId)
-            : [...currentAbilities, abilityId];
-
-        setCharacter({ ...character, abilities: updatedAbilities });
-        await updateDoc(doc(db, "characters", id), {
-            abilities: updatedAbilities,
-        });
-    };
-
-    const toggleItem = async (itemId: string) => {
-        if (!character || !id) return;
-        const currentItems = character.items || [];
-        const updatedItems = currentItems.includes(itemId)
-            ? currentItems.filter((i: string) => i !== itemId)
-            : [...currentItems, itemId];
-
-        setCharacter({ ...character, items: updatedItems });
-        await updateDoc(doc(db, "characters", id), { items: updatedItems });
-    };
-
-    const updateCharacterField = async (field: string, newValue: string) => {
-        if (!character || !id) return;
-        if (newValue.replace(/\s+/g, "") === "") {
-            newValue = field;
-            newValue = newValue.charAt(0).toUpperCase() + newValue.slice(1);
-        }
-        setCharacter((prev: any) => ({
-            ...prev,
-            [field]: newValue,
-        }));
-        await updateDoc(doc(db, "characters", id), { [field]: newValue });
-    };
-
-    const updateCharacterStat = async (field: string, newValue: number) => {
-        if (!character || !id) return;
-
-        setCharacter((prev: any) => ({
-            ...prev,
-            [field]: newValue,
-        }));
-
-        await updateDoc(doc(db, "characters", id), { [field]: newValue });
-    };
-
-    const handleDeductAP = async (cost: number) => {
-        if (!character || !id) return;
-
-        const currentAP = character.ap ?? 10;
-        const newAP = currentAP - cost;
-
-        await updateCharacterStat("ap", newAP);
-    };
-
-    const deleteCharacter = async () => {
-        try {
-            if (!id) return;
-            await deleteDoc(doc(db, "characters", id, "private", "notes"));
-            await deleteDoc(doc(db, "characters", id));
-
-            navigate("/view");
-        } catch (error) {
-            console.error("Error deleting character:", error);
-            showAlert(
-                "There was an error deleting the character. Please try again.",
-                "Error",
-                "error",
-            );
-        }
-    };
-
-    const handleUpdateNotes = async (newNotes: Note[]) => {
-        if (!id || !isOwner) return;
-    
-        try {
-            const notesRef = doc(db, "characters", id, "private", "notes");
-            
-            await setDoc(notesRef, { 
-                content: newNotes,
-                updatedAt: new Date() 
-            }, { merge: true });
-    
-            setNotes(newNotes); 
-        } catch (error) {
-            console.error("Could not save private notes.", error);
-            showAlert("Could not save private notes.", "Security Error", "error");
-        }
-    };
-
-    const rollD20 = () => {
-        if (rollTimeoutRef.current) {
-            clearTimeout(rollTimeoutRef.current);
-        }
-
-        setSpinKey((prev) => prev + 1);
-        setIsRolling(true);
-        setRollResult(Math.floor(Math.random() * 20) + 1);
-
-        rollTimeoutRef.current = setTimeout(() => {
-            setIsRolling(false);
-        }, 5000);
-    };
-
-    const handleCopyLink = () => {
-        navigator.clipboard.writeText(window.location.href);
-        setIsCopied(true);
-        setTimeout(() => setIsCopied(false), 2000);
+    const sheetActions = {
+        updateField: characterData.updateField,
+        updateStat: characterData.updateStat,
+        handleDeductAP: characterData.handleDeductAP,
+        toggleAbility: characterData.toggleAbility,
+        toggleItem: characterData.toggleItem,
+        handleUpdateNotes: characterData.handleUpdateNotes,
+        deleteCharacter: characterData.deleteCharacter,
+        rollD20: diceData.rollD20,
+        handleFileSelect: handleFileSelect
     };
 
     return (
         <div className="flex max-sm:justify-start relative flex-col justify-between items-center bg-white min-h-screen w-full">
-            {character && (
             <Helmet>
-                <title>{`${character.name} | Keeper`}</title>
-                <meta name="description" content={`View the character sheet of ${character.name} in Keeper.`} />
-                
-                {/* Open Graph (WhatsApp, Discord, Facebook) */}
-                <meta property="og:title" content={`${character.name} - The ${character.role}`} />
+                <title>{`${characterData.character.name} | Keeper`}</title>
+                <meta name="description" content={`View the character sheet of ${characterData.character.name} in Keeper.`} />
+                <meta property="og:title" content={`${characterData.character.name} - The ${characterData.character.role}`} />
                 <meta property="og:description" content="Manage your Quest RPG character sheet with Keeper." />
-                <meta property="og:image" content={character.profileImage || "/defaultpfp.png"} />
-                <meta property="og:type" content="website" />
-                
-                {/* Twitter */}
-                <meta name="twitter:card" content="summary_large_image" />
-                <meta name="twitter:title" content={`${character.name} | Keeper`} />
-                <meta name="twitter:description" content={`The ${character.role}`} />
+                <meta property="og:image" content={characterData.character.profileImage || "/defaultpfp.png"} />
             </Helmet>
-        )}
+            
             <Navbar />
-            <Dialog
-                open={!!imageToCrop}
-                onOpenChange={(open) => !open && setImageToCrop(null)}
-            >
+
+            {/* Img Cropper */}
+            <Dialog open={!!imageToCrop} onOpenChange={(open) => !open && setImageToCrop(null)}>
                 <DialogContent className="sm:max-w-md bg-white">
                     <DialogHeader>
-                        <DialogTitle className="font-alegraya text-3xl font-extrabold">
-                            Adjust Picture
-                        </DialogTitle>
+                        <DialogTitle className="font-alegraya text-3xl font-extrabold">Adjust Picture</DialogTitle>
                     </DialogHeader>
-
                     <div className="relative w-full h-72 bg-black rounded-lg overflow-hidden">
-                        <Cropper
-                            image={imageToCrop || ""}
-                            crop={crop}
-                            zoom={zoom}
-                            aspect={1}
-                            onCropChange={setCrop}
-                            onCropComplete={onCropComplete}
-                            onZoomChange={setZoom}
-                        />
+                        <Cropper image={imageToCrop || ""} crop={crop} zoom={zoom} aspect={1} onCropChange={setCrop} onCropComplete={(_a:any, p:any) => setCroppedAreaPixels(p)} onZoomChange={setZoom} />
                     </div>
-
                     <div className="flex flex-col gap-1 mt-2">
-                        <label className="text-base font-alegraya-sans font-bold lowercase">
-                            Zoom
-                        </label>
-                        <input
-                            type="range"
-                            value={zoom}
-                            min={1}
-                            max={3}
-                            step={0.1}
-                            onChange={(e) => setZoom(Number(e.target.value))}
-                            className="w-full accent-purple"
-                        />
+                        <label className="text-base font-alegraya-sans font-bold lowercase">Zoom</label>
+                        <input type="range" value={zoom} min={1} max={3} step={0.1} onChange={(e) => setZoom(Number(e.target.value))} className="w-full accent-purple" />
                     </div>
-
                     <DialogFooter className="mt-4 sm:justify-between gap-4">
-                        <Button
-                            onClick={() => setImageToCrop(null)}
-                            className="bg-transparent shadow-none text-black hover:shadow-btn!"
-                        >
-                            Cancel
-                        </Button>
-                        <Button
-                            onClick={handleCropAndUpload}
-                            className="bg-purple text-black"
-                            disabled={uploadingImage}
-                        >
-                            {uploadingImage ? "Saving..." : "Save Image"}
-                        </Button>
+                        <Button onClick={() => setImageToCrop(null)} className="bg-transparent shadow-none text-black hover:shadow-btn!">Cancel</Button>
+                        <Button onClick={handleCropAndUpload} className="bg-purple text-black" disabled={uploadingImage}>{uploadingImage ? "Saving..." : "Save Image"}</Button>
                     </DialogFooter>
                 </DialogContent>
             </Dialog>
 
-            <Alert
-                className={`
-          fixed bottom-5 z-120! w-fit text-center shadow-btn text-xl sm:text-3xl p-2 mx-2 max-sm:bottom-20 sm:p-5
-          transition-all duration-500 ease-in-out
-          font-alegraya
-          ${
-              isRolling
-                  ? "translate-y-0 opacity-100 visible"
-                  : "translate-y-20 opacity-0 invisible"
-          }
-        `}
-            >
+            {/* Dice Roll Alert */}
+            <Alert className={`fixed bottom-5 z-120! w-fit text-center shadow-btn text-xl sm:text-3xl p-2 mx-2 max-sm:bottom-20 sm:p-5 transition-all duration-500 ease-in-out font-alegraya ${diceData.isRolling ? "translate-y-0 opacity-100 visible" : "translate-y-20 opacity-0 invisible"}`}>
                 <AlertTitle>
-                    You rolled{" "}
-                    {[8, 11, 18].includes(rollResult) ? "an  " : "a  "}
-                    <span className="font-extrabold font-alegraya-sans text-2xl sm:text-4xl mx-1 -mt-1">
-                        {rollResult}
-                    </span>
-                    {"  "}-
+                    You rolled {[8, 11, 18].includes(diceData.rollResult) ? "an  " : "a  "}
+                    <span className="font-extrabold font-alegraya-sans text-2xl sm:text-4xl mx-1 -mt-1">{diceData.rollResult}</span> -
                     <span className="font-bold">
-                        {rollResult === 20 && " Triumph!"}
-                        {rollResult >= 11 && rollResult <= 19 && " Success"}
-                        {rollResult >= 6 && rollResult <= 10 && " Tough Choice"}
-                        {rollResult >= 2 && rollResult <= 5 && " Failure"}
-                        {rollResult === 1 && " Catastrophe"}
+                        {diceData.rollResult === 20 && " Triumph!"}
+                        {diceData.rollResult >= 11 && diceData.rollResult <= 19 && " Success"}
+                        {diceData.rollResult >= 6 && diceData.rollResult <= 10 && " Tough Choice"}
+                        {diceData.rollResult >= 2 && diceData.rollResult <= 5 && " Failure"}
+                        {diceData.rollResult === 1 && " Catastrophe"}
                     </span>
                 </AlertTitle>
                 <AlertDescription className="text-center w-full text-sm sm:text-base whitespace-pre-line">
-                    {rollResult === 20 &&
-                        "This is an exciting moment!\nYou automatically succeed at what you were trying to do, and you may even find added fortune.\nIf you’re dealing damage, double it."}
-                    {rollResult >= 11 &&
-                        rollResult <= 19 &&
-                        "You accomplish what you were trying to do without any compromises.\nIf you’re dealing damage, you deal the standard amount."}
-                    {rollResult >= 6 &&
-                        rollResult <= 10 &&
-                        "You succeed in your action, but there’s a cost.\nThe Guide will give you a choice between two setbacks."}
-                    {rollResult >= 2 &&
-                        rollResult <= 5 &&
-                        "You fail your intended action and face a setback of the Guide’s choice.\nYou might lose equipment, take damage from an enemy counterattack, or face some other misfortune."}
-                    {rollResult === 1 &&
-                        "Oh no.\nYou automatically fail, and you may suffer a severe setback."}
+                    {diceData.rollResult === 20 && "This is an exciting moment!\nYou automatically succeed at what you were trying to do, and you may even find added fortune.\nIf you’re dealing damage, double it."}
+                    {diceData.rollResult >= 11 && diceData.rollResult <= 19 && "You accomplish what you were trying to do without any compromises.\nIf you’re dealing damage, you deal the standard amount."}
+                    {diceData.rollResult >= 6 && diceData.rollResult <= 10 && "You succeed in your action, but there’s a cost.\nThe Guide will give you a choice between two setbacks."}
+                    {diceData.rollResult >= 2 && diceData.rollResult <= 5 && "You fail your intended action and face a setback of the Guide’s choice.\nYou might lose equipment, take damage from an enemy counterattack, or face some other misfortune."}
+                    {diceData.rollResult === 1 && "Oh no.\nYou automatically fail, and you may suffer a severe setback."}
                 </AlertDescription>
             </Alert>
-            
-            
-            {/* Desktop */}
-            <div className="hidden md:block w-full mx-5">
-                <Button
-                    onClick={rollD20}
-                    className={`p-4! fixed bottom-10 right-10 z-10 bg-white `}
-                >
-                    <img
-                        key={`roll-${spinKey}`}
-                        src={d20Icon}
-                        alt="Roll d20 die"
-                        className={`${spinKey > 0 ? "animate-[spin_0.7s_ease-out]" : ""} w-12 h-12 rounded-full`}
-                    />
+
+            {/* Character Sheets */}
+            <main className="flex-1 w-full flex flex-col items-center">
+                <DesktopSheet 
+                    character={characterData.character}
+                    isOwner={characterData.isOwner}
+                    notes={characterData.notes}
+                    myAbilities={characterData.myAbilities}
+                    myItems={characterData.myItems}
+                    usedSlots={characterData.usedSlots}
+                    uploadingImage={uploadingImage}
+                    fileInputRef={fileInputRef}
+                    actions={sheetActions}
+                />
+                <MobileSheet 
+                    character={characterData.character}
+                    isOwner={characterData.isOwner}
+                    notes={characterData.notes}
+                    myAbilities={characterData.myAbilities}
+                    myItems={characterData.myItems}
+                    usedSlots={characterData.usedSlots}
+                    uploadingImage={uploadingImage}
+                    fileInputRef={fileInputRef}
+                    actions={sheetActions}
+                    spinKey={diceData.spinKey}
+                />
+            </main>
+
+            <span className="max-md:hidden w-full"><Footer /></span>
+
+            <div className="hidden md:block">
+                <Button onClick={diceData.rollD20} className={`p-4! fixed bottom-10 right-10 z-10 bg-white `}>
+                    <img key={`roll-${diceData.spinKey}`} src={d20Icon} alt="Roll d20 die" className={`${diceData.spinKey > 0 ? "animate-[spin_0.7s_ease-out]" : ""} w-12 h-12 rounded-full`} />
                 </Button>
-                <div className="my-10 max-w-280 w-screen px-5 mx-auto flex flex-col gap-3 items-center">
-                    <div className="w-full">
-                    <Link
-                        to="/view"
-                        className="text-gray-400 flex flex-row gap-2 w-fit"
-                    >
-                        <CircleArrowLeft />
-                        <span className="uppercase text-xl font-medium font-alegraya-sans">
-                            Back
-                        </span>
-                    </Link>
-                    </div>
-                    
-                    <div className="flex flex-row w-full justify-between gap-2 items-center align-middle pb-5 border-b ">
-                        <div className="flex flex-col min-w-0 shrink">
-                            <h1 className="font-alegraya font-bold truncate text-5xl">
-                                {character.name}
-                            </h1>
-                            <h2 className="font-alegraya-sans text-gray-500 uppercase font-medium text-xl">
-                                The {character.role}
-                            </h2>
-                        </div>
-                        <div>
-                            <Dialog>
-                                <DialogTrigger asChild>
-                                    <Button className="font-medium flex flex-row justify-center items-center py-3 mr-1">
-                                        <RiShareFill className="inline-block mr-3" />
-                                        <span>Share</span>
-                                    </Button>
-                                </DialogTrigger>
-
-                                <DialogContent className="sm:max-w-md p-6 gap-0 bg-white border- border-black rounded-xl">
-                                    <DialogHeader className="mb-2">
-                                        <DialogTitle className="text-3xl font-alegraya font-extrabold text-black">
-                                            Share this character!
-                                        </DialogTitle>
-                                        <DialogDescription className="text-lg font-alegraya-sans text-gray-600">
-                                            Anyone with this link can view this
-                                            character.
-                                        </DialogDescription>
-                                    </DialogHeader>
-
-                                    <div className="flex items-center w-full mt-2 mb-4 border border-black overflow-hidden bg-gray-50 transition-all">
-                                        <input
-                                            className=" flex-0 shrink bg-transparent  px-3 py-2 font-ovo text-[17px] text-gray-700 outline-none cursor-text truncate"
-                                            readOnly
-                                            value={window.location.href
-                                                .replace("http://", "")
-                                                .replace("https://", "")}
-                                        />
-                                        <button
-                                            onClick={handleCopyLink}
-                                            className={`px-4 py-3 font-bold grow font-alegraya-sans border-l  border-black transition-colors flex items-center gap-2 cursor-pointer w-28 justify-center
-                        ${isCopied ? "bg-purple text-black hover:bg-purple/80" : "bg-purple text-black hover:bg-purple/80"}
-                      `}
-                                        >
-                                            {isCopied ? (
-                                                <Check className="size-5" />
-                                            ) : (
-                                                <Copy className="size-4" />
-                                            )}
-                                            {isCopied ? "COPIED!" : "COPY"}
-                                        </button>
-                                    </div>
-
-                                    <DialogFooter className="sm:justify-start">
-                                        <p className="text-base/tight font-ovo text-gray-500 italic">
-                                            Viewers cannot edit any character
-                                            information or read their notes.
-                                        </p>
-                                    </DialogFooter>
-                                </DialogContent>
-                            </Dialog>
-                        </div>
-                    </div>
-                    <div className="grid grid-cols-10 w-full gap-2">
-                        <div className="col-span-3 flex flex-col w-full gap-2">
-                            {/* Stats */}
-                            <section className="border border-gray-400 rounded-lg p-4 flex flex-col gap-2">
-                                <div className="w-full flex aspect-square justify-center items-center border mb-3 rounded-lg overflow-hidden">
-                                    {uploadingImage ? (
-                                        <span className="font-alegraya-sans lowercase text-base font-bold animate-pulse">
-                                            Uploading...
-                                        </span>
-                                    ) : (
-                                        <div
-                                            className={`relative ${isOwner && "group"} w-full h-full overflow-hidden`}
-                                        >
-                                            {/* Character Picture */}
-                                            <img
-                                                src={
-                                                    character.profileImage ||
-                                                    defaultPfp
-                                                }
-                                                className="object-cover w-full h-full transition-all group-hover:scale-105 group-hover:opacity-90"
-                                                alt={`Profile picture of ${character.name}`}
-                                            />
-
-                                            {/* Overlay */}
-                                            <div
-                                                className="absolute inset-0 bg-linear-to-t  from-black/40 to-transparent 
-                                    opacity-0 group-hover:opacity-100 transition-opacity duration-300
-                                    flex items-center justify-center"
-                                            >
-                                                <Button
-                                                    type="button"
-                                                    onClick={() =>
-                                                        fileInputRef.current?.click()
-                                                    }
-                                                    className={`flex items-center bg-white border px-4 py-2 cursor-pointer text-sm font-bold font-alegraya-sans 
-                                      uppercase tracking-wider transition-all ${!isOwner && "hidden"}`}
-                                                >
-                                                    <Upload className="size-4 mr-2" />
-                                                    Upload Image
-                                                </Button>
-                                            </div>
-                                        </div>
-                                    )}
-
-                                    <input
-                                        type="file"
-                                        ref={fileInputRef}
-                                        onChange={handleFileSelect}
-                                        accept="image/*"
-                                        className="hidden"
-                                    />
-                                </div>
-                                <Stat
-                                    id="hp"
-                                    isOwner={isOwner}
-                                    name="HP"
-                                    value={character.hp ?? 10}
-                                    onUpdate={updateCharacterStat}
-                                />
-                                <Stat
-                                    id="ap"
-                                    isOwner={isOwner}
-                                    name="AP"
-                                    value={character.ap ?? 10}
-                                    onUpdate={updateCharacterStat}
-                                />
-                            </section>
-                            {/* Notes */}
-                            <NotesManager
-                                isOwner={isOwner}
-                                notes={notes}
-                                onUpdateNotes={handleUpdateNotes}
-                            />
-                        </div>
-                        <div className="col-span-7 flex flex-col w-full gap-2">
-                            {/* Characteristics */}
-                            <section className="border border-gray-400 rounded-lg p-4">
-                                <CharacterProfile
-                                    isOwner={isOwner}
-                                    characterData={character}
-                                    updateField={updateCharacterField}
-                                />
-                            </section>
-                            {/* Abilities & Inventory */}
-                            <section className="border border-gray-400 rounded-lg w-full gap-9 flex items-between flex-col p-4">
-                                <div className="flex flex-row gap-5 justify-between">
-                                    <div className="flex flex-row justify-between w-full items-center">
-                                        <div className="pl-1 font-alegraya-sans lowercase font-semibold text-2xl">
-                                            Abilities
-                                        </div>
-                                        <div className="mr-1">
-                                            {isOwner && (
-                                                <Dialog modal={true}
-                                                >
-                                                    <DialogTrigger asChild>
-                                                        <Button className="flex text-lg py-0.5! items-center cursor-pointer">
-                                                            <Pencil className="size-4 mr-2" />{" "}
-                                                            Edit
-                                                        </Button>
-                                                    </DialogTrigger>
-                                                    <DialogContent 
-                                                        onWheel={(e) => {
-                                                            e.stopPropagation();
-                                                        }}
-                                                        onTouchMove={(e) => {
-                                                            e.stopPropagation();
-                                                        }}
-                                                        className="w-fit max-w-[90vw]! max-h-[90vh] overflow-y-auto p-10 bg-white">
-                                                        <AbilitySelector
-                                                            selectedAbilities={
-                                                                character.abilities ||
-                                                                []
-                                                            }
-                                                            onToggleAbility={
-                                                                toggleAbility
-                                                            }
-                                                        />
-                                                    </DialogContent>
-                                                </Dialog>
-                                            )}
-                                        </div>
-                                    </div>
-                                    <div className="flex flex-row justify-between w-full items-center">
-                                        <div className="pl-1 relative font-alegraya-sans lowercase font-semibold text-2xl">
-                                            Inventory
-                                            <div className="absolute top-6 font-alegraya-sans opacity-40 lowercase text-lg">{`(${usedSlots}/12)`}</div>
-                                        </div>
-
-                                        <div className="mr-1">
-                                            {isOwner && (
-                                                <Dialog modal={true}>
-                                                    <DialogTrigger asChild>
-                                                        <Button className="flex text-lg py-0.5! items-center cursor-pointer">
-                                                            <Pencil className="size-4 mr-2" />{" "}
-                                                            Edit
-                                                        </Button>
-                                                    </DialogTrigger>
-                                                    <DialogContent 
-                                                        onWheel={(e) => {
-                                                            e.stopPropagation();
-                                                        }}
-                                                        onTouchMove={(e) => {
-                                                            e.stopPropagation();
-                                                        }}
-                                                        className="w-fit max-w-[90vw]! max-h-[90vh] overflow-y-auto p-10 bg-white">
-                                                        <ItemSelector
-                                                            selectedItems={
-                                                                character.items ||
-                                                                []
-                                                            }
-                                                            onToggleItem={
-                                                                toggleItem
-                                                            }
-                                                        />
-                                                    </DialogContent>
-                                                </Dialog>
-                                            )}
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="flex flex-row gap-4 justify-between">
-                                    <div className="flex flex-col gap-4 justify-start h-full w-1/2 ">
-                                        <div className="p-5 bg-gray-100 rounded-lg w-full h-full border min-h-125 border-gray-300">
-                                            <div className="mt-23 flex-col grow-0">
-                                                {myAbilities.length === 0 && (
-                                                    <p className="text-gray-500 font-alegraya-sans text-center">
-                                                        No abilities yet.
-                                                    </p>
-                                                )}
-                                                {myAbilities.map(
-                                                    (ability, index, array) => (
-                                                        <Card
-                                                            key={ability.id}
-                                                            ability={ability}
-                                                            editing={false}
-                                                            isSelected={true}
-                                                            isOwner={isOwner}
-                                                            onClick={() =>
-                                                                removeAbility(
-                                                                    ability.id,
-                                                                )
-                                                            }
-                                                            onRoll={rollD20}
-                                                            isLast={
-                                                                index ===
-                                                                array.length - 1
-                                                            }
-                                                            onDeductAP={
-                                                                handleDeductAP
-                                                            }
-                                                        />
-                                                    ),
-                                                )}
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="flex flex-col gap-4 justify-start h-full w-1/2">
-                                        <div className="p-5 bg-gray-100 rounded-lg w-full h-full border min-h-125 border-gray-300 ">
-                                            <div className="mt-23 flex-col grow-0">
-                                                {myItems.length === 0 && (
-                                                    <p className="text-gray-500 font-alegraya-sans text-center">
-                                                        No items yet.
-                                                    </p>
-                                                )}
-                                                {myItems.map(
-                                                    (item, index, array) => (
-                                                        <Card
-                                                            key={item.id}
-                                                            ability={item}
-                                                            editing={false}
-                                                            isSelected={true}
-                                                            isOwner={isOwner}
-                                                            onRoll={rollD20}
-                                                            onClick={() =>
-                                                                removeItem(
-                                                                    item.id,
-                                                                )
-                                                            }
-                                                            isLast={
-                                                                index ===
-                                                                array.length - 1
-                                                            }
-                                                            onDeductAP={
-                                                                handleDeductAP
-                                                            }
-                                                        />
-                                                    ),
-                                                )}
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </section>
-                        </div>
-                    </div>
-                    {isOwner && (
-                        <Dialog>
-                            <DialogTrigger asChild>
-                                <button className="font-alegraya-sans lowercase text-left w-full ml-1 cursor-pointer hover:underline transition-all hover:text-red-400 font-medium text-xl text-red-500 ">
-                                    Delete this character
-                                </button>
-                            </DialogTrigger>
-                            <DialogContent className="sm:max-w-md">
-                                <DialogHeader>
-                                    <DialogTitle>
-                                        Are you sure you want to delete this
-                                        character?
-                                    </DialogTitle>
-                                    <DialogDescription className="text-base pb-5">
-                                        This action CANNOT be undone!
-                                    </DialogDescription>
-                                </DialogHeader>
-                                <DialogFooter className="sm:justify-between">
-                                    <DialogClose asChild>
-                                        <Button
-                                            className="bg-red-400 text-white"
-                                            onClick={deleteCharacter}
-                                        >
-                                            Delete
-                                        </Button>
-                                    </DialogClose>
-                                    <DialogClose asChild>
-                                        <Button>Close</Button>
-                                    </DialogClose>
-                                </DialogFooter>
-                            </DialogContent>
-                        </Dialog>
-                    )}
-                </div>
-            </div>
-            <span className="max-md:hidden w-full">
-                <Footer />
-            </span>
-
-            {/* Mobile */}
-            <div className="block md:hidden w-screen pb-20">
-                <div className="flex flex-row px-5 justify-between items-center align-middle pb-5 ">
-                    <div className="flex flex-col gap-2 w-full pb-5 border-b">
-                        <div className="flex flex-row w-full gap-4 justify-between items-center">
-                            <div className="flex flex-col h-full w-2/3 justify-between items-between gap-1">
-                                <div>
-                                    <h1
-                                        className={`font-alegraya font-bold truncate ${character.name.length < 10 ? "text-5xl/8 pb-3 pt-1" : "text-3xl/8"}`}
-                                    >
-                                        {character.name}
-                                    </h1>
-                                    <h2 className="font-alegraya-sans truncate text-gray-500 uppercase font-medium">
-                                        The {character.role}
-                                    </h2>
-                                </div>
-                                <Dialog>
-                                    <DialogTrigger asChild>
-                                        <Button className="font-medium mr-1 px-3! w-fit flex items-center justify-center">
-                                            <RiShareFill className="inline-block mr-2 size-3" />
-                                            <span className="text-sm">Share</span>
-                                        </Button>
-                                    </DialogTrigger>
-
-                                    <DialogContent className="sm:max-w-md p-6 gap-0 bg-white border- border-black rounded-xl">
-                                    <DialogHeader className="mb-2">
-                                        <DialogTitle className="text-3xl font-alegraya font-extrabold text-black">
-                                            Share this character!
-                                        </DialogTitle>
-                                        <DialogDescription className="text-lg font-alegraya-sans text-gray-600">
-                                            Anyone with this link can view this
-                                            character.
-                                        </DialogDescription>
-                                    </DialogHeader>
-
-                                    <div className="flex items-center w-full mt-2 mb-4 border border-black overflow-hidden bg-gray-50 focus-within:ring-2 focus-within:ring-purple/50 transition-all">
-                                        <input
-                                            className="shrink bg-transparent px-3 py-2 min-w-0 w-full font-ovo text-[17px] text-gray-700 outline-none cursor-text truncate"
-                                            readOnly
-                                            value={window.location.href
-                                                .replace("http://", "")
-                                                .replace("https://", "")}
-                                        />
-                                        <button
-                                            onClick={handleCopyLink}
-                                            className={`px-4 py-3 font-bold font-alegraya-sans border-l flex-none border-black transition-colors flex items-center gap-2 cursor-pointer w-28 justify-center
-                        ${isCopied ? "bg-purple text-black hover:bg-purple/80" : "bg-purple text-black hover:bg-purple/80"}
-                      `}
-                                        >
-                                            {isCopied ? (
-                                                <Check className="size-5" />
-                                            ) : (
-                                                <Copy className="size-4" />
-                                            )}
-                                            {isCopied ? "COPIED!" : "COPY"}
-                                        </button>
-                                    </div>
-
-                                    <DialogFooter className="sm:justify-start">
-                                        <p className="text-base/tight font-ovo text-gray-500 italic">
-                                            Viewers cannot edit any character
-                                            information or read their notes.
-                                        </p>
-                                    </DialogFooter>
-                                </DialogContent>
-                                </Dialog>
-                            </div>
-
-                            <div className="flex flex-col h-full w-2/5 items-between gap-2">
-                                <div className=" w-full aspect-square shrink-0 h-full flex justify-center items-center border rounded-lg overflow-hidden">
-                                    {uploadingImage ? (
-                                        <span className="font-alegraya-sans lowercase text-base font-bold animate-pulse">
-                                            Uploading...
-                                        </span>
-                                    ) : (
-                                        <div
-                                            className={`relative ${!isOwner && "group"} w-full h-full overflow-hidden`}
-                                        >
-                                            {/* Character Picture */}
-                                            <img
-                                                src={
-                                                    character.profileImage ||
-                                                    defaultPfp
-                                                }
-                                                className="object-cover w-full h-full transition-all group-hover:scale-105 group-hover:opacity-90"
-                                                alt={`Profile picture of ${character.name}`}
-                                            />
-
-                                            {/* Overlay */}
-                                            <div
-                                                className="absolute inset-0 bg-linear-to-t  from-black/40 to-transparent 
-                                      opacity-0 group-hover:opacity-100 transition-opacity duration-300
-                                      flex items-center justify-center"
-                                            >
-                                                <Button
-                                                    type="button"
-                                                    onClick={() =>
-                                                        fileInputRef.current?.click()
-                                                    }
-                                                    className={`flex items-center bg-white border px-4 py-2 cursor-pointer text-sm font-bold font-alegraya-sans 
-                                        uppercase tracking-wider transition-all ${!isOwner && "hidden"}`}
-                                                >
-                                                    <Upload className="size-4 mr-2" />
-                                                    Upload Image
-                                                </Button>
-                                            </div>
-                                        </div>
-                                    )}
-
-                                    <input
-                                        type="file"
-                                        ref={fileInputRef}
-                                        onChange={handleFileSelect}
-                                        accept="image/*"
-                                        className="hidden"
-                                    />
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="mt-5 flex flex-col gap-4">
-                            <Stat
-                                id="hp"
-                                name="HP"
-                                isOwner={isOwner}
-                                value={character.hp ?? 10}
-                                onUpdate={updateCharacterStat}
-                            />
-                            <Stat
-                                id="ap"
-                                name="AP"
-                                isOwner={isOwner}
-                                value={character.ap ?? 10}
-                                onUpdate={updateCharacterStat}
-                            />
-                        </div>
-                    </div>
-                </div>
-                <Tabs defaultValue="characteristics">
-                    <TabsList className="fixed w-full bottom-0 left-0 z-10">
-                        <TabsTrigger
-                            value="characteristics"
-                            className="group active:scale-95 transition-transform"
-                        >
-                            <FaUser className="size-6 group-data-[state=active]:-mt-2 group-data-[state=active]:size-6.5" />
-                        </TabsTrigger>
-                        <TabsTrigger
-                            value="abilities"
-                            className="group active:scale-95 transition-transform"
-                        >
-                            <RiSparkling2Fill className="size-6 group-data-[state=active]:-mt-2 group-data-[state=active]:size-7" />
-                        </TabsTrigger>
-                        <TabsTrigger
-                            value="inventory"
-                            className="group active:scale-95 transition-transform"
-                        >
-                            <BsFillBackpack2Fill className="size-6 group-data-[state=active]:-mt-2 group-data-[state=active]:size-7" />
-                        </TabsTrigger>
-                        <TabsTrigger
-                            value="notes"
-                            className="group mr-18 active:scale-95 transition-transform"
-                        >
-                            <BsFillFileTextFill className="size-6 group-data-[state=active]:-mt-2 group-data-[state=active]:size-7" />
-                        </TabsTrigger>
-                        <Button
-                            onClick={rollD20}
-                            className="p-3! fixed bottom-3 right-3 z-999 bg-white"
-                        >
-                            <img
-                                key={`roll-${spinKey}`}
-                                src={d20Icon}
-                                className={`${spinKey > 0 ? "animate-[spin_0.7s_ease-out]" : ""} size-8.5`}
-                            />
-                        </Button>
-                    </TabsList>
-                    <TabsContent value="characteristics" className="px-5">
-                        <CharacterProfile
-                            isOwner={isOwner}
-                            characterData={character}
-                            updateField={updateCharacterField}
-                        />{" "}
-                    </TabsContent>
-                    <TabsContent value="abilities" className="px-5">
-                        <div className="flex flex-col gap-4 justify-center grow">
-                            <div className="flex flex-row justify-between items-center">
-                                <div className="pl-1 font-alegraya-sans lowercase font-semibold text-xl">
-                                    Abilities
-                                </div>
-                                <div className="mr-1">
-                                    {isOwner && (
-                                        <Dialog modal={true}>
-                                            <DialogTrigger asChild>
-                                                <Button className="flex text-lg py-0! items-center cursor-pointer">
-                                                    <Pencil className="size-4 mr-2" />{" "}
-                                                    Edit
-                                                </Button>
-                                            </DialogTrigger>
-                                            <DialogContent 
-                                                onWheel={(e) => {
-                                                    e.stopPropagation();
-                                                }}
-                                                onTouchMove={(e) => {
-                                                    e.stopPropagation();
-                                                }}
-                                                className="w-fit max-w-[95vw]! max-h-[90vh] p-2 pt-10 max-sm:w-[95vw] overflow-y-auto sm:p-10 bg-white">
-                                                <AbilitySelector
-                                                    selectedAbilities={
-                                                        character.abilities ||
-                                                        []
-                                                    }
-                                                    onToggleAbility={
-                                                        toggleAbility
-                                                    }
-                                                />
-                                            </DialogContent>
-                                        </Dialog>
-                                    )}
-                                </div>
-                            </div>
-
-                            <div className="max-sm:p-0 max-sm:bg-white max-sm:border-0 p-5 bg-gray-100 rounded-lg w-full border border-gray-300">
-                                <div className="mt-23 flex-col grow-0">
-                                    {myAbilities.length === 0 && (
-                                        <p className="text-gray-500 font-alegraya-sans text-center">
-                                            No abilities yet.
-                                        </p>
-                                    )}
-                                    {myAbilities.map(
-                                        (ability, index, array) => (
-                                            <Card
-                                                key={ability.id}
-                                                ability={ability}
-                                                editing={false}
-                                                isOwner={isOwner}
-                                                isSelected={true}
-                                                onRoll={rollD20}
-                                                onClick={() => {}}
-                                                isLast={
-                                                    index === array.length - 1
-                                                }
-                                            />
-                                        ),
-                                    )}
-                                </div>
-                            </div>
-                        </div>
-                    </TabsContent>
-                    <TabsContent value="inventory" className="px-5">
-                        <div className="flex flex-col gap-4 justify-center grow">
-                            <div className="flex flex-row justify-between items-center">
-                                <div className="flex flex-col ">
-                                    <div className="pl-1 font-alegraya-sans lowercase font-semibold text-xl">
-                                        Inventory
-                                    </div>
-                                    <div className="pl-1 -mt-2 font-alegraya-sans lowercase font-semibold opacity-50 text-xl">{`(${usedSlots}/12)`}</div>
-                                </div>
-
-                                <div className="mr-1">
-                                    {isOwner && (
-                                        <Dialog modal={true}>
-                                            <DialogTrigger asChild>
-                                                <Button className="flex text-lg py-0! items-center cursor-pointer">
-                                                    <Pencil className="size-4 mr-2" />{" "}
-                                                    Edit
-                                                </Button>
-                                            </DialogTrigger>
-                                            <DialogContent 
-                                                onWheel={(e) => {
-                                                    e.stopPropagation();
-                                                }}
-                                                onTouchMove={(e) => {
-                                                    e.stopPropagation();
-                                                }}
-                                                className="w-fit max-w-[95vw]! max-h-[90vh] p-2 pt-10 max-sm:w-[95vw] overflow-y-auto sm:p-10 bg-white">
-                                                <ItemSelector
-                                                    selectedItems={
-                                                        character.items || []
-                                                    }
-                                                    onToggleItem={toggleItem}
-                                                />
-                                            </DialogContent>
-                                        </Dialog>
-                                    )}
-                                </div>
-                            </div>
-
-                            <div className="max-sm:p-0 max-sm:bg-white max-sm:border-0 p-5 bg-gray-100 rounded-lg w-full border border-gray-300">
-                                <div className="mt-23 flex-col grow-0">
-                                    {myItems.length === 0 && (
-                                        <p className="text-gray-500 font-alegraya-sans text-center">
-                                            No items yet.
-                                        </p>
-                                    )}
-                                    {myItems.map((item, index, array) => (
-                                        <Card
-                                            key={item.id}
-                                            ability={item}
-                                            editing={false}
-                                            isOwner={isOwner}
-                                            isSelected={true}
-                                            onRoll={rollD20}
-                                            onClick={() => {}}
-                                            isLast={index === array.length - 1}
-                                        />
-                                    ))}
-                                </div>
-                            </div>
-                        </div>
-                    </TabsContent>
-                    <TabsContent
-                        value="notes"
-                        className="px-5 flex gap-2 justify-between flex-col h-full"
-                    >
-                        <NotesManager
-                            isOwner={isOwner}
-                            notes={character.notes || []}
-                            onUpdateNotes={handleUpdateNotes}
-                        />
-                        {isOwner && (
-                            <Dialog>
-                                <DialogTrigger asChild>
-                                    <button className="font-alegraya-sans lowercase text-left w-full ml-1 cursor-pointer hover:underline transition-all hover:text-red-400 font-medium text-xl text-red-500 ">
-                                        Delete this character
-                                    </button>
-                                </DialogTrigger>
-                                <DialogContent className="sm:max-w-md">
-                                    <DialogHeader>
-                                        <DialogTitle>
-                                            Are you sure you want to delete this
-                                            character?
-                                        </DialogTitle>
-                                        <DialogDescription className="text-base pb-5">
-                                            This action CANNOT be undone!
-                                        </DialogDescription>
-                                    </DialogHeader>
-                                    <DialogFooter className="sm:justify-between">
-                                        <DialogClose asChild>
-                                            <Button
-                                                className="bg-red-400 text-white"
-                                                onClick={deleteCharacter}
-                                            >
-                                                Delete
-                                            </Button>
-                                        </DialogClose>
-                                        <DialogClose asChild>
-                                            <Button>Close</Button>
-                                        </DialogClose>
-                                    </DialogFooter>
-                                </DialogContent>
-                            </Dialog>
-                        )}
-                    </TabsContent>
-                </Tabs>
             </div>
         </div>
     );
