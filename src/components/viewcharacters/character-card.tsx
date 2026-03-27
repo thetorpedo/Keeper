@@ -55,7 +55,7 @@ export default function CharacterCard({ name, role, createdAt, id, pfp }: Charac
                 </div>
                     <span className='font-alegraya-sans font-semibold text-gray-500 min-w-0 max-w-[90%] lowercase truncate text-sm sm:text-xl'><div className="truncate block">The {role}</div></span>
                 <div className="aspect-square shrink-0 w-24 sm:w-48 flex justify-center items-center border rounded-lg overflow-hidden">
-                    <img src={pfp} className="object-contain" />
+                    <img src={pfp} className="object-cover w-full h-full" />
                 </div>
                 <div className='flex flex-col justify-between'>
                         <span className='font-alegraya-sans pt-1 text-gray-400 lowercase text-sm sm:text-lg'>Created on <span className="max-sm:block max-sm:-mt-2">{formatDate(createdAt)}</span></span>
